@@ -7,16 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CF86D3D028DB9CFC0027A812 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF86D3CF28DB9CFB0027A812 /* ImagePicker.swift */; };
+		CF86D3D228DBC3D10027A812 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF86D3D128DBC3D10027A812 /* AudioRecorder.swift */; };
+		CFB77B1028D8DE3C00D3F39D /* StructsDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB77B0F28D8DE3C00D3F39D /* StructsDB.swift */; };
+		CFB77B1228D8DED200D3F39D /* contacts.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB77B1128D8DED200D3F39D /* contacts.swift */; };
 		CFE5054A28D7892100825BC9 /* DementiaAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE5054928D7892100825BC9 /* DementiaAppApp.swift */; };
-		CFE5054C28D7892100825BC9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE5054B28D7892100825BC9 /* ContentView.swift */; };
+		CFE5054C28D7892100825BC9 /* PatientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE5054B28D7892100825BC9 /* PatientView.swift */; };
 		CFE5054E28D7892200825BC9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFE5054D28D7892200825BC9 /* Assets.xcassets */; };
 		CFE5055128D7892200825BC9 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFE5055028D7892200825BC9 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CF86D3CF28DB9CFB0027A812 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		CF86D3D128DBC3D10027A812 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
+		CFB77B0F28D8DE3C00D3F39D /* StructsDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StructsDB.swift; sourceTree = "<group>"; };
+		CFB77B1128D8DED200D3F39D /* contacts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = contacts.swift; sourceTree = "<group>"; };
 		CFE5054628D7892100825BC9 /* DementiaApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DementiaApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFE5054928D7892100825BC9 /* DementiaAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DementiaAppApp.swift; sourceTree = "<group>"; };
-		CFE5054B28D7892100825BC9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		CFE5054B28D7892100825BC9 /* PatientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientView.swift; sourceTree = "<group>"; };
 		CFE5054D28D7892200825BC9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CFE5055028D7892200825BC9 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -52,7 +60,11 @@
 			isa = PBXGroup;
 			children = (
 				CFE5054928D7892100825BC9 /* DementiaAppApp.swift */,
-				CFE5054B28D7892100825BC9 /* ContentView.swift */,
+				CFE5054B28D7892100825BC9 /* PatientView.swift */,
+				CFB77B0F28D8DE3C00D3F39D /* StructsDB.swift */,
+				CFB77B1128D8DED200D3F39D /* contacts.swift */,
+				CF86D3CF28DB9CFB0027A812 /* ImagePicker.swift */,
+				CF86D3D128DBC3D10027A812 /* AudioRecorder.swift */,
 				CFE5054D28D7892200825BC9 /* Assets.xcassets */,
 				CFE5054F28D7892200825BC9 /* Preview Content */,
 			);
@@ -137,8 +149,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CFE5054C28D7892100825BC9 /* ContentView.swift in Sources */,
+				CFB77B1228D8DED200D3F39D /* contacts.swift in Sources */,
+				CFE5054C28D7892100825BC9 /* PatientView.swift in Sources */,
+				CF86D3D028DB9CFC0027A812 /* ImagePicker.swift in Sources */,
+				CFB77B1028D8DE3C00D3F39D /* StructsDB.swift in Sources */,
 				CFE5054A28D7892100825BC9 /* DementiaAppApp.swift in Sources */,
+				CF86D3D228DBC3D10027A812 /* AudioRecorder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,6 +286,8 @@
 				DEVELOPMENT_TEAM = JCBWZNYKTF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -299,6 +317,8 @@
 				DEVELOPMENT_TEAM = JCBWZNYKTF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

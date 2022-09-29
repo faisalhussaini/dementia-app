@@ -11,7 +11,7 @@ import SwiftUI
 struct DementiaAppApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            PatientView()
         }
     }
 }
