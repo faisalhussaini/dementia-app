@@ -44,34 +44,8 @@ struct PatientView: View {
             }
             //.accentColor(Color(.label))
             Button {
-                let patient1: patient = patient(id: "1", name: "Faisal Hussaini", gender: "male", DOB: Date())
-                let patient2: patient = patient(id: "2", name: "Julian Humecki", gender: "male", DOB: Date())
-                let patient3: patient = patient(id: "3", name: "Hassan Khan", gender: "male", DOB: Date())
-                let patient4: patient = patient(id: "4", name: "Omar Abou El Naja", gender: "male", DOB: Date())
-                patientList.items.append(patient1)
-                patientList.items.append(patient2)
-                patientList.items.append(patient3)
-                patientList.items.append(patient4)
-                let newLovedOne1: lovedOne = lovedOne(id: "1", patientID: "1", name: "Loved One 1", gender: "male", DOB: Date())
-                let newLovedOne2: lovedOne = lovedOne(id: "2", patientID: "2", name: "Loved One 1", gender: "male", DOB: Date())
-                let newLovedOne3: lovedOne = lovedOne(id: "3", patientID: "2", name: "Loved One 2", gender: "male", DOB: Date())
-                let newLovedOne4: lovedOne = lovedOne(id: "4", patientID: "3", name: "Loved One 1", gender: "male", DOB: Date())
-                let newLovedOne5: lovedOne = lovedOne(id: "5", patientID: "3", name: "Loved One 2", gender: "male", DOB: Date())
-                let newLovedOne6: lovedOne = lovedOne(id: "6", patientID: "3", name: "Loved One 3", gender: "male", DOB: Date())
-                let newLovedOne7: lovedOne = lovedOne(id: "7", patientID: "4", name: "Loved One 1", gender: "male", DOB: Date())
-                let newLovedOne8: lovedOne = lovedOne(id: "8", patientID: "4", name: "Loved One 2", gender: "male", DOB: Date())
-                let newLovedOne9: lovedOne = lovedOne(id: "9", patientID: "4", name: "Loved One 3", gender: "male", DOB: Date())
-                let newLovedOne10: lovedOne = lovedOne(id: "10", patientID: "4", name: "Loved One 4", gender: "male", DOB: Date())
-                lovedOneList.items.append(newLovedOne1)
-                lovedOneList.items.append(newLovedOne2)
-                lovedOneList.items.append(newLovedOne3)
-                lovedOneList.items.append(newLovedOne4)
-                lovedOneList.items.append(newLovedOne5)
-                lovedOneList.items.append(newLovedOne6)
-                lovedOneList.items.append(newLovedOne7)
-                lovedOneList.items.append(newLovedOne8)
-                lovedOneList.items.append(newLovedOne9)
-                lovedOneList.items.append(newLovedOne10)
+                load_patients()
+                load_loved_ones()
             } label : {
                 Text("Add patients and loved ones who would already be in our db. In the future we populate this data from the db...")
             }
@@ -81,6 +55,24 @@ struct PatientView: View {
     }
     func removeItems(at offsets: IndexSet) {
         patientList.items.remove(atOffsets: offsets)
+    }
+    //For now just hard code this, access API endpoint later
+    func load_patients(){
+        let patient1: patient = patient(id: "1", name: "Faisal Hussaini", gender: "male", DOB: Date())
+        let patient2: patient = patient(id: "2", name: "Julian Humecki", gender: "male", DOB: Date())
+        let patient3: patient = patient(id: "3", name: "Hassan Khan", gender: "male", DOB: Date())
+        let patient4: patient = patient(id: "4", name: "Omar Abou El Naja", gender: "male", DOB: Date())
+        patientList.items.append(patient1)
+        patientList.items.append(patient2)
+        patientList.items.append(patient3)
+        patientList.items.append(patient4)
+    }
+    func load_loved_ones(){
+        for i in 1...15{
+            let name = "Loved One" + String(i)
+            let newLovedOne: lovedOne = lovedOne(id: String(i), patientID: String((i % 4) + 1), name: name, gender: "male", DOB: Date())
+            lovedOneList.items.append(newLovedOne)
+        }
     }
 }
 
