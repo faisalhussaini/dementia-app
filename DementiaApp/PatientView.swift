@@ -144,14 +144,18 @@ struct newPatientView: View {
                 }
                 .navigationBarTitle("New Patient")
                 Button {
-                    let newPatient = patient(id: "21", name: name, gender: gender, DOB: date)
-                    patientList.items.append(newPatient)
+                    add_patient(id: "21", name: name, gender: gender, date: date)
                     presentationMode.wrappedValue.dismiss()
                 } label : {
                     Text("Save")
                 }
             }
         }
+    }
+    //hard code for now, add API access
+    func add_patient(id: String, name: String, gender:String, date:Date){
+        let newPatient = patient(id: id, name: name, gender: gender, DOB: date)
+        patientList.items.append(newPatient)
     }
 }
 
@@ -180,14 +184,18 @@ struct newLovedOneView: View {
                 }
                 .navigationBarTitle("New Loved One")
                 Button {
-                    let newLovedOne = lovedOne(id: "21", patientID: patientID,  name: name, gender: gender, DOB: date)
-                    lovedOneList.items.append(newLovedOne)
+                    add_loved_one(id: "21", patiendID: patientID, name: name, gender: gender, date: date)
                     presentationMode.wrappedValue.dismiss()
                 } label : {
                     Text("Save")
                 }
             }
         }
+    }
+    //hard code for now, add API access later
+    func add_loved_one(id:String, patiendID: String, name:String, gender:String, date:Date){
+        let newLovedOne = lovedOne(id: id, patientID: patientID,  name: name, gender: gender, DOB: date)
+        lovedOneList.items.append(newLovedOne)
     }
 }
 
