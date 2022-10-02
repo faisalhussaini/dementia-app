@@ -58,20 +58,52 @@ struct PatientView: View {
     }
     //For now just hard code this, access API endpoint later
     func load_patients(){
-        let patient1: patient = patient(id: "1", name: "Faisal Hussaini", gender: "male", DOB: Date())
-        let patient2: patient = patient(id: "2", name: "Julian Humecki", gender: "male", DOB: Date())
-        let patient3: patient = patient(id: "3", name: "Hassan Khan", gender: "male", DOB: Date())
-        let patient4: patient = patient(id: "4", name: "Omar Abou El Naja", gender: "male", DOB: Date())
-        patientList.items.append(patient1)
-        patientList.items.append(patient2)
-        patientList.items.append(patient3)
-        patientList.items.append(patient4)
+        let mode:Int = 0;
+        if(mode == 1){
+            //TODO: At some point backend code needs to be deployed...
+            let url = URL(string: "http://127.0.0.1:5000/all_patients")!
+            
+            let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
+                guard let data = data else { return }
+                //TODO: Actually parse this and store in a dictionary
+                print(String(data: data, encoding: .utf8)!)
+            }
+            
+            task.resume()
+        }
+        else{
+            let patient1: patient = patient(id: "1", name: "Faisal Hussaini", gender: "male", DOB: Date())
+            let patient2: patient = patient(id: "2", name: "Julian Humecki", gender: "male", DOB: Date())
+            let patient3: patient = patient(id: "3", name: "Hassan Khan", gender: "male", DOB: Date())
+            let patient4: patient = patient(id: "4", name: "Omar Abou El Naja", gender: "male", DOB: Date())
+            patientList.items.append(patient1)
+            patientList.items.append(patient2)
+            patientList.items.append(patient3)
+            patientList.items.append(patient4)
+        }
     }
     func load_loved_ones(){
-        for i in 1...15{
-            let name = "Loved One" + String(i)
-            let newLovedOne: lovedOne = lovedOne(id: String(i), patientID: String((i % 4) + 1), name: name, gender: "male", DOB: Date())
-            lovedOneList.items.append(newLovedOne)
+        let mode:Int = 0;
+        if(mode == 1){
+            //TODO: At some point backend code needs to be deployed...
+            //TODO: should loop over patients and use their uuid as i here
+            let i = 0
+            let url = URL(string: "http://127.0.0.1:5000/all_loved_ones/" + String(i))!
+            
+            let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
+                guard let data = data else { return }
+                //TODO: Actually parse this
+                print(String(data: data, encoding: .utf8)!)
+            }
+            
+            task.resume()
+        }
+        else{
+            for i in 1...15{
+                let name = "Loved One" + String(i)
+                let newLovedOne: lovedOne = lovedOne(id: String(i), patientID: String((i % 4) + 1), name: name, gender: "male", DOB: Date())
+                lovedOneList.items.append(newLovedOne)
+            }
         }
     }
 }
