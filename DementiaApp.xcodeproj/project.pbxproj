@@ -7,10 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		CF86D3D028DB9CFC0027A812 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF86D3CF28DB9CFB0027A812 /* ImagePicker.swift */; };
-		CF86D3D228DBC3D10027A812 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF86D3D128DBC3D10027A812 /* AudioRecorder.swift */; };
+		CF059CEC28E64335000E2DBA /* AppleLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF059CEB28E64335000E2DBA /* AppleLogo.swift */; };
+		CF059CF028E6469B000E2DBA /* bob.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CF059CEF28E6469B000E2DBA /* bob.mp3 */; };
+		CF059CF228E64936000E2DBA /* AppleLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF059CF128E64936000E2DBA /* AppleLogoView.swift */; };
+		CF059CF428E68874000E2DBA /* SpeechRecognition.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF059CF328E68874000E2DBA /* SpeechRecognition.swift */; };
+		CF70C8C628EE7D5600C0BD42 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF70C8C528EE7D5600C0BD42 /* AudioRecorder.swift */; };
+		CF70C8CC28EE804100C0BD42 /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF70C8CB28EE804100C0BD42 /* AudioPlayer.swift */; };
+		CF70C8CE28EE807000C0BD42 /* RecordingsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF70C8CD28EE807000C0BD42 /* RecordingsList.swift */; };
 		CFB77B1028D8DE3C00D3F39D /* StructsDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB77B0F28D8DE3C00D3F39D /* StructsDB.swift */; };
 		CFB77B1228D8DED200D3F39D /* contacts.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB77B1128D8DED200D3F39D /* contacts.swift */; };
+		CFD8EF3028F1FE4300DB94F7 /* PhotoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD8EF2F28F1FE4300DB94F7 /* PhotoPicker.swift */; };
 		CFE5054A28D7892100825BC9 /* DementiaAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE5054928D7892100825BC9 /* DementiaAppApp.swift */; };
 		CFE5054C28D7892100825BC9 /* PatientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE5054B28D7892100825BC9 /* PatientView.swift */; };
 		CFE5054E28D7892200825BC9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFE5054D28D7892200825BC9 /* Assets.xcassets */; };
@@ -18,10 +24,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		CF86D3CF28DB9CFB0027A812 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
-		CF86D3D128DBC3D10027A812 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
+		CF059CEB28E64335000E2DBA /* AppleLogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLogo.swift; sourceTree = "<group>"; };
+		CF059CEF28E6469B000E2DBA /* bob.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = bob.mp3; sourceTree = "<group>"; };
+		CF059CF128E64936000E2DBA /* AppleLogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLogoView.swift; sourceTree = "<group>"; };
+		CF059CF328E68874000E2DBA /* SpeechRecognition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognition.swift; sourceTree = "<group>"; };
+		CF70C8C528EE7D5600C0BD42 /* AudioRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorder.swift; sourceTree = "<group>"; };
+		CF70C8CB28EE804100C0BD42 /* AudioPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
+		CF70C8CD28EE807000C0BD42 /* RecordingsList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordingsList.swift; sourceTree = "<group>"; };
 		CFB77B0F28D8DE3C00D3F39D /* StructsDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StructsDB.swift; sourceTree = "<group>"; };
 		CFB77B1128D8DED200D3F39D /* contacts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = contacts.swift; sourceTree = "<group>"; };
+		CFD8EF2F28F1FE4300DB94F7 /* PhotoPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoPicker.swift; sourceTree = "<group>"; };
 		CFE5054628D7892100825BC9 /* DementiaApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DementiaApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFE5054928D7892100825BC9 /* DementiaAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DementiaAppApp.swift; sourceTree = "<group>"; };
 		CFE5054B28D7892100825BC9 /* PatientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientView.swift; sourceTree = "<group>"; };
@@ -59,12 +71,16 @@
 		CFE5054828D7892100825BC9 /* DementiaApp */ = {
 			isa = PBXGroup;
 			children = (
+				CF059CEF28E6469B000E2DBA /* bob.mp3 */,
 				CFE5054928D7892100825BC9 /* DementiaAppApp.swift */,
 				CFE5054B28D7892100825BC9 /* PatientView.swift */,
-				CFB77B0F28D8DE3C00D3F39D /* StructsDB.swift */,
 				CFB77B1128D8DED200D3F39D /* contacts.swift */,
-				CF86D3CF28DB9CFB0027A812 /* ImagePicker.swift */,
-				CF86D3D128DBC3D10027A812 /* AudioRecorder.swift */,
+				CFB77B0F28D8DE3C00D3F39D /* StructsDB.swift */,
+				CF70C8C528EE7D5600C0BD42 /* AudioRecorder.swift */,
+				CF70C8CB28EE804100C0BD42 /* AudioPlayer.swift */,
+				CF70C8CD28EE807000C0BD42 /* RecordingsList.swift */,
+				CF059CF128E64936000E2DBA /* AppleLogoView.swift */,
+				CFD8EF2F28F1FE4300DB94F7 /* PhotoPicker.swift */,
 				CFE5054D28D7892200825BC9 /* Assets.xcassets */,
 				CFE5054F28D7892200825BC9 /* Preview Content */,
 			);
@@ -75,6 +91,8 @@
 			isa = PBXGroup;
 			children = (
 				CFE5055028D7892200825BC9 /* Preview Assets.xcassets */,
+				CF059CEB28E64335000E2DBA /* AppleLogo.swift */,
+				CF059CF328E68874000E2DBA /* SpeechRecognition.swift */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -137,6 +155,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF059CF028E6469B000E2DBA /* bob.mp3 in Resources */,
 				CFE5055128D7892200825BC9 /* Preview Assets.xcassets in Resources */,
 				CFE5054E28D7892200825BC9 /* Assets.xcassets in Resources */,
 			);
@@ -149,12 +168,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF70C8C628EE7D5600C0BD42 /* AudioRecorder.swift in Sources */,
+				CFD8EF3028F1FE4300DB94F7 /* PhotoPicker.swift in Sources */,
 				CFB77B1228D8DED200D3F39D /* contacts.swift in Sources */,
 				CFE5054C28D7892100825BC9 /* PatientView.swift in Sources */,
-				CF86D3D028DB9CFC0027A812 /* ImagePicker.swift in Sources */,
 				CFB77B1028D8DE3C00D3F39D /* StructsDB.swift in Sources */,
+				CF059CF428E68874000E2DBA /* SpeechRecognition.swift in Sources */,
+				CF059CF228E64936000E2DBA /* AppleLogoView.swift in Sources */,
 				CFE5054A28D7892100825BC9 /* DementiaAppApp.swift in Sources */,
-				CF86D3D228DBC3D10027A812 /* AudioRecorder.swift in Sources */,
+				CF70C8CE28EE807000C0BD42 /* RecordingsList.swift in Sources */,
+				CF059CEC28E64335000E2DBA /* AppleLogo.swift in Sources */,
+				CF70C8CC28EE804100C0BD42 /* AudioPlayer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,12 +311,14 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Microphone usage is required to communicate with loved ones";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Speech recognition is required to communicate with loved ones";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -318,12 +344,14 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "";
-				INFOPLIST_KEY_NSMicrophoneUsageDescription = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Microphone usage is required to communicate with loved ones";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Speech recognition is required to communicate with loved ones";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

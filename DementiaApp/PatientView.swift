@@ -7,7 +7,7 @@
 
 
 import SwiftUI
-
+import AVKit
 
 struct PatientView: View {
     
@@ -23,6 +23,7 @@ struct PatientView: View {
                             Text(item.name)
                             NavigationLink(destination: LovedOneView(patientID: item.id, lovedOneList: lovedOneList), label: {
                             })
+                            .isDetailLink(false)
                         }
                         .padding(.top)
                     }
@@ -42,7 +43,7 @@ struct PatientView: View {
                     }
                 }
             }
-            //.accentColor(Color(.label))
+            .navigationViewStyle(StackNavigationViewStyle())
             Button {
                 load_patients()
                 load_loved_ones()
@@ -101,7 +102,7 @@ struct PatientView: View {
         else{
             for i in 1...15{
                 let name = "Loved One" + String(i)
-                let newLovedOne: lovedOne = lovedOne(id: String(i), patientID: String((i % 4) + 1), name: name, gender: "male", DOB: Date())
+                let newLovedOne: lovedOne = lovedOne(id: String(i), patientID: String((i % 4) + 1), name: name, gender: "male", DOB: Date(), picture: Data())
                 lovedOneList.items.append(newLovedOne)
             }
         }
@@ -118,32 +119,36 @@ struct LovedOneView: View {
     @StateObject var lovedOneList : lovedOnes
     var body: some View {
         ZStack {
-            List {
-                ForEach(lovedOneList.items, id: \.id) { item in
-                    if (item.patientID == patientID) {
-                        HStack {
-                            Text(item.name)
-                            NavigationLink(destination: CallView(color: .blue), label: {
-                            })
+            NavigationView() {
+                List {
+                    ForEach(lovedOneList.items, id: \.id) { item in
+                        if (item.patientID == patientID) {
+                            HStack {
+                                Text(item.name)
+                                NavigationLink(destination: CallView(color: .blue, lovedOneList: lovedOneList, id: item.id), label: {
+                                })
+                                .isDetailLink(false)
+                            }
+                            .padding(.top)
                         }
-                        .padding(.top)
+                    }
+                    .onDelete(perform: removeItems)
+                }
+                .navigationTitle("Call A Loved One")
+                .offset(y:80)
+                .padding()
+                .toolbar {
+                    Button {
+                        showPopup.toggle()
+                    } label : {
+                        Image(systemName: "plus")
+                    }
+                    .sheet(isPresented: $showPopup) {
+                        newLovedOneView(audioRecorder: AudioRecorder(), patientID: patientID, lovedOneList: lovedOneList)
                     }
                 }
-                .onDelete(perform: removeItems)
             }
-            .navigationTitle("Call A Loved One")
-            .offset(y:80)
-            .padding()
-            .toolbar {
-                Button {
-                    showPopup.toggle()
-                } label : {
-                    Image(systemName: "plus")
-                }
-                .sheet(isPresented: $showPopup) {
-                    newLovedOneView(patientID: patientID, lovedOneList: lovedOneList)
-                }
-            }
+            .navigationViewStyle(StackNavigationViewStyle())
         }
         .ignoresSafeArea()
     }
@@ -155,7 +160,7 @@ struct LovedOneView: View {
 struct newPatientView: View {
     @StateObject var patientList : patients
     @Environment(\.presentationMode) var presentationMode
-    
+    @Environment(\.dismiss) var dismiss
     var genders = ["Male", "Female", "Prefer not to say"]
     @State private var date = Date()
     @State private var name: String = ""
@@ -182,7 +187,14 @@ struct newPatientView: View {
                     Text("Save")
                 }
             }
+            .toolbar {
+                Button("Cancel") {
+                    dismiss()
+                }
+                Spacer()
+            }
         }
+        .navigationViewStyle(.stack)
     }
     //hard code for now, add API access
     func add_patient(id: String, name: String, gender:String, date:Date){
@@ -192,6 +204,8 @@ struct newPatientView: View {
 }
 
 struct newLovedOneView: View {
+    
+    @ObservedObject var audioRecorder: AudioRecorder
     var patientID: String
     @StateObject var lovedOneList : lovedOnes
     @Environment(\.presentationMode) var presentationMode
@@ -200,6 +214,10 @@ struct newLovedOneView: View {
     @State private var date = Date()
     @State private var name: String = ""
     @State private var gender: String = ""
+    @State private var audioFile: Recording?
+    @State private var isShowingPhotoPicker = false
+    @State private var lovedOneImage = UIImage(named: "default-avatar")!
+    @Environment(\.dismiss) var dismiss
     var body: some View {
         NavigationView {
             VStack {
@@ -213,20 +231,74 @@ struct newLovedOneView: View {
                             }
                         }
                     }
+                    //https://www.youtube.com/watch?v=V-kSSjh1T74
+                    Section {
+                        Image(uiImage: lovedOneImage) //swiftui does not have a native way in ios 15 to interact with photopicker. Have to use with uiimagepickercontroller in uikit which returns uiimage
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 150, height:150)
+                            .clipShape(Circle())
+                            .padding()
+                            .onTapGesture {
+                                isShowingPhotoPicker = true
+                            }
+                        Text("Select Image of Loved One")
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    }
+                    .navigationTitle("Profile")
+                    .sheet(isPresented: $isShowingPhotoPicker) {
+                        PhotoPicker(lovedOneImage: $lovedOneImage)
+                    }
+                    //Code to record audio adapted from a SwiftUI Voice Recorder tutorial
+                    //https://blckbirds.com/post/voice-recorder-app-in-swiftui-1/
+                    //https://blckbirds.com/post/voice-recorder-app-in-swiftui-2/
+                    RecordingsList(audioRecorder: audioRecorder)
+                    if audioRecorder.recording == false { //button to start
+                        Button(action: {self.audioRecorder.startRecording()}) {
+                            Text("Start Recording Audio Sample of Loved One")
+                                .frame(maxWidth: .infinity, alignment: .center)
+                            Image(systemName: "circle.fill")
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: 60, height: 60)
+                                .clipped()
+                                .foregroundColor(.red)
+                        } 
+                    } else {
+                        Button(action: {self.audioRecorder.stopRecording()}) { //button to stop
+                            Text("Stop Recording Audio Sample of Loved One")
+                                .frame(maxWidth: .infinity, alignment: .center)
+                            Image(systemName: "stop.fill")
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: 60, height: 60)
+                                .clipped()
+                                .foregroundColor(.red)
+                        }
+                    }
                 }
                 .navigationBarTitle("New Loved One")
                 Button {
-                    add_loved_one(id: "21", patiendID: patientID, name: name, gender: gender, date: date)
+                    //Once we connect with Backend then pass mp4 file in add_loved_one
+                    add_loved_one(id: "21", patiendID: patientID, name: name, gender: gender, date: date, picture: Data())
                     presentationMode.wrappedValue.dismiss()
                 } label : {
                     Text("Save")
                 }
             }
+            .toolbar {
+                Button("Cancel") {
+                    dismiss()
+                }
+                Spacer()
+            }
         }
+        .navigationViewStyle(.stack)
     }
     //hard code for now, add API access later
-    func add_loved_one(id:String, patiendID: String, name:String, gender:String, date:Date){
-        let newLovedOne = lovedOne(id: id, patientID: patientID,  name: name, gender: gender, DOB: date)
+    //Once we connect with Backend then pass mp4 file in add_loved_one
+    func add_loved_one(id:String, patiendID: String, name:String, gender:String, date:Date, picture:Data){
+        let newLovedOne = lovedOne(id: id, patientID: patientID,  name: name, gender: gender, DOB: date, picture: picture)
         lovedOneList.items.append(newLovedOne)
     }
 }
@@ -234,12 +306,46 @@ struct newLovedOneView: View {
 
 struct CallView: View {
     var color: Color
+    @StateObject var lovedOneList : lovedOnes
+    var id: String
+    var player = AVPlayer()
     var body: some View {
         ZStack {
-            Text("Display Call here")
-                .padding()
+            ForEach(lovedOneList.items, id: \.id) { item in
+                if (item.id == id) {
+                    VStack {
+                        
+                        //we would get video URL from api call, for now play something random
+                        var videoURL = "https://bit.ly/swswift"
+                        
+                        //Make video play automatically
+                        //https://stackoverflow.com/questions/65796552/ios-swiftui-video-autoplay
+                        VideoPlayer(player: player)
+                            .onAppear{
+                                if player.currentItem == nil {
+                                    let item = AVPlayerItem(url: URL(string: videoURL)!)
+                                    player.replaceCurrentItem(with: item)
+                                }
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                                    player.play()
+                                })
+                            }
+                        Text("Display Call to \(item.name) here")
+                            .padding()
+                        
+                            //Add code to capture speech when user starts talking, stop mic when they stop
+                            //Use speech recognition to convert to text
+                            //We would then pass this into chatbot and get an output text
+                    }
+                    .padding(.top)
+                }
+            }
         }
         .ignoresSafeArea()
+    }
+    func play_video(url: String) -> some View{
+        VideoPlayer(player: AVPlayer(url:  URL(string: url)!))
+            .frame(width: 700, height: 500)
     }
 }
 

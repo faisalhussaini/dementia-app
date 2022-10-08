@@ -16,6 +16,11 @@ struct patient: Identifiable {
     let DOB: Date
 }
 
+struct Recording {
+    let fileURL: URL
+    let id = UUID()
+}
+
 struct lovedOne: Identifiable {
     //let id = UUID()
     //let patientID: UUID
@@ -24,4 +29,6 @@ struct lovedOne: Identifiable {
     let name: String
     let gender: String
     let DOB: Date
+    let picture: Data
+    //let recording: Recording?
 }
