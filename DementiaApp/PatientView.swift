@@ -232,6 +232,7 @@ struct newLovedOneView: View {
                         }
                     }
                     //https://www.youtube.com/watch?v=V-kSSjh1T74
+                    //once we connect with backend then upload lovedOneImage in add_loved_one, for now do nothing
                     Section {
                         Image(uiImage: lovedOneImage) //swiftui does not have a native way in ios 15 to interact with photopicker. Have to use with uiimagepickercontroller in uikit which returns uiimage
                             .resizable()
@@ -279,7 +280,7 @@ struct newLovedOneView: View {
                 }
                 .navigationBarTitle("New Loved One")
                 Button {
-                    //Once we connect with Backend then pass mp4 file in add_loved_one
+                    //Once we connect with Backend then pass mp4 file and image in add_loved_one
                     add_loved_one(id: "21", patiendID: patientID, name: name, gender: gender, date: date, picture: Data())
                     presentationMode.wrappedValue.dismiss()
                 } label : {
