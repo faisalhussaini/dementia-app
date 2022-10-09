@@ -264,7 +264,7 @@ struct newLovedOneView: View {
                                 .frame(width: 60, height: 60)
                                 .clipped()
                                 .foregroundColor(.red)
-                        } 
+                        }
                     } else {
                         Button(action: {self.audioRecorder.stopRecording()}) { //button to stop
                             Text("Stop Recording Audio Sample of Loved One")
@@ -281,7 +281,8 @@ struct newLovedOneView: View {
                 .navigationBarTitle("New Loved One")
                 Button {
                     //Once we connect with Backend then pass mp4 file and image in add_loved_one
-                    add_loved_one(id: "21", patiendID: patientID, name: name, gender: gender, date: date, picture: Data())
+                    let imageData: Data = lovedOneImage.jpegData(compressionQuality: 0.1) ?? Data()
+                    add_loved_one(id: "21", patiendID: patientID, name: name, gender: gender, date: date, picture: imageData)
                     presentationMode.wrappedValue.dismiss()
                 } label : {
                     Text("Save")
@@ -299,8 +300,35 @@ struct newLovedOneView: View {
     //hard code for now, add API access later
     //Once we connect with Backend then pass mp4 file in add_loved_one
     func add_loved_one(id:String, patiendID: String, name:String, gender:String, date:Date, picture:Data){
+        let mode : Int = 0
         let newLovedOne = lovedOne(id: id, patientID: patientID,  name: name, gender: gender, DOB: date, picture: picture)
         lovedOneList.items.append(newLovedOne)
+        
+        if(mode == 1){
+            //Upload the image to the server
+            let imageStr : String = picture.base64EncodedString()
+            guard let url: URL = URL(string: "http://127.0.0.1:5000/all_loved_ones/") else {
+                print("Invalid url")
+                return
+            }
+            let paramStr : String = "image=\(imageStr)"
+            let paramData : Data = paramStr.data(using: .utf8) ?? Data()
+            var urlRequest: URLRequest = URLRequest(url: url)
+            urlRequest.httpMethod = "POST"
+            urlRequest.httpBody = paramData
+            
+            urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+            URLSession.shared.dataTask(with: urlRequest, completionHandler: {
+                (data, response, error) in
+                guard let data = data else{
+                    print("invalid data")
+                    return
+                }
+                let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
+                print(responseStr)
+            }).resume()
+        }
+        
     }
 }
 
@@ -334,9 +362,9 @@ struct CallView: View {
                         Text("Display Call to \(item.name) here")
                             .padding()
                         
-                            //Add code to capture speech when user starts talking, stop mic when they stop
-                            //Use speech recognition to convert to text
-                            //We would then pass this into chatbot and get an output text
+                        //Add code to capture speech when user starts talking, stop mic when they stop
+                        //Use speech recognition to convert to text
+                        //We would then pass this into chatbot and get an output text
                     }
                     .padding(.top)
                 }
