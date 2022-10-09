@@ -281,7 +281,7 @@ struct newLovedOneView: View {
                 .navigationBarTitle("New Loved One")
                 Button {
                     //Once we connect with Backend then pass mp4 file and image in add_loved_one
-                    let imageData: Data = lovedOneImage.jpegData(compressionQuality: 0.1) ?? Data()
+                    let imageData: Data = lovedOneImage.jpegData(compressionQuality: 0.5) ?? Data()
                     add_loved_one(id: "21", patiendID: patientID, name: name, gender: gender, date: date, picture: imageData)
                     presentationMode.wrappedValue.dismiss()
                 } label : {
@@ -307,7 +307,8 @@ struct newLovedOneView: View {
         if(mode == 1){
             //Upload the image to the server
             let imageStr : String = picture.base64EncodedString()
-            guard let url: URL = URL(string: "http://127.0.0.1:5000/all_loved_ones/") else {
+            //print(imageStr)
+            guard let url: URL = URL(string: "http://127.0.0.1:5000/upload_image") else {
                 print("Invalid url")
                 return
             }
