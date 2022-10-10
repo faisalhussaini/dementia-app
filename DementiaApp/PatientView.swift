@@ -9,6 +9,17 @@
 import SwiftUI
 import AVKit
 
+func convertToDictionary(text: String) -> [String: String]? {
+    if let data = text.data(using: .utf8) {
+        do {
+            return try JSONSerialization.jsonObject(with: data, options: []) as? [String: String]
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    return nil
+}
+
 struct PatientView: View {
     
     @StateObject var patientList = patients()
@@ -196,16 +207,7 @@ struct newPatientView: View {
         }
         .navigationViewStyle(.stack)
     }
-    func convertToDictionary(text: String) -> [String: String]? {
-        if let data = text.data(using: .utf8) {
-            do {
-                return try JSONSerialization.jsonObject(with: data, options: []) as? [String: String]
-            } catch {
-                print(error.localizedDescription)
-            }
-        }
-        return nil
-    }
+    
     //hard code for now, add API access
     func add_patient(id: String, name: String, gender:String, date:Date){
         let mode : Int = 0
@@ -359,24 +361,36 @@ struct newLovedOneView: View {
     //Once we connect with Backend then pass mp4 file in add_loved_one
     func add_loved_one(id:String, patiendID: String, name:String, gender:String, date:Date, picture:Data){
         let mode : Int = 0
-        let newLovedOne = lovedOne(id: id, patientID: patientID,  name: name, gender: gender, DOB: date, picture: picture)
-        lovedOneList.items.append(newLovedOne)
+        let upload_img : Bool = true
         
         if(mode == 1){
-            //Upload the image to the server
-            let imageStr : String = picture.base64EncodedString()
-            //print(imageStr)
-            guard let url: URL = URL(string: "http://127.0.0.1:5000/upload_image") else {
+            //Upload patient to the server
+            guard let url: URL = URL(string: "http://127.0.0.1:5000/loved_ones") else {
                 print("Invalid url")
                 return
             }
-            let paramStr : String = "image=\(imageStr)"
-            let paramData : Data = paramStr.data(using: .utf8) ?? Data()
+            let dF : DateFormatter = DateFormatter()
+            // Convert Date to String
+            dF.dateFormat = "YY/MM/dd"
+            let dob = dF.string(from: date)
+            print(dob)
             var urlRequest: URLRequest = URLRequest(url: url)
             urlRequest.httpMethod = "POST"
-            urlRequest.httpBody = paramData
-            
-            urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+            let parameters: [String: String] = [
+                "p_idx": patiendID,
+                "name": name,
+                "gender": gender,
+                "DOB": dob
+            ]
+            let encoder = JSONEncoder()
+            if let jsonData = try? encoder.encode(parameters) {
+                if let jsonString = String(data: jsonData, encoding: .utf8) {
+                    print(jsonString)
+                    urlRequest.httpBody = jsonData
+                }
+            }
+            //urlRequest.httpBody = jsonData
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
             URLSession.shared.dataTask(with: urlRequest, completionHandler: {
                 (data, response, error) in
                 guard let data = data else{
@@ -385,7 +399,44 @@ struct newLovedOneView: View {
                 }
                 let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
                 print(responseStr)
+                let res : [String : String]? = convertToDictionary(text: (responseStr))
+                print(res)
+                let loved_one_id : String? = res?["id"]
+                print("Loved one id is \(loved_one_id ?? "0")")
+                let newLovedOne = lovedOne(id: loved_one_id ?? "0", patientID: patientID,  name: name, gender: gender, DOB: date, picture: picture)
+                lovedOneList.items.append(newLovedOne)
+                if(upload_img){
+                    //Upload the image to the server
+                    let imageStr : String = picture.base64EncodedString()
+                    //print(imageStr)
+                    guard let url: URL = URL(string: "http://127.0.0.1:5000/upload_image/" + patiendID + "/" + (loved_one_id ?? "0")) else {
+                        print("Invalid url")
+                        return
+                    }
+                    let paramStr : String = "image=\(imageStr)"
+                    let paramData : Data = paramStr.data(using: .utf8) ?? Data()
+                    var urlRequest: URLRequest = URLRequest(url: url)
+                    urlRequest.httpMethod = "POST"
+                    urlRequest.httpBody = paramData
+                    
+                    urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+                    URLSession.shared.dataTask(with: urlRequest, completionHandler: {
+                        (data, response, error) in
+                        guard let data = data else{
+                            print("invalid data")
+                            return
+                        }
+                        let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
+                        print(responseStr)
+                    }).resume()
+                }
             }).resume()
+            
+            
+        }
+        else{
+            let newLovedOne = lovedOne(id: id, patientID: patientID,  name: name, gender: gender, DOB: date, picture: picture)
+            lovedOneList.items.append(newLovedOne)
         }
         
     }
