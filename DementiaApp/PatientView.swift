@@ -66,6 +66,40 @@ struct PatientView: View {
         .ignoresSafeArea()
     }
     func removeItems(at offsets: IndexSet) {
+        let mode : Int = 0
+        if(mode == 1){
+            for index in offsets{
+                let patient : patient = patientList.items[index]
+                guard let url: URL = URL(string: "http://127.0.0.1:5000/patients") else {
+                    print("Invalid url")
+                    return
+                }
+                var urlRequest: URLRequest = URLRequest(url: url)
+                urlRequest.httpMethod = "DELETE"
+                let parameters: [String: String] = [
+                    "p_idx": patient.id
+                ]
+                let encoder = JSONEncoder()
+                if let jsonData = try? encoder.encode(parameters) {
+                    if let jsonString = String(data: jsonData, encoding: .utf8) {
+                        print(jsonString)
+                        urlRequest.httpBody = jsonData
+                    }
+                }
+
+                urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                URLSession.shared.dataTask(with: urlRequest, completionHandler: {
+                    (data, response, error) in
+                    guard let data = data else{
+                        print("invalid data")
+                        return
+                    }
+                    let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
+                    print(responseStr)
+                }).resume()
+            }
+            
+        }
         patientList.items.remove(atOffsets: offsets)
     }
     //For now just hard code this, access API endpoint later
@@ -164,6 +198,41 @@ struct LovedOneView: View {
         .ignoresSafeArea()
     }
     func removeItems(at offsets: IndexSet) {
+        let mode : Int = 0
+        if(mode == 1){
+            for index in offsets{
+                let lovedOne : lovedOne = lovedOneList.items[index]
+                guard let url: URL = URL(string: "http://127.0.0.1:5000/loved_ones") else {
+                    print("Invalid url")
+                    return
+                }
+                var urlRequest: URLRequest = URLRequest(url: url)
+                urlRequest.httpMethod = "DELETE"
+                let parameters: [String: String] = [
+                    "p_idx": lovedOne.patientID,
+                    "lo_idx": lovedOne.id
+                ]
+                let encoder = JSONEncoder()
+                if let jsonData = try? encoder.encode(parameters) {
+                    if let jsonString = String(data: jsonData, encoding: .utf8) {
+                        print(jsonString)
+                        urlRequest.httpBody = jsonData
+                    }
+                }
+
+                urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                URLSession.shared.dataTask(with: urlRequest, completionHandler: {
+                    (data, response, error) in
+                    guard let data = data else{
+                        print("invalid data")
+                        return
+                    }
+                    let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
+                    print(responseStr)
+                }).resume()
+            }
+            
+        }
         lovedOneList.items.remove(atOffsets: offsets)
     }
 }
