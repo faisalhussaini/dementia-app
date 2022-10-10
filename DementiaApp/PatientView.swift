@@ -196,10 +196,67 @@ struct newPatientView: View {
         }
         .navigationViewStyle(.stack)
     }
+    func convertToDictionary(text: String) -> [String: String]? {
+        if let data = text.data(using: .utf8) {
+            do {
+                return try JSONSerialization.jsonObject(with: data, options: []) as? [String: String]
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+        return nil
+    }
     //hard code for now, add API access
     func add_patient(id: String, name: String, gender:String, date:Date){
-        let newPatient = patient(id: id, name: name, gender: gender, DOB: date)
-        patientList.items.append(newPatient)
+        let mode : Int = 0
+        if(mode == 1){
+            //Upload patient to the server
+            guard let url: URL = URL(string: "http://127.0.0.1:5000/patients") else {
+                print("Invalid url")
+                return
+            }
+            let dF : DateFormatter = DateFormatter()
+            // Convert Date to String
+            dF.dateFormat = "YY/MM/dd"
+            let dob = dF.string(from: date)
+            print(dob)
+            var urlRequest: URLRequest = URLRequest(url: url)
+            urlRequest.httpMethod = "POST"
+            let parameters: [String: String] = [
+                "name": name,
+                "gender": gender,
+                "DOB": dob
+            ]
+            let encoder = JSONEncoder()
+            if let jsonData = try? encoder.encode(parameters) {
+                if let jsonString = String(data: jsonData, encoding: .utf8) {
+                    print(jsonString)
+                    urlRequest.httpBody = jsonData
+                }
+            }
+            
+            //urlRequest.httpBody = jsonData
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            URLSession.shared.dataTask(with: urlRequest, completionHandler: {
+                (data, response, error) in
+                guard let data = data else{
+                    print("invalid data")
+                    return
+                }
+                let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
+                print(responseStr)
+                let res : [String : String]? = convertToDictionary(text: (responseStr))
+                print(res)
+                let patient_id : String? = res?["id"]
+                print("Patient id is \(patient_id ?? "0")")
+                let newPatient = patient(id: patient_id ?? "0", name: name, gender: gender, DOB: date)
+                patientList.items.append(newPatient)
+            }).resume()
+        }
+        else{
+            let newPatient = patient(id: id, name: name, gender: gender, DOB: date)
+            patientList.items.append(newPatient)
+        }
     }
 }
 
@@ -297,6 +354,7 @@ struct newLovedOneView: View {
         }
         .navigationViewStyle(.stack)
     }
+    
     //hard code for now, add API access later
     //Once we connect with Backend then pass mp4 file in add_loved_one
     func add_loved_one(id:String, patiendID: String, name:String, gender:String, date:Date, picture:Data){
