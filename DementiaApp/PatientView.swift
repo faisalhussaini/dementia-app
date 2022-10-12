@@ -166,20 +166,46 @@ struct PatientView: View {
         }
     }
     func load_loved_ones(){
-        let mode:Int = 0;
+        let mode : Int = 0
         if(mode == 1){
-            //TODO: At some point backend code needs to be deployed...
-            //TODO: should loop over patients and use their uuid as i here
-            let i = 0
-            let url = URL(string: "http://127.0.0.1:5000/all_loved_ones/" + String(i))!
-            
-            let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
-                guard let data = data else { return }
-                //TODO: Actually parse this
-                print(String(data: data, encoding: .utf8)!)
+            //fetch all the loved ones
+            guard let url: URL = URL(string: "http://127.0.0.1:5000/all_loved_ones") else {
+                print("Invalid url")
+                return
             }
             
-            task.resume()
+            var urlRequest: URLRequest = URLRequest(url: url)
+            urlRequest.httpMethod = "GET"
+            
+            //urlRequest.httpBody = jsonData
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            URLSession.shared.dataTask(with: urlRequest, completionHandler: {
+                (data, response, error) in
+                guard let data = data else{
+                    print("invalid data")
+                    return
+                }
+                let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
+                print(responseStr)
+                let res : [String:[[String : String]]] = convertToDictionaryList(text:responseStr) ?? ["" : [["":""]]]
+                print(res)
+                let all_loved_ones : [[String : String]] = res["loved_ones"] ?? [["":""]]
+                for lo in all_loved_ones{
+                    let gender : String = lo["gender"] ?? ""
+                    let patientId : String = lo["p_idx"] ?? ""
+                    let id : String = lo["lo_idx"] ?? ""
+                    let name : String  = lo["name"] ?? ""
+                    let dob : String = lo["DOB"] ?? ""
+                    let dF : DateFormatter = DateFormatter()
+                    // Convert string to date
+                    dF.dateFormat = "YY/MM/dd"
+                    let date = dF.date(from: dob) ?? Date()
+                    //print(date)
+                    let curr_loved_one: lovedOne = lovedOne(id: id, patientID: patientId, name: name, gender: gender, DOB: date, picture: Data())
+                    //TODO: Why is the picture field here? we only use it on upload, it shouldnt be stored in memory with the loved one
+                    lovedOneList.items.append(curr_loved_one)
+                }
+            }).resume()
         }
         else{
             for i in 1...15{
