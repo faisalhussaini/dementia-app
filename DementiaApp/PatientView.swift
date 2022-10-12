@@ -9,6 +9,8 @@
 import SwiftUI
 import AVKit
 
+let useBackend : Bool = false
+
 func convertToDictionary(text: String) -> [String: String]? {
     if let data = text.data(using: .utf8) {
         do {
@@ -77,8 +79,7 @@ struct PatientView: View {
         .ignoresSafeArea()
     }
     func removeItems(at offsets: IndexSet) {
-        let mode : Int = 0
-        if(mode == 1){
+        if(useBackend){
             for index in offsets{
                 let patient : patient = patientList.items[index]
                 guard let url: URL = URL(string: "http://127.0.0.1:5000/patients") else {
@@ -115,8 +116,7 @@ struct PatientView: View {
     }
     //For now just hard code this, access API endpoint later
     func load_patients(){
-        let mode : Int = 0
-        if(mode == 1){
+        if(useBackend){
             //fetch all the patients
             guard let url: URL = URL(string: "http://127.0.0.1:5000/all_patients") else {
                 print("Invalid url")
@@ -166,8 +166,7 @@ struct PatientView: View {
         }
     }
     func load_loved_ones(){
-        let mode : Int = 0
-        if(mode == 1){
+        if(useBackend){
             //fetch all the loved ones
             guard let url: URL = URL(string: "http://127.0.0.1:5000/all_loved_ones") else {
                 print("Invalid url")
@@ -261,8 +260,7 @@ struct LovedOneView: View {
         .ignoresSafeArea()
     }
     func removeItems(at offsets: IndexSet) {
-        let mode : Int = 0
-        if(mode == 1){
+        if(useBackend){
             for index in offsets{
                 let lovedOne : lovedOne = lovedOneList.items[index]
                 guard let url: URL = URL(string: "http://127.0.0.1:5000/loved_ones") else {
@@ -342,8 +340,7 @@ struct newPatientView: View {
     
     //hard code for now, add API access
     func add_patient(id: String, name: String, gender:String, date:Date){
-        let mode : Int = 0
-        if(mode == 1){
+        if(useBackend){
             //Upload patient to the server
             guard let url: URL = URL(string: "http://127.0.0.1:5000/patients") else {
                 print("Invalid url")
@@ -492,10 +489,9 @@ struct newLovedOneView: View {
     //hard code for now, add API access later
     //Once we connect with Backend then pass mp4 file in add_loved_one
     func add_loved_one(id:String, patiendID: String, name:String, gender:String, date:Date, picture:Data){
-        let mode : Int = 0
         let upload_img : Bool = true
         
-        if(mode == 1){
+        if(useBackend){
             //Upload patient to the server
             guard let url: URL = URL(string: "http://127.0.0.1:5000/loved_ones") else {
                 print("Invalid url")
