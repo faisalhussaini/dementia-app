@@ -20,6 +20,17 @@ func convertToDictionary(text: String) -> [String: String]? {
     return nil
 }
 
+func convertToDictionaryList(text: String) -> [String: [[String : String]]]? {
+    if let data = text.data(using: .utf8) {
+        do {
+            return try JSONSerialization.jsonObject(with: data, options: []) as? [String: [[String : String]]]
+        } catch {
+            print(error.localizedDescription)
+        }
+    }
+    return nil
+}
+
 struct PatientView: View {
     
     @StateObject var patientList = patients()
@@ -104,18 +115,44 @@ struct PatientView: View {
     }
     //For now just hard code this, access API endpoint later
     func load_patients(){
-        let mode:Int = 0;
+        let mode : Int = 0
         if(mode == 1){
-            //TODO: At some point backend code needs to be deployed...
-            let url = URL(string: "http://127.0.0.1:5000/all_patients")!
-            
-            let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
-                guard let data = data else { return }
-                //TODO: Actually parse this and store in a dictionary
-                print(String(data: data, encoding: .utf8)!)
+            //fetch all the patients
+            guard let url: URL = URL(string: "http://127.0.0.1:5000/all_patients") else {
+                print("Invalid url")
+                return
             }
             
-            task.resume()
+            var urlRequest: URLRequest = URLRequest(url: url)
+            urlRequest.httpMethod = "GET"
+            
+            //urlRequest.httpBody = jsonData
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            URLSession.shared.dataTask(with: urlRequest, completionHandler: {
+                (data, response, error) in
+                guard let data = data else{
+                    print("invalid data")
+                    return
+                }
+                let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
+                print(responseStr)
+                let res : [String:[[String : String]]] = convertToDictionaryList(text:responseStr) ?? ["" : [["":""]]]
+                print(res)
+                let all_patients : [[String : String]] = res["patients"] ?? [["":""]]
+                for p in all_patients{
+                    let gender : String = p["gender"] ?? ""
+                    let id : String = p["p_idx"] ?? ""
+                    let name : String  = p["name"] ?? ""
+                    let dob : String = p["DOB"] ?? ""
+                    let dF : DateFormatter = DateFormatter()
+                    // Convert string to date
+                    dF.dateFormat = "YY/MM/dd"
+                    let date = dF.date(from: dob) ?? Date()
+                    print(date)
+                    let curr_patient: patient = patient(id: id, name: name, gender: gender, DOB: date)
+                    patientList.items.append(curr_patient)
+                }
+            }).resume()
         }
         else{
             let patient1: patient = patient(id: "1", name: "Faisal Hussaini", gender: "male", DOB: Date())
