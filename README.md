@@ -15,4 +15,5 @@ If you get into the project and it says some bs about a missing xc environment, 
 1) goto General Project settings
 2) scroll down to Frameworks, Libraries, and Embedded Content
 3) Finally make sure the one package that is there has Embed label: Embed & Sign
+-> If not, change it to Embed and Sign, then rebuild and all will be well
 
