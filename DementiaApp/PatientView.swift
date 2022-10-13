@@ -8,8 +8,9 @@
 
 import SwiftUI
 import AVKit
+import Alamofire
 
-let useBackend : Bool = false
+let useBackend : Bool = true
 
 func convertToDictionary(text: String) -> [String: String]? {
     if let data = text.data(using: .utf8) {
@@ -470,7 +471,8 @@ struct newLovedOneView: View {
                 Button {
                     //Once we connect with Backend then pass mp4 file and image in add_loved_one
                     let imageData: Data = lovedOneImage.jpegData(compressionQuality: 0.5) ?? Data()
-                    add_loved_one(id: "21", patiendID: patientID, name: name, gender: gender, date: date, picture: imageData)
+                    
+                    add_loved_one(id: "21", patiendID: patientID, name: name, gender: gender, date: date, picture: imageData, recorded: audioRecorder)
                     presentationMode.wrappedValue.dismiss()
                 } label : {
                     Text("Save")
@@ -488,9 +490,9 @@ struct newLovedOneView: View {
     
     //hard code for now, add API access later
     //Once we connect with Backend then pass mp4 file in add_loved_one
-    func add_loved_one(id:String, patiendID: String, name:String, gender:String, date:Date, picture:Data){
+    func add_loved_one(id:String, patiendID: String, name:String, gender:String, date:Date, picture:Data, recorded:AudioRecorder){
         let upload_img : Bool = true
-        
+        print("Adding a loved one\n");
         if(useBackend){
             //Upload patient to the server
             guard let url: URL = URL(string: "http://127.0.0.1:5000/loved_ones") else {
@@ -558,6 +560,23 @@ struct newLovedOneView: View {
                         print(responseStr)
                     }).resume()
                 }
+                //send the recorded audio file to server
+                let documentPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]//where do you want to save
+                let audioFilename = documentPath.appendingPathComponent("Recording.m4a")
+                var response: DataResponse<Data?, AFError>?
+                guard let data = try? Data(contentsOf: audioFilename) else {
+                    print("failed")
+                    return
+                }
+                let request = AF.upload(multipartFormData: { multipartFormData in multipartFormData.append(data, withName: "loved_one.mp3")
+                    },
+                    to: "http://127.0.0.1:5000/upload_audio/" + patiendID + "/" + (loved_one_id ?? "0")
+                    ,method: .post ).response { resp in
+                            response = resp
+                            print("got response")
+                            print(resp)
+
+                        }
             }).resume()
             
             
