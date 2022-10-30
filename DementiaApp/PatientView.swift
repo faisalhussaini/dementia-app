@@ -146,20 +146,25 @@ struct PatientView: View {
                     let name : String  = p["name"] ?? ""
                     let dob : String = p["DOB"] ?? ""
                     let dF : DateFormatter = DateFormatter()
+                    let children : String = p["children"] ?? ""
+                    let spouse : String = p["spouse"] ?? ""
+                    let placeOfResidence : String = p["placeOfResidence"] ?? ""
+                    let hobbies : String = p["hobbies"] ?? ""
+                    let hospitalName : String = p["hospitalName"] ?? ""
                     // Convert string to date
                     dF.dateFormat = "YY/MM/dd"
                     let date = dF.date(from: dob) ?? Date()
                     print(date)
-                    let curr_patient: patient = patient(id: id, name: name, gender: gender, DOB: date)
+                    let curr_patient: patient = patient(id: id, name: name, gender: gender, DOB: date, children: children, spouse: spouse, placeOfResidence: placeOfResidence, hobbies: hobbies, hospitalName: hospitalName)
                     patientList.items.append(curr_patient)
                 }
             }).resume()
         }
         else{
-            let patient1: patient = patient(id: "1", name: "Faisal Hussaini", gender: "male", DOB: Date())
-            let patient2: patient = patient(id: "2", name: "Julian Humecki", gender: "male", DOB: Date())
-            let patient3: patient = patient(id: "3", name: "Hassan Khan", gender: "male", DOB: Date())
-            let patient4: patient = patient(id: "4", name: "Omar Abou El Naja", gender: "male", DOB: Date())
+            let patient1: patient = patient(id: "1", name: "Faisal Hussaini", gender: "male", DOB: Date(), children:"John Bob", spouse:"wife: Non existent", placeOfResidence:"Toronto", hobbies:"nothing", hospitalName: "UofT")
+            let patient2: patient = patient(id: "2", name: "Julian Humecki", gender: "male", DOB: Date(), children:"John Bob", spouse:"wife: Non existent", placeOfResidence:"Toronto", hobbies:"nothing", hospitalName: "UofT")
+            let patient3: patient = patient(id: "3", name: "Hassan Khan", gender: "male", DOB: Date(), children:"John Bob", spouse:"wife: Non existent", placeOfResidence:"Toronto", hobbies:"nothing", hospitalName: "UofT")
+            let patient4: patient = patient(id: "4", name: "Omar Abou El Naja", gender: "male", DOB: Date(), children:"John Bob", spouse:"wife: Non existent", placeOfResidence:"Toronto", hobbies:"nothing", hospitalName: "UofT")
             patientList.items.append(patient1)
             patientList.items.append(patient2)
             patientList.items.append(patient3)
@@ -196,13 +201,16 @@ struct PatientView: View {
                     let id : String = lo["lo_idx"] ?? ""
                     let name : String  = lo["name"] ?? ""
                     let dob : String = lo["DOB"] ?? ""
+                    let children : String = lo["children"] ?? ""
+                    let spouse : String = lo["spouse"] ?? ""
+                    let placeOfResidence : String = lo["placeOfResidence"] ?? ""
+                    let hobbies : String = lo["hobbies"] ?? ""
                     let dF : DateFormatter = DateFormatter()
                     // Convert string to date
                     dF.dateFormat = "YY/MM/dd"
                     let date = dF.date(from: dob) ?? Date()
                     //print(date)
-                    let curr_loved_one: lovedOne = lovedOne(id: id, patientID: patientId, name: name, gender: gender, DOB: date, picture: Data())
-                    //TODO: Why is the picture field here? we only use it on upload, it shouldnt be stored in memory with the loved one
+                    let curr_loved_one: lovedOne = lovedOne(id: id, patientID: patientId, name: name, gender: gender, DOB: date, children: children, spouse: spouse, placeOfResidence: placeOfResidence, hobbies: hobbies)
                     lovedOneList.items.append(curr_loved_one)
                 }
             }).resume()
@@ -210,7 +218,7 @@ struct PatientView: View {
         else{
             for i in 1...15{
                 let name = "Loved One" + String(i)
-                let newLovedOne: lovedOne = lovedOne(id: String(i), patientID: String((i % 4) + 1), name: name, gender: "male", DOB: Date(), picture: Data())
+                let newLovedOne: lovedOne = lovedOne(id: String(i), patientID: String((i % 4) + 1), name: name, gender: "male", DOB: Date(), children:"John Bob", spouse:"wife: Non existent", placeOfResidence:"Toronto", hobbies:"nothing")
                 lovedOneList.items.append(newLovedOne)
             }
         }
@@ -307,23 +315,33 @@ struct newPatientView: View {
     @State private var date = Date()
     @State private var name: String = ""
     @State private var gender: String = ""
+    @State private var children: String = ""
+    @State private var spouse: String = ""
+    @State private var placeOfResidence: String = ""
+    @State private var hobbies: String = ""
+    @State private var hospitalName: String = ""
     var body: some View {
         NavigationView {
             VStack {
                 Form {
                     Section {
                         TextField("Patient's Name", text: $name)
-                        DatePicker("Patient's Birthday", selection : $date, displayedComponents: .date)
+                        DatePicker("Patient's Date of Birth", selection : $date, displayedComponents: .date)
                         Picker("Patient's Gender", selection: $gender) {
                             ForEach(genders, id: \.self) {
                                 Text($0)
                             }
                         }
+                        TextField("Patient's children seperated by commas. Example: 'John Smith, Jack Smith'", text: $children)
+                        TextField("Patient's spouse/partner and their name. Example: 'husband: Harry Smith'", text: $spouse)
+                        TextField("Patient's place of residence", text: $placeOfResidence)
+                        TextField("Patient's hobbies seperated by commas. Example: 'swimming, poetry, cooking'", text: $hobbies)
+                        TextField("Name of the hospital patient is staying in", text: $hospitalName)
                     }
                 }
                 .navigationBarTitle("New Patient")
                 Button {
-                    add_patient(id: "21", name: name, gender: gender, date: date)
+                    add_patient(id: "21", name: name, gender: gender, date: date, children:children, spouse:spouse, placeOfResidence:placeOfResidence, hobbies:hobbies, hospitalName:hospitalName)
                     presentationMode.wrappedValue.dismiss()
                 } label : {
                     Text("Save")
@@ -340,7 +358,7 @@ struct newPatientView: View {
     }
     
     //hard code for now, add API access
-    func add_patient(id: String, name: String, gender:String, date:Date){
+    func add_patient(id: String, name: String, gender:String, date:Date, children:String, spouse:String, placeOfResidence:String, hobbies:String, hospitalName:String){
         if(useBackend){
             //Upload patient to the server
             guard let url: URL = URL(string: "http://127.0.0.1:5000/patients") else {
@@ -357,7 +375,12 @@ struct newPatientView: View {
             let parameters: [String: String] = [
                 "name": name,
                 "gender": gender,
-                "DOB": dob
+                "DOB": dob,
+                "children": children,
+                "spouse": spouse,
+                "placeOfResidence":placeOfResidence,
+                "hobbies":hobbies,
+                "hospitalName":hospitalName
             ]
             let encoder = JSONEncoder()
             if let jsonData = try? encoder.encode(parameters) {
@@ -381,12 +404,12 @@ struct newPatientView: View {
                 print(res)
                 let patient_id : String? = res?["id"]
                 print("Patient id is \(patient_id ?? "0")")
-                let newPatient = patient(id: patient_id ?? "0", name: name, gender: gender, DOB: date)
+                let newPatient = patient(id: patient_id ?? "0", name: name, gender: gender, DOB: date, children:children, spouse:spouse, placeOfResidence:placeOfResidence, hobbies:hobbies, hospitalName:hospitalName)
                 patientList.items.append(newPatient)
             }).resume()
         }
         else{
-            let newPatient = patient(id: id, name: name, gender: gender, DOB: date)
+            let newPatient = patient(id: id, name: name, gender: gender, DOB: date, children:children, spouse:spouse, placeOfResidence:placeOfResidence, hobbies:hobbies, hospitalName:hospitalName)
             patientList.items.append(newPatient)
         }
     }
@@ -406,6 +429,10 @@ struct newLovedOneView: View {
     @State private var audioFile: Recording?
     @State private var isShowingPhotoPicker = false
     @State private var lovedOneImage = UIImage(named: "default-avatar")!
+    @State private var children: String = ""
+    @State private var spouse: String = ""
+    @State private var placeOfResidence: String = ""
+    @State private var hobbies: String = ""
     @Environment(\.dismiss) var dismiss
     var body: some View {
         NavigationView {
@@ -413,12 +440,16 @@ struct newLovedOneView: View {
                 Form {
                     Section {
                         TextField("Loved One's Name", text: $name)
-                        DatePicker("Loved One's Birthday", selection : $date, displayedComponents: .date)
+                        DatePicker("Loved One's Date of birth", selection : $date, displayedComponents: .date)
                         Picker("Loved Ones's Gender", selection: $gender) {
                             ForEach(genders, id: \.self) {
                                 Text($0)
                             }
                         }
+                        TextField("Loved One's children seperated by commas. Example: 'John Smith, Jack Smith'", text: $children)
+                        TextField("Loved One's spouse/partner and their name. Example: 'husband: Harry Smith'", text: $spouse)
+                        TextField("Loved One's place of residence", text: $placeOfResidence)
+                        TextField("Loved One's hobbies seperated by commas. Example: 'swimming, poetry, cooking'", text: $hobbies)
                     }
                     //https://www.youtube.com/watch?v=V-kSSjh1T74
                     //once we connect with backend then upload lovedOneImage in add_loved_one, for now do nothing
@@ -435,7 +466,7 @@ struct newLovedOneView: View {
                         Text("Select Image of Loved One")
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
-                    .navigationTitle("Profile")
+                    .navigationTitle("New Loved One")
                     .sheet(isPresented: $isShowingPhotoPicker) {
                         PhotoPicker(lovedOneImage: $lovedOneImage)
                     }
@@ -472,7 +503,7 @@ struct newLovedOneView: View {
                     //Once we connect with Backend then pass mp4 file and image in add_loved_one
                     let imageData: Data = lovedOneImage.jpegData(compressionQuality: 0.5) ?? Data()
                     
-                    add_loved_one(id: "21", patiendID: patientID, name: name, gender: gender, date: date, picture: imageData, recorded: audioRecorder)
+                    add_loved_one(id: "21", patiendID: patientID, name: name, gender: gender, date: date, picture: imageData, children:children, spouse:spouse, placeOfResidence:placeOfResidence, hobbies:hobbies)
                     presentationMode.wrappedValue.dismiss()
                 } label : {
                     Text("Save")
@@ -490,7 +521,7 @@ struct newLovedOneView: View {
     
     //hard code for now, add API access later
     //Once we connect with Backend then pass mp4 file in add_loved_one
-    func add_loved_one(id:String, patiendID: String, name:String, gender:String, date:Date, picture:Data, recorded:AudioRecorder){
+    func add_loved_one(id:String, patiendID: String, name:String, gender:String, date:Date, picture:Data, children:String, spouse:String, placeOfResidence:String, hobbies:String){
         let upload_img : Bool = true
         print("Adding a loved one\n");
         if(useBackend){
@@ -510,7 +541,11 @@ struct newLovedOneView: View {
                 "p_idx": patiendID,
                 "name": name,
                 "gender": gender,
-                "DOB": dob
+                "DOB": dob,
+                "children": children,
+                "spouse": spouse,
+                "placeOfResidence":placeOfResidence,
+                "hobbies":hobbies
             ]
             let encoder = JSONEncoder()
             if let jsonData = try? encoder.encode(parameters) {
@@ -533,7 +568,7 @@ struct newLovedOneView: View {
                 print(res)
                 let loved_one_id : String? = res?["id"]
                 print("Loved one id is \(loved_one_id ?? "0")")
-                let newLovedOne = lovedOne(id: loved_one_id ?? "0", patientID: patientID,  name: name, gender: gender, DOB: date, picture: picture)
+                let newLovedOne = lovedOne(id: loved_one_id ?? "0", patientID: patientID,  name: name, gender: gender, DOB: date, children:children, spouse:spouse, placeOfResidence:placeOfResidence, hobbies:hobbies)
                 lovedOneList.items.append(newLovedOne)
                 if(upload_img){
                     //Upload the image to the server
@@ -582,7 +617,7 @@ struct newLovedOneView: View {
             
         }
         else{
-            let newLovedOne = lovedOne(id: id, patientID: patientID,  name: name, gender: gender, DOB: date, picture: picture)
+            let newLovedOne = lovedOne(id: id, patientID: patientID,  name: name, gender: gender, DOB: date, children:children, spouse:spouse, placeOfResidence:placeOfResidence, hobbies:hobbies)
             lovedOneList.items.append(newLovedOne)
         }
         

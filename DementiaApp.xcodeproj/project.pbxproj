@@ -14,6 +14,8 @@
 		CF70C8C628EE7D5600C0BD42 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF70C8C528EE7D5600C0BD42 /* AudioRecorder.swift */; };
 		CF70C8CC28EE804100C0BD42 /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF70C8CB28EE804100C0BD42 /* AudioPlayer.swift */; };
 		CF70C8CE28EE807000C0BD42 /* RecordingsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF70C8CD28EE807000C0BD42 /* RecordingsList.swift */; };
+		CF876B1828FB7FCF005D44AC /* Pods_DementiaApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33F89C145C2E01CFCDBAD044 /* Pods_DementiaApp.framework */; };
+		CF876B1928FB7FCF005D44AC /* Pods_DementiaApp.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 33F89C145C2E01CFCDBAD044 /* Pods_DementiaApp.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CFB77B1028D8DE3C00D3F39D /* StructsDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB77B0F28D8DE3C00D3F39D /* StructsDB.swift */; };
 		CFB77B1228D8DED200D3F39D /* contacts.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB77B1128D8DED200D3F39D /* contacts.swift */; };
 		CFD8EF3028F1FE4300DB94F7 /* PhotoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD8EF2F28F1FE4300DB94F7 /* PhotoPicker.swift */; };
@@ -23,7 +25,23 @@
 		CFE5055128D7892200825BC9 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFE5055028D7892200825BC9 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		CF876B1A28FB7FCF005D44AC /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				CF876B1928FB7FCF005D44AC /* Pods_DementiaApp.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		33F89C145C2E01CFCDBAD044 /* Pods_DementiaApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DementiaApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		48367EE8DDE9E7A98B5AA9CB /* Pods-DementiaApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DementiaApp.release.xcconfig"; path = "Target Support Files/Pods-DementiaApp/Pods-DementiaApp.release.xcconfig"; sourceTree = "<group>"; };
 		CF059CEB28E64335000E2DBA /* AppleLogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLogo.swift; sourceTree = "<group>"; };
 		CF059CEF28E6469B000E2DBA /* bob.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = bob.mp3; sourceTree = "<group>"; };
 		CF059CF128E64936000E2DBA /* AppleLogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleLogoView.swift; sourceTree = "<group>"; };
@@ -39,6 +57,7 @@
 		CFE5054B28D7892100825BC9 /* PatientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientView.swift; sourceTree = "<group>"; };
 		CFE5054D28D7892200825BC9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CFE5055028D7892200825BC9 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		FCF6EA4B89408B77F8465AD3 /* Pods-DementiaApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DementiaApp.debug.xcconfig"; path = "Target Support Files/Pods-DementiaApp/Pods-DementiaApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -46,17 +65,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CF876B1828FB7FCF005D44AC /* Pods_DementiaApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A83FA805AC79F7235FF5851B /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				FCF6EA4B89408B77F8465AD3 /* Pods-DementiaApp.debug.xcconfig */,
+				48367EE8DDE9E7A98B5AA9CB /* Pods-DementiaApp.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		C1752FA4A936588B3F3552E9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				33F89C145C2E01CFCDBAD044 /* Pods_DementiaApp.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		CFE5053D28D7892100825BC9 = {
 			isa = PBXGroup;
 			children = (
 				CFE5054828D7892100825BC9 /* DementiaApp */,
 				CFE5054728D7892100825BC9 /* Products */,
+				A83FA805AC79F7235FF5851B /* Pods */,
+				C1752FA4A936588B3F3552E9 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -104,9 +143,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CFE5055428D7892200825BC9 /* Build configuration list for PBXNativeTarget "DementiaApp" */;
 			buildPhases = (
+				22BAF259005B8DBB9503DB50 /* [CP] Check Pods Manifest.lock */,
 				CFE5054228D7892100825BC9 /* Sources */,
 				CFE5054328D7892100825BC9 /* Frameworks */,
 				CFE5054428D7892100825BC9 /* Resources */,
+				AD51A1FB2B8C4EF01F68BED7 /* [CP] Embed Pods Frameworks */,
+				CF876B1A28FB7FCF005D44AC /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -162,6 +204,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		22BAF259005B8DBB9503DB50 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-DementiaApp-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		AD51A1FB2B8C4EF01F68BED7 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-DementiaApp/Pods-DementiaApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-DementiaApp/Pods-DementiaApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-DementiaApp/Pods-DementiaApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		CFE5054228D7892100825BC9 /* Sources */ = {
@@ -301,6 +385,7 @@
 		};
 		CFE5055528D7892200825BC9 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FCF6EA4B89408B77F8465AD3 /* Pods-DementiaApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -334,6 +419,7 @@
 		};
 		CFE5055628D7892200825BC9 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 48367EE8DDE9E7A98B5AA9CB /* Pods-DementiaApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

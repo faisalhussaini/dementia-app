@@ -14,6 +14,11 @@ struct patient: Identifiable {
     let name: String
     let gender: String
     let DOB: Date
+    let children: String
+    let spouse: String
+    let placeOfResidence: String
+    let hobbies: String
+    let hospitalName: String
 }
 
 struct Recording {
@@ -29,6 +34,9 @@ struct lovedOne: Identifiable {
     let name: String
     let gender: String
     let DOB: Date
-    let picture: Data
-    //let recording: Recording?
+    //let picture: Data
+    let children: String
+    let spouse: String
+    let placeOfResidence: String
+    let hobbies: String
 }
