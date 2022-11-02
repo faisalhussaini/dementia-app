@@ -12,6 +12,15 @@ import Alamofire
 
 let useBackend : Bool = true
 
+func convertDictionaryToString(dic: [String : String]) -> String{
+    var res:String = ""
+    for (key,val) in dic{
+        //TODO: do this cleaner, I cant use commas because the value can have commas in it...
+        res += key + ":" + val + ";"
+    }
+    return res
+}
+
 func convertToDictionary(text: String) -> [String: String]? {
     if let data = text.data(using: .utf8) {
         do {
@@ -389,6 +398,7 @@ struct newPatientView: View {
                 "name": name,
                 "gender": gender,
                 "DOB": dob,
+                "responses": convertDictionaryToString(dic: questionResponses),
             ]
             let encoder = JSONEncoder()
             if let jsonData = try? encoder.encode(parameters) {
@@ -568,6 +578,7 @@ struct newLovedOneView: View {
                 "name": name,
                 "gender": gender,
                 "DOB": dob,
+                "responses" : convertDictionaryToString(dic: questionResponses),
             ]
             let encoder = JSONEncoder()
             if let jsonData = try? encoder.encode(parameters) {
