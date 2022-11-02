@@ -146,25 +146,20 @@ struct PatientView: View {
                     let name : String  = p["name"] ?? ""
                     let dob : String = p["DOB"] ?? ""
                     let dF : DateFormatter = DateFormatter()
-                    let children : String = p["children"] ?? ""
-                    let spouse : String = p["spouse"] ?? ""
-                    let placeOfResidence : String = p["placeOfResidence"] ?? ""
-                    let hobbies : String = p["hobbies"] ?? ""
-                    let hospitalName : String = p["hospitalName"] ?? ""
                     // Convert string to date
                     dF.dateFormat = "YY/MM/dd"
                     let date = dF.date(from: dob) ?? Date()
                     print(date)
-                    let curr_patient: patient = patient(id: id, name: name, gender: gender, DOB: date, children: children, spouse: spouse, placeOfResidence: placeOfResidence, hobbies: hobbies, hospitalName: hospitalName)
+                    let curr_patient: patient = patient(id: id, name: name, gender: gender, DOB: date)
                     patientList.items.append(curr_patient)
                 }
             }).resume()
         }
         else{
-            let patient1: patient = patient(id: "1", name: "Faisal Hussaini", gender: "male", DOB: Date(), children:"John Bob", spouse:"wife: Non existent", placeOfResidence:"Toronto", hobbies:"nothing", hospitalName: "UofT")
-            let patient2: patient = patient(id: "2", name: "Julian Humecki", gender: "male", DOB: Date(), children:"John Bob", spouse:"wife: Non existent", placeOfResidence:"Toronto", hobbies:"nothing", hospitalName: "UofT")
-            let patient3: patient = patient(id: "3", name: "Hassan Khan", gender: "male", DOB: Date(), children:"John Bob", spouse:"wife: Non existent", placeOfResidence:"Toronto", hobbies:"nothing", hospitalName: "UofT")
-            let patient4: patient = patient(id: "4", name: "Omar Abou El Naja", gender: "male", DOB: Date(), children:"John Bob", spouse:"wife: Non existent", placeOfResidence:"Toronto", hobbies:"nothing", hospitalName: "UofT")
+            let patient1: patient = patient(id: "1", name: "Faisal Hussaini", gender: "male", DOB: Date())
+            let patient2: patient = patient(id: "2", name: "Julian Humecki", gender: "male", DOB: Date())
+            let patient3: patient = patient(id: "3", name: "Hassan Khan", gender: "male", DOB: Date())
+            let patient4: patient = patient(id: "4", name: "Omar Abou El Naja", gender: "male", DOB: Date())
             patientList.items.append(patient1)
             patientList.items.append(patient2)
             patientList.items.append(patient3)
@@ -201,16 +196,12 @@ struct PatientView: View {
                     let id : String = lo["lo_idx"] ?? ""
                     let name : String  = lo["name"] ?? ""
                     let dob : String = lo["DOB"] ?? ""
-                    let children : String = lo["children"] ?? ""
-                    let spouse : String = lo["spouse"] ?? ""
-                    let placeOfResidence : String = lo["placeOfResidence"] ?? ""
-                    let hobbies : String = lo["hobbies"] ?? ""
                     let dF : DateFormatter = DateFormatter()
                     // Convert string to date
                     dF.dateFormat = "YY/MM/dd"
                     let date = dF.date(from: dob) ?? Date()
                     //print(date)
-                    let curr_loved_one: lovedOne = lovedOne(id: id, patientID: patientId, name: name, gender: gender, DOB: date, children: children, spouse: spouse, placeOfResidence: placeOfResidence, hobbies: hobbies)
+                    let curr_loved_one: lovedOne = lovedOne(id: id, patientID: patientId, name: name, gender: gender, DOB: date)
                     lovedOneList.items.append(curr_loved_one)
                 }
             }).resume()
@@ -218,7 +209,7 @@ struct PatientView: View {
         else{
             for i in 1...15{
                 let name = "Loved One" + String(i)
-                let newLovedOne: lovedOne = lovedOne(id: String(i), patientID: String((i % 4) + 1), name: name, gender: "male", DOB: Date(), children:"John Bob", spouse:"wife: Non existent", placeOfResidence:"Toronto", hobbies:"nothing")
+                let newLovedOne: lovedOne = lovedOne(id: String(i), patientID: String((i % 4) + 1), name: name, gender: "male", DOB: Date())
                 lovedOneList.items.append(newLovedOne)
             }
         }
@@ -320,6 +311,11 @@ struct newPatientView: View {
     @State private var placeOfResidence: String = ""
     @State private var hobbies: String = ""
     @State private var hospitalName: String = ""
+    @State private var questionResponses = ["children": "",
+                             "spouse": "",
+                             "placeOfResidence": "",
+                             "hobbies": "",
+                             "hospitalName": ""]
     var body: some View {
         NavigationView {
             VStack {
@@ -339,9 +335,26 @@ struct newPatientView: View {
                         TextField("Name of the hospital patient is staying in", text: $hospitalName)
                     }
                 }
+                
+                .onChange(of: children, perform: { string in
+                    questionResponses["children"] = children
+                })
+                .onChange(of: spouse, perform: { string in
+                    questionResponses["spouse"] = spouse
+                })
+                .onChange(of: placeOfResidence, perform: { string in
+                    questionResponses["placeOfResidence"] = placeOfResidence
+                })
+                .onChange(of: hobbies, perform: { string in
+                    questionResponses["hobbies"] = hobbies
+                })
+                .onChange(of: hospitalName, perform: { string in
+                    questionResponses["hospitalName"] = hospitalName
+                })
+                
                 .navigationBarTitle("New Patient")
                 Button {
-                    add_patient(id: "21", name: name, gender: gender, date: date, children:children, spouse:spouse, placeOfResidence:placeOfResidence, hobbies:hobbies, hospitalName:hospitalName)
+                    add_patient(id: "21", name: name, gender: gender, date: date, questionResponses: questionResponses)
                     presentationMode.wrappedValue.dismiss()
                 } label : {
                     Text("Save")
@@ -358,7 +371,7 @@ struct newPatientView: View {
     }
     
     //hard code for now, add API access
-    func add_patient(id: String, name: String, gender:String, date:Date, children:String, spouse:String, placeOfResidence:String, hobbies:String, hospitalName:String){
+    func add_patient(id: String, name: String, gender:String, date:Date, questionResponses: [String: String]){
         if(useBackend){
             //Upload patient to the server
             guard let url: URL = URL(string: "http://127.0.0.1:5000/patients") else {
@@ -376,11 +389,6 @@ struct newPatientView: View {
                 "name": name,
                 "gender": gender,
                 "DOB": dob,
-                "children": children,
-                "spouse": spouse,
-                "placeOfResidence":placeOfResidence,
-                "hobbies":hobbies,
-                "hospitalName":hospitalName
             ]
             let encoder = JSONEncoder()
             if let jsonData = try? encoder.encode(parameters) {
@@ -404,12 +412,12 @@ struct newPatientView: View {
                 print(res)
                 let patient_id : String? = res?["id"]
                 print("Patient id is \(patient_id ?? "0")")
-                let newPatient = patient(id: patient_id ?? "0", name: name, gender: gender, DOB: date, children:children, spouse:spouse, placeOfResidence:placeOfResidence, hobbies:hobbies, hospitalName:hospitalName)
+                let newPatient = patient(id: patient_id ?? "0", name: name, gender: gender, DOB: date)
                 patientList.items.append(newPatient)
             }).resume()
         }
         else{
-            let newPatient = patient(id: id, name: name, gender: gender, DOB: date, children:children, spouse:spouse, placeOfResidence:placeOfResidence, hobbies:hobbies, hospitalName:hospitalName)
+            let newPatient = patient(id: id, name: name, gender: gender, DOB: date)
             patientList.items.append(newPatient)
         }
     }
@@ -433,6 +441,10 @@ struct newLovedOneView: View {
     @State private var spouse: String = ""
     @State private var placeOfResidence: String = ""
     @State private var hobbies: String = ""
+    @State private var questionResponses = ["children": "",
+                             "spouse": "",
+                             "placeOfResidence": "",
+                             "hobbies": ""]
     @Environment(\.dismiss) var dismiss
     var body: some View {
         NavigationView {
@@ -499,11 +511,25 @@ struct newLovedOneView: View {
                     }
                 }
                 .navigationBarTitle("New Loved One")
+                
+                .onChange(of: children, perform: { string in
+                    questionResponses["children"] = children
+                })
+                .onChange(of: spouse, perform: { string in
+                    questionResponses["spouse"] = spouse
+                })
+                .onChange(of: placeOfResidence, perform: { string in
+                    questionResponses["placeOfResidence"] = placeOfResidence
+                })
+                .onChange(of: hobbies, perform: { string in
+                    questionResponses["hobbies"] = hobbies
+                })
+                
                 Button {
                     //Once we connect with Backend then pass mp4 file and image in add_loved_one
                     let imageData: Data = lovedOneImage.jpegData(compressionQuality: 0.5) ?? Data()
                     
-                    add_loved_one(id: "21", patiendID: patientID, name: name, gender: gender, date: date, picture: imageData, children:children, spouse:spouse, placeOfResidence:placeOfResidence, hobbies:hobbies)
+                    add_loved_one(id: "21", patiendID: patientID, name: name, gender: gender, date: date, picture: imageData, questionResponses: questionResponses)
                     presentationMode.wrappedValue.dismiss()
                 } label : {
                     Text("Save")
@@ -521,7 +547,7 @@ struct newLovedOneView: View {
     
     //hard code for now, add API access later
     //Once we connect with Backend then pass mp4 file in add_loved_one
-    func add_loved_one(id:String, patiendID: String, name:String, gender:String, date:Date, picture:Data, children:String, spouse:String, placeOfResidence:String, hobbies:String){
+    func add_loved_one(id:String, patiendID: String, name:String, gender:String, date:Date, picture:Data, questionResponses: [String: String]){
         let upload_img : Bool = true
         print("Adding a loved one\n");
         if(useBackend){
@@ -542,10 +568,6 @@ struct newLovedOneView: View {
                 "name": name,
                 "gender": gender,
                 "DOB": dob,
-                "children": children,
-                "spouse": spouse,
-                "placeOfResidence":placeOfResidence,
-                "hobbies":hobbies
             ]
             let encoder = JSONEncoder()
             if let jsonData = try? encoder.encode(parameters) {
@@ -568,7 +590,7 @@ struct newLovedOneView: View {
                 print(res)
                 let loved_one_id : String? = res?["id"]
                 print("Loved one id is \(loved_one_id ?? "0")")
-                let newLovedOne = lovedOne(id: loved_one_id ?? "0", patientID: patientID,  name: name, gender: gender, DOB: date, children:children, spouse:spouse, placeOfResidence:placeOfResidence, hobbies:hobbies)
+                let newLovedOne = lovedOne(id: loved_one_id ?? "0", patientID: patientID,  name: name, gender: gender, DOB: date)
                 lovedOneList.items.append(newLovedOne)
                 if(upload_img){
                     //Upload the image to the server
@@ -617,7 +639,7 @@ struct newLovedOneView: View {
             
         }
         else{
-            let newLovedOne = lovedOne(id: id, patientID: patientID,  name: name, gender: gender, DOB: date, children:children, spouse:spouse, placeOfResidence:placeOfResidence, hobbies:hobbies)
+            let newLovedOne = lovedOne(id: id, patientID: patientID,  name: name, gender: gender, DOB: date)
             lovedOneList.items.append(newLovedOne)
         }
         
