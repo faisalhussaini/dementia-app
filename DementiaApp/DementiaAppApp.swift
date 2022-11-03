@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Firebase
 
 @main
 struct DementiaAppApp: App {
@@ -13,5 +14,9 @@ struct DementiaAppApp: App {
         WindowGroup {
             PatientView()
         }
+    }
+    
+    init() {
+        FirebaseApp.configure()
     }
 }
