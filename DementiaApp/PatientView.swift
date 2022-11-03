@@ -609,7 +609,7 @@ struct newLovedOneView: View {
                     //Upload training data to firebase
                     // Create a reference to the file you want to upload
                     let storRef = Storage.storage().reference()
-                    let imgRef = storRef.child("training_data/face.jpe  g")
+                    let imgRef = storRef.child("training_data/face.jpeg")
 
                     let uploadTask = imgRef.putData(picture, metadata: nil) { (metadata, error) in
                       guard let metadata = metadata else {
