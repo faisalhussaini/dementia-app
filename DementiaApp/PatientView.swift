@@ -9,6 +9,7 @@
 import SwiftUI
 import AVKit
 import Alamofire
+import FirebaseStorage
 
 let useBackend : Bool = true
 
@@ -604,20 +605,69 @@ struct newLovedOneView: View {
                 let newLovedOne = lovedOne(id: loved_one_id ?? "0", patientID: patientID,  name: name, gender: gender, DOB: date)
                 lovedOneList.items.append(newLovedOne)
                 if(upload_img){
-                    //Upload the image to the server
-                    let imageStr : String = picture.base64EncodedString()
-                    //print(imageStr)
-                    guard let url: URL = URL(string: "http://127.0.0.1:5000/upload_image/" + patiendID + "/" + (loved_one_id ?? "0")) else {
+                    //TODO: add p_id and lo_id in the upload path, (need to work around optional part...)
+                    //Upload training data to firebase
+                    // Create a reference to the file you want to upload
+                    let storRef = Storage.storage().reference()
+                    let imgRef = storRef.child("training_data/face.jpe  g")
+
+                    let uploadTask = imgRef.putData(picture, metadata: nil) { (metadata, error) in
+                      guard let metadata = metadata else {
+                        // Uh-oh, an error occurred!
+                        return
+                      }
+                      // Metadata contains file metadata such as size, content-type.
+                      let size = metadata.size
+                      // You can also access to download URL after upload.
+                      storRef.downloadURL { (url, error) in
+                        guard let downloadURL = url else {
+                          // Uh-oh, an error occurred!
+                          return
+                        }
+                      }
+                    }
+                    let audioRef = storRef.child("training_data/voice.m4a")
+                    let documentPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]//where do you want to save
+                    let audioFilename = documentPath.appendingPathComponent("Recording.m4a")
+                    
+                    let audioUploadTask = audioRef.putFile(from: audioFilename, metadata: nil) { (metadata, error) in
+                      guard let metadata = metadata else {
+                        // Uh-oh, an error occurred!
+                        return
+                      }
+                      // Metadata contains file metadata such as size, content-type.
+                      let size = metadata.size
+                      // You can also access to download URL after upload.
+                      storRef.downloadURL { (url, error) in
+                        guard let downloadURL = url else {
+                          // Uh-oh, an error occurred!
+                          return
+                        }
+                      }
+                    }
+                    
+                    //Notify backend of upload
+                    //TODO: possibly use some event hook here instead so we dont have to do this
+                    guard let url: URL = URL(string: "http://127.0.0.1:5000/training_data") else {
                         print("Invalid url")
                         return
                     }
-                    let paramStr : String = "image=\(imageStr)"
-                    let paramData : Data = paramStr.data(using: .utf8) ?? Data()
+                    
                     var urlRequest: URLRequest = URLRequest(url: url)
                     urlRequest.httpMethod = "POST"
-                    urlRequest.httpBody = paramData
-                    
-                    urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+                    let parameters: [String: String] = [
+                        "p_idx": patiendID,
+                        "lo_idx": loved_one_id!
+                    ]
+                    let encoder = JSONEncoder()
+                    if let jsonData = try? encoder.encode(parameters) {
+                        if let jsonString = String(data: jsonData, encoding: .utf8) {
+                            print(jsonString)
+                            urlRequest.httpBody = jsonData
+                        }
+                    }
+
+                    urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
                     URLSession.shared.dataTask(with: urlRequest, completionHandler: {
                         (data, response, error) in
                         guard let data = data else{
@@ -627,24 +677,8 @@ struct newLovedOneView: View {
                         let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
                         print(responseStr)
                     }).resume()
+                    
                 }
-                //send the recorded audio file to server
-                let documentPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]//where do you want to save
-                let audioFilename = documentPath.appendingPathComponent("Recording.m4a")
-                var response: DataResponse<Data?, AFError>?
-                guard let data = try? Data(contentsOf: audioFilename) else {
-                    print("failed")
-                    return
-                }
-                let request = AF.upload(multipartFormData: { multipartFormData in multipartFormData.append(data, withName: "loved_one.mp3")
-                    },
-                    to: "http://127.0.0.1:5000/upload_audio/" + patiendID + "/" + (loved_one_id ?? "0")
-                    ,method: .post ).response { resp in
-                            response = resp
-                            print("got response")
-                            print(resp)
-
-                        }
             }).resume()
             
             
