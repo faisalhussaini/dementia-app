@@ -109,7 +109,7 @@ struct PatientView: View {
                         urlRequest.httpBody = jsonData
                     }
                 }
-
+                
                 urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 URLSession.shared.dataTask(with: urlRequest, completionHandler: {
                     (data, response, error) in
@@ -290,7 +290,7 @@ struct LovedOneView: View {
                         urlRequest.httpBody = jsonData
                     }
                 }
-
+                
                 urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 URLSession.shared.dataTask(with: urlRequest, completionHandler: {
                     (data, response, error) in
@@ -322,10 +322,10 @@ struct newPatientView: View {
     @State private var hobbies: String = ""
     @State private var hospitalName: String = ""
     @State private var questionResponses = ["children": "",
-                             "spouse": "",
-                             "placeOfResidence": "",
-                             "hobbies": "",
-                             "hospitalName": ""]
+                                            "spouse": "",
+                                            "placeOfResidence": "",
+                                            "hobbies": "",
+                                            "hospitalName": ""]
     var body: some View {
         NavigationView {
             VStack {
@@ -453,9 +453,9 @@ struct newLovedOneView: View {
     @State private var placeOfResidence: String = ""
     @State private var hobbies: String = ""
     @State private var questionResponses = ["children": "",
-                             "spouse": "",
-                             "placeOfResidence": "",
-                             "hobbies": ""]
+                                            "spouse": "",
+                                            "placeOfResidence": "",
+                                            "hobbies": ""]
     @Environment(\.dismiss) var dismiss
     var body: some View {
         NavigationView {
@@ -608,75 +608,78 @@ struct newLovedOneView: View {
                     //TODO: add p_id and lo_id in the upload path, (need to work around optional part...)
                     //Upload training data to firebase
                     // Create a reference to the file you want to upload
+                    //TODO: this whole thing would be cleaner with async and await
                     let storRef = Storage.storage().reference()
                     let imgRef = storRef.child("training_data/face.jpeg")
-
+                    
                     let uploadTask = imgRef.putData(picture, metadata: nil) { (metadata, error) in
-                      guard let metadata = metadata else {
-                        // Uh-oh, an error occurred!
-                        return
-                      }
-                      // Metadata contains file metadata such as size, content-type.
-                      let size = metadata.size
-                      // You can also access to download URL after upload.
-                      storRef.downloadURL { (url, error) in
-                        guard let downloadURL = url else {
-                          // Uh-oh, an error occurred!
-                          return
-                        }
-                      }
-                    }
-                    let audioRef = storRef.child("training_data/voice.m4a")
-                    let documentPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]//where do you want to save
-                    let audioFilename = documentPath.appendingPathComponent("Recording.m4a")
-                    
-                    let audioUploadTask = audioRef.putFile(from: audioFilename, metadata: nil) { (metadata, error) in
-                      guard let metadata = metadata else {
-                        // Uh-oh, an error occurred!
-                        return
-                      }
-                      // Metadata contains file metadata such as size, content-type.
-                      let size = metadata.size
-                      // You can also access to download URL after upload.
-                      storRef.downloadURL { (url, error) in
-                        guard let downloadURL = url else {
-                          // Uh-oh, an error occurred!
-                          return
-                        }
-                      }
-                    }
-                    
-                    //Notify backend of upload
-                    //TODO: possibly use some event hook here instead so we dont have to do this
-                    guard let url: URL = URL(string: "http://127.0.0.1:5000/training_data") else {
-                        print("Invalid url")
-                        return
-                    }
-                    
-                    var urlRequest: URLRequest = URLRequest(url: url)
-                    urlRequest.httpMethod = "POST"
-                    let parameters: [String: String] = [
-                        "p_idx": patiendID,
-                        "lo_idx": loved_one_id!
-                    ]
-                    let encoder = JSONEncoder()
-                    if let jsonData = try? encoder.encode(parameters) {
-                        if let jsonString = String(data: jsonData, encoding: .utf8) {
-                            print(jsonString)
-                            urlRequest.httpBody = jsonData
-                        }
-                    }
-
-                    urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                    URLSession.shared.dataTask(with: urlRequest, completionHandler: {
-                        (data, response, error) in
-                        guard let data = data else{
-                            print("invalid data")
+                        guard let metadata = metadata else {
+                            // Uh-oh, an error occurred!
                             return
                         }
-                        let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
-                        print(responseStr)
-                    }).resume()
+                        let audioRef = storRef.child("training_data/voice.m4a")
+                        let documentPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]//where do you want to save
+                        let audioFilename = documentPath.appendingPathComponent("Recording.m4a")
+                        
+                        let audioUploadTask = audioRef.putFile(from: audioFilename, metadata: nil) { (metadata, error) in
+                            guard let metadata = metadata else {
+                                // Uh-oh, an error occurred!
+                                return
+                            }
+                            //Notify backend of upload
+                            //TODO: possibly use some event hook here instead so we dont have to do this
+                            guard let url: URL = URL(string: "http://127.0.0.1:5000/training_data") else {
+                                print("Invalid url")
+                                return
+                            }
+                            
+                            var urlRequest: URLRequest = URLRequest(url: url)
+                            urlRequest.httpMethod = "POST"
+                            let parameters: [String: String] = [
+                                "p_idx": patiendID,
+                                "lo_idx": loved_one_id!
+                            ]
+                            let encoder = JSONEncoder()
+                            if let jsonData = try? encoder.encode(parameters) {
+                                if let jsonString = String(data: jsonData, encoding: .utf8) {
+                                    print(jsonString)
+                                    urlRequest.httpBody = jsonData
+                                }
+                            }
+                            
+                            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                            URLSession.shared.dataTask(with: urlRequest, completionHandler: {
+                                (data, response, error) in
+                                guard let data = data else{
+                                    print("invalid data")
+                                    return
+                                }
+                                let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
+                                print(responseStr)
+                            }).resume()
+                            
+                            // Metadata contains file metadata such as size, content-type.
+                            let size = metadata.size
+                            // You can also access to download URL after upload.
+                            storRef.downloadURL { (url, error) in
+                                guard let downloadURL = url else {
+                                    // Uh-oh, an error occurred!
+                                    return
+                                }
+                            }
+                        }
+                        
+                        // Metadata contains file metadata such as size, content-type.
+                        let size = metadata.size
+                        // You can also access to download URL after upload.
+                        storRef.downloadURL { (url, error) in
+                            guard let downloadURL = url else {
+                                // Uh-oh, an error occurred!
+                                return
+                            }
+                        }
+                    }
+                    
                     
                 }
             }).resume()
