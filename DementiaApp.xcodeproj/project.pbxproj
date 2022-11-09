@@ -10,7 +10,6 @@
 		4752BC5D29141B4200FDCB98 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4752BC5C29141B4200FDCB98 /* GoogleService-Info.plist */; };
 		4752BC6029141C1600FDCB98 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 4752BC5F29141C1600FDCB98 /* FirebaseFirestore */; };
 		4752BC6229141C1600FDCB98 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 4752BC6129141C1600FDCB98 /* FirebaseStorage */; };
-		CF059CF028E6469B000E2DBA /* bob.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CF059CEF28E6469B000E2DBA /* bob.mp3 */; };
 		CF3CB1C9291B4A4D002D53E0 /* SpeechManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3CB1C8291B4A4D002D53E0 /* SpeechManager.swift */; };
 		CF3CB1CB291B4A5B002D53E0 /* MicManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3CB1CA291B4A5B002D53E0 /* MicManager.swift */; };
 		CF3CB1CD291B4A64002D53E0 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3CB1CC291B4A64002D53E0 /* Persistence.swift */; };
@@ -47,7 +46,6 @@
 		33F89C145C2E01CFCDBAD044 /* Pods_DementiaApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DementiaApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4752BC5C29141B4200FDCB98 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		48367EE8DDE9E7A98B5AA9CB /* Pods-DementiaApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DementiaApp.release.xcconfig"; path = "Target Support Files/Pods-DementiaApp/Pods-DementiaApp.release.xcconfig"; sourceTree = "<group>"; };
-		CF059CEF28E6469B000E2DBA /* bob.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = bob.mp3; sourceTree = "<group>"; };
 		CF3CB1C8291B4A4D002D53E0 /* SpeechManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeechManager.swift; sourceTree = "<group>"; };
 		CF3CB1CA291B4A5B002D53E0 /* MicManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MicManager.swift; sourceTree = "<group>"; };
 		CF3CB1CC291B4A64002D53E0 /* Persistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -118,7 +116,6 @@
 		CFE5054828D7892100825BC9 /* DementiaApp */ = {
 			isa = PBXGroup;
 			children = (
-				CF059CEF28E6469B000E2DBA /* bob.mp3 */,
 				CFE5054928D7892100825BC9 /* DementiaAppApp.swift */,
 				CFE5054B28D7892100825BC9 /* PatientView.swift */,
 				CFB77B1128D8DED200D3F39D /* contacts.swift */,
@@ -214,7 +211,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CF059CF028E6469B000E2DBA /* bob.mp3 in Resources */,
 				4752BC5D29141B4200FDCB98 /* GoogleService-Info.plist in Resources */,
 				CFE5055128D7892200825BC9 /* Preview Assets.xcassets in Resources */,
 				CFE5054E28D7892200825BC9 /* Assets.xcassets in Resources */,
