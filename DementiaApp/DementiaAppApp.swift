@@ -10,9 +10,11 @@ import Firebase
 
 @main
 struct DementiaAppApp: App {
+    let persistenceController = PersistenceController.shared
     var body: some Scene {
         WindowGroup {
             PatientView()
+                .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
     

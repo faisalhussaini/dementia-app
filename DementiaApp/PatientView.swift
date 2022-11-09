@@ -697,12 +697,18 @@ struct CallView: View {
     @StateObject var lovedOneList : lovedOnes
     var id: String
     var player = AVPlayer()
+    
+    @Environment(\.managedObjectContext) private var viewContext
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Todo.created, ascending: true)], animation: .default) private var todos: FetchedResults<Todo>
+    @State var recording = false
+    @ObservedObject var mic = MicMonitor(numberOfSamples: 30)
+    var speechManager = SpeechManager()
+    
     var body: some View {
-        ZStack {
+        ZStack (alignment: .bottomTrailing){
             ForEach(lovedOneList.items, id: \.id) { item in
                 if (item.id == id) {
                     VStack {
-                        
                         //we would get video URL from api call, for now play something random
                         var videoURL = "https://bit.ly/swswift"
                         
@@ -721,9 +727,29 @@ struct CallView: View {
                         Text("Display Call to \(item.name) here")
                             .padding()
                         
-                        //Add code to capture speech when user starts talking, stop mic when they stop
-                        //Use speech recognition to convert to text
+                        //TODO: MAKE CALL HANDS FREE RATHER THAN WITH BUTTON
                         //We would then pass this into chatbot and get an output text
+                        
+                        //code for speech recognition adopted from a todo app tutorial youtube series
+                        //https://www.youtube.com/playlist?list=PLbrKvTeCrFAffsnrKSa9mp9hM22E6kSjx
+                        
+                        /*If you want to Display each recording in a list
+                        List {
+                            ForEach(todos) { item in
+                                Text(item.text ?? " - ")
+                            }
+                            .onDelete(perform: deleteItems)
+                        }
+                        */
+                         
+                        HStack{
+                            Text(todos.last?.text ?? "----")
+                            recordButton()
+                            deleteButton()//to delete all elements in list of texts
+                        }
+                    }
+                    .onAppear {
+                        speechManager.checkPermissions()
                     }
                     .padding(.top)
                 }
@@ -731,9 +757,74 @@ struct CallView: View {
         }
         .ignoresSafeArea()
     }
-    func play_video(url: String) -> some View{
-        VideoPlayer(player: AVPlayer(url:  URL(string: url)!))
-            .frame(width: 700, height: 500)
+    func recordButton() -> some View {
+        Button(action: addItem) {
+            Image(systemName: recording ? "stop.fill" : "mic.fill")
+                .font(.system(size: 40))
+                .padding()
+                .cornerRadius(10)
+        }.foregroundColor(.red)
+    }
+    
+    func addItem() {
+        if speechManager.isRecording {
+            self.recording = false
+            mic.stopMonitoring()
+            speechManager.stopRecording()
+        } else {
+            self.recording = true
+            mic.startMonitoring()
+            speechManager.start { (speechText) in
+                guard let text = speechText, !text.isEmpty else {
+                    self.recording = false
+                    return
+                }
+                print("text: ", text)
+                DispatchQueue.main.async {
+                    withAnimation {
+                        let newItem = Todo(context: viewContext)
+                        newItem.id = UUID()
+                        newItem.text = text
+                        newItem.created = Date()
+                        
+                        do {
+                            try viewContext.save()
+                        } catch {
+                            print(error)
+                        }
+                    }
+                }
+            }
+        }
+        speechManager.isRecording.toggle()
+    }
+    func deleteItems(offsets: IndexSet) {
+        withAnimation {
+            offsets.map {todos[$0]}.forEach(viewContext.delete)
+            
+            do {
+                try viewContext.save()
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
+    func deleteButton() -> some View {
+        Button(action: deleteAllItems) {
+            Image(systemName: "trash" )
+                .font(.system(size: 40))
+                .padding()
+                .cornerRadius(10)
+        }.foregroundColor(.red)
+    }
+    func deleteAllItems() {
+        todos.forEach(viewContext.delete)
+        do {
+            try viewContext.save()
+        } catch {
+            print(error)
+        }
     }
 }
 
