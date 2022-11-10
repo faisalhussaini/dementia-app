@@ -707,14 +707,19 @@ struct CallView: View {
     @ObservedObject var mic = MicMonitor(numberOfSamples: 30)
     var speechManager = SpeechManager()
     
+    @State var videoURL = "https://bit.ly/swswift"
+    var videoURL1 = "https://storage.googleapis.com/virtual-presence-app.appspot"
+    var videoURL2 = "https://storage.googleapis.com/virtual-presence-app.appspot.com/1/1/howareyoudoing.mp4"
+    var videoURL3 = "https://storage.googleapis.com/virtual-presence-app.appspot.com/1/1/okay.mp4"
+    var videoURL4 = "https://storage.googleapis.com/virtual-presence-app.appspot.com/1/1/hellotherefriend.mp4"
+    var videoURL5 = "https://storage.googleapis.com/virtual-presence-app.appspot.com/1/1/doyouknowwhereyouare.mp4"
+    var videoURL6 = "https://storage.googleapis.com/virtual-presence-app.appspot.com/1/1/mhm.mp4"
+    
     var body: some View {
         ZStack (alignment: .bottomTrailing){
             ForEach(lovedOneList.items, id: \.id) { item in
                 if (item.id == id) {
                     VStack {
-                        //we would get video URL from api call, for now play something random
-                        var videoURL = "https://bit.ly/swswift"
-                        
                         //Make video play automatically
                         //https://stackoverflow.com/questions/65796552/ios-swiftui-video-autoplay
                         VideoPlayer(player: player)
@@ -727,7 +732,7 @@ struct CallView: View {
                                     player.play()
                                 })
                             }
-                        Text("Display Call to \(item.name) here")
+                        Text("Chatting with \(item.name)")
                             .padding()
                         
                         //TODO: MAKE CALL HANDS FREE RATHER THAN WITH BUTTON
@@ -735,20 +740,10 @@ struct CallView: View {
                         
                         //code for speech recognition adopted from a todo app tutorial youtube series
                         //https://www.youtube.com/playlist?list=PLbrKvTeCrFAffsnrKSa9mp9hM22E6kSjx
-                        
-                        /*If you want to Display each recording in a list
-                        List {
-                            ForEach(todos) { item in
-                                Text(item.text ?? " - ")
-                            }
-                            .onDelete(perform: deleteItems)
-                        }
-                        */
-                         
                         HStack{
                             Text(todos.last?.text ?? "----")
-                            recordButton()
-                            deleteButton()//to delete all elements in list of texts
+                            recordButton(text: todos.last?.text)
+                            deleteButton()//to delete all elements in list of texts, figure out how to do this automatically when you leave call view
                         }
                     }
                     .onAppear {
@@ -760,13 +755,19 @@ struct CallView: View {
         }
         .ignoresSafeArea()
     }
-    func recordButton() -> some View {
-        Button(action: addItem) {
+    func recordButton(text: String?) -> some View {
+        Button(action: {
+            addItem()
+            //callBackend(text: text)
+        }) {
             Image(systemName: recording ? "stop.fill" : "mic.fill")
                 .font(.system(size: 40))
                 .padding()
                 .cornerRadius(10)
         }.foregroundColor(.red)
+        .onAppear {
+            callBackend(text: text)
+        }
     }
     
     func addItem() {
@@ -828,6 +829,11 @@ struct CallView: View {
         } catch {
             print(error)
         }
+    }
+    func callBackend(text: String?) {
+        print("Called backend!")
+        videoURL = videoURL5
+        print("text to send to backend: ", text)
     }
 }
 
