@@ -158,7 +158,7 @@ struct PatientView: View {
                     let dob : String = p["DOB"] ?? ""
                     let dF : DateFormatter = DateFormatter()
                     // Convert string to date
-                    dF.dateFormat = "YY/MM/dd"
+                    dF.dateFormat = "YYYY/MM/dd"
                     let date = dF.date(from: dob) ?? Date()
                     print(date)
                     let curr_patient: patient = patient(id: id, name: name, gender: gender, DOB: date)
@@ -209,7 +209,7 @@ struct PatientView: View {
                     let dob : String = lo["DOB"] ?? ""
                     let dF : DateFormatter = DateFormatter()
                     // Convert string to date
-                    dF.dateFormat = "YY/MM/dd"
+                    dF.dateFormat = "YYYY/MM/dd"
                     let date = dF.date(from: dob) ?? Date()
                     //print(date)
                     let curr_loved_one: lovedOne = lovedOne(id: id, patientID: patientId, name: name, gender: gender, DOB: date)
@@ -391,7 +391,7 @@ struct newPatientView: View {
             }
             let dF : DateFormatter = DateFormatter()
             // Convert Date to String
-            dF.dateFormat = "YY/MM/dd"
+            dF.dateFormat = "YYYY/MM/dd"
             let dob = dF.string(from: date)
             print(dob)
             var urlRequest: URLRequest = URLRequest(url: url)
@@ -570,7 +570,7 @@ struct newLovedOneView: View {
             }
             let dF : DateFormatter = DateFormatter()
             // Convert Date to String
-            dF.dateFormat = "YY/MM/dd"
+            dF.dateFormat = "YYYY/MM/dd"
             let dob = dF.string(from: date)
             print(dob)
             var urlRequest: URLRequest = URLRequest(url: url)
