@@ -11,7 +11,7 @@ import AVKit
 import Alamofire
 import FirebaseStorage
 
-let useBackend : Bool = false
+let useBackend : Bool = true
 var didLoad : Bool = false
 
 func convertDictionaryToString(dic: [String : String]) -> String{
