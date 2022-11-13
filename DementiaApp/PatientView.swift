@@ -243,7 +243,7 @@ struct LovedOneView: View {
                         if (item.patientID == patientID) {
                             HStack {
                                 Text(item.name)
-                                NavigationLink(destination: CallView(color: .blue, lovedOneList: lovedOneList, id: item.id), label: {
+                                NavigationLink(destination: CallView(color: .blue, lovedOneList: lovedOneList, id: item.id, p_id: patientID), label: {
                                 })
                                 .isDetailLink(false)
                             }
@@ -700,6 +700,7 @@ struct CallView: View {
     var color: Color
     @StateObject var lovedOneList : lovedOnes
     var id: String
+    var p_id: String
     var player = AVPlayer()
     
     @Environment(\.managedObjectContext) private var viewContext
@@ -832,7 +833,45 @@ struct CallView: View {
         print("text to send to backend: ", text)
         
         //TODO: GET VIDEO URL, FOR NOW GETTING A RANDOM VID
-        
+        var new_url = ""
+        if(useBackend){
+            //Upload patient to the server
+            guard let url: URL = URL(string: "http://127.0.0.1:5000/responses") else {
+                print("Invalid url")
+                return
+            }
+            var urlRequest: URLRequest = URLRequest(url: url)
+            urlRequest.httpMethod = "GET"
+            let parameters: [String: String] = [
+                "lo_idx": id,
+                "input": text ?? "",
+            ]
+            let encoder = JSONEncoder()
+            if let jsonData = try? encoder.encode(parameters) {
+                if let jsonString = String(data: jsonData, encoding: .utf8) {
+                    print(jsonString)
+                    urlRequest.httpBody = jsonData
+                }
+            }
+            
+            //urlRequest.httpBody = jsonData
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            URLSession.shared.dataTask(with: urlRequest, completionHandler: {
+                (data, response, error) in
+                guard let data = data else{
+                    print("invalid data")
+                    return
+                }
+                let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
+                print(responseStr)
+                let res : [String : String]? = convertToDictionary(text: (responseStr))
+                print(res)
+                let response_name : String? = res?["response"]
+                let base_url : String = "https://storage.googleapis.com/virtual-presence-app.appspot.com"
+                new_url = "\(base_url)/\(p_id)/\(id)/\(response_name)"
+                print(new_url)
+            }).resume()
+        }
         let urlArray = [videoURL2, videoURL3, videoURL4, videoURL5, videoURL6]
         
         let item = AVPlayerItem(url: URL(string: urlArray.randomElement() ?? videoURL2)!)
