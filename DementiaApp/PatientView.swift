@@ -11,7 +11,8 @@ import AVKit
 import Alamofire
 import FirebaseStorage
 
-let useBackend : Bool = true
+let useBackend : Bool = false
+var didLoad : Bool = false
 
 func convertDictionaryToString(dic: [String : String]) -> String{
     var res:String = ""
@@ -79,13 +80,13 @@ struct PatientView: View {
                 }
             }
             .navigationViewStyle(StackNavigationViewStyle())
-            Button {
-                load_patients()
-                load_loved_ones()
-            } label : {
-                Text("Add patients and loved ones who would already be in our db. In the future we populate this data from the db...")
+            .onAppear {
+                if (!didLoad) {
+                    load_patients()
+                    load_loved_ones()
+                    didLoad = true
+                }
             }
-            .offset(y:300)
         }
         .ignoresSafeArea()
     }
@@ -708,7 +709,6 @@ struct CallView: View {
     var speechManager = SpeechManager()
     
     @State var videoURL = "https://bit.ly/swswift"
-    var videoURL1 = "https://storage.googleapis.com/virtual-presence-app.appspot"
     var videoURL2 = "https://storage.googleapis.com/virtual-presence-app.appspot.com/1/1/howareyoudoing.mp4"
     var videoURL3 = "https://storage.googleapis.com/virtual-presence-app.appspot.com/1/1/okay.mp4"
     var videoURL4 = "https://storage.googleapis.com/virtual-presence-app.appspot.com/1/1/hellotherefriend.mp4"
@@ -744,6 +744,7 @@ struct CallView: View {
                             Text(todos.last?.text ?? "----")
                             recordButton(text: todos.last?.text)
                             deleteButton()//to delete all elements in list of texts, figure out how to do this automatically when you leave call view
+                            backendButton(text: todos.last?.text)
                         }
                     }
                     .onAppear {
@@ -758,16 +759,12 @@ struct CallView: View {
     func recordButton(text: String?) -> some View {
         Button(action: {
             addItem()
-            //callBackend(text: text)
         }) {
             Image(systemName: recording ? "stop.fill" : "mic.fill")
                 .font(.system(size: 40))
                 .padding()
                 .cornerRadius(10)
         }.foregroundColor(.red)
-        .onAppear {
-            callBackend(text: text)
-        }
     }
     
     func addItem() {
@@ -832,8 +829,26 @@ struct CallView: View {
     }
     func callBackend(text: String?) {
         print("Called backend!")
-        videoURL = videoURL5
         print("text to send to backend: ", text)
+        
+        //TODO: GET VIDEO URL, FOR NOW GETTING A RANDOM VID
+        
+        let urlArray = [videoURL2, videoURL3, videoURL4, videoURL5, videoURL6]
+        
+        let item = AVPlayerItem(url: URL(string: urlArray.randomElement() ?? videoURL2)!)
+        player.replaceCurrentItem(with: item)
+        player.play()
+    }
+    
+    func backendButton(text: String?) -> some View {
+        Button(action: {
+            callBackend(text: text)
+        }) {
+            Image(systemName: "square.and.arrow.up")
+                .font(.system(size: 40))
+                .padding()
+                .cornerRadius(10)
+        }.foregroundColor(.red)
     }
 }
 
