@@ -324,9 +324,9 @@ struct newPatientView: View {
     @State private var hospitalName: String = ""
     @State private var questionResponses = ["children": "",
                                             "spouse": "",
-                                            "placeOfResidence": "",
+                                            "residence": "",
                                             "hobbies": "",
-                                            "hospitalName": ""]
+                                            "hospital": ""]
     var body: some View {
         NavigationView {
             VStack {
@@ -396,6 +396,7 @@ struct newPatientView: View {
             print(dob)
             var urlRequest: URLRequest = URLRequest(url: url)
             urlRequest.httpMethod = "POST"
+            
             let parameters: [String: String] = [
                 "name": name,
                 "gender": gender,
@@ -455,7 +456,7 @@ struct newLovedOneView: View {
     @State private var hobbies: String = ""
     @State private var questionResponses = ["children": "",
                                             "spouse": "",
-                                            "placeOfResidence": "",
+                                            "residence": "",
                                             "hobbies": ""]
     @Environment(\.dismiss) var dismiss
     var body: some View {
