@@ -846,6 +846,7 @@ struct CallView: View {
             let parameters: [String: String] = [
                 "lo_idx": id,
                 "input": text ?? "",
+                "p_idx": p_id,
             ]
             let encoder = JSONEncoder()
             if let jsonData = try? encoder.encode(parameters) {
