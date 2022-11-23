@@ -354,13 +354,13 @@ struct newPatientView: View {
                     questionResponses["spouse"] = spouse
                 })
                 .onChange(of: placeOfResidence, perform: { string in
-                    questionResponses["placeOfResidence"] = placeOfResidence
+                    questionResponses["residence"] = placeOfResidence
                 })
                 .onChange(of: hobbies, perform: { string in
                     questionResponses["hobbies"] = hobbies
                 })
                 .onChange(of: hospitalName, perform: { string in
-                    questionResponses["hospitalName"] = hospitalName
+                    questionResponses["hospital"] = hospitalName
                 })
                 
                 .navigationBarTitle("New Patient")
@@ -532,7 +532,7 @@ struct newLovedOneView: View {
                     questionResponses["spouse"] = spouse
                 })
                 .onChange(of: placeOfResidence, perform: { string in
-                    questionResponses["placeOfResidence"] = placeOfResidence
+                    questionResponses["residence"] = placeOfResidence
                 })
                 .onChange(of: hobbies, perform: { string in
                     questionResponses["hobbies"] = hobbies
@@ -842,7 +842,7 @@ struct CallView: View {
                 return
             }
             var urlRequest: URLRequest = URLRequest(url: url)
-            urlRequest.httpMethod = "GET"
+            urlRequest.httpMethod = "POST"
             let parameters: [String: String] = [
                 "lo_idx": id,
                 "input": text ?? "",
@@ -870,7 +870,7 @@ struct CallView: View {
                 print(res)
                 let response_name : String? = res?["response"]
                 let base_url : String = "https://storage.googleapis.com/virtual-presence-app.appspot.com"
-                new_url = "\(base_url)/\(p_id)/\(id)/\(response_name)"
+                new_url = "\(base_url)/\(p_id)/\(id)/\(response_name!)"
                 print(new_url)
             }).resume()
         }
