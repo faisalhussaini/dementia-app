@@ -872,13 +872,11 @@ struct CallView: View {
                 let base_url : String = "https://storage.googleapis.com/virtual-presence-app.appspot.com"
                 new_url = "\(base_url)/\(p_id)/\(id)/\(response_name!)"
                 print(new_url)
+                let item = AVPlayerItem(url: URL(string: new_url)!)
+                player.replaceCurrentItem(with: item)
+                player.play()
             }).resume()
         }
-        let urlArray = [videoURL2, videoURL3, videoURL4, videoURL5, videoURL6]
-        
-        let item = AVPlayerItem(url: URL(string: urlArray.randomElement() ?? videoURL2)!)
-        player.replaceCurrentItem(with: item)
-        player.play()
     }
     
     func backendButton(text: String?) -> some View {
