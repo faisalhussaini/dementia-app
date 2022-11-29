@@ -340,7 +340,7 @@ struct newPatientView: View {
                             }
                         }
                         TextField("Patient's children seperated by commas. Example: 'John Smith, Jack Smith'", text: $children)
-                        TextField("Patient's spouse/partner and their name. Example: 'husband: Harry Smith'", text: $spouse)
+                        TextField("Patient's spouse/partner", text: $spouse)
                         TextField("Patient's place of residence", text: $placeOfResidence)
                         TextField("Patient's hobbies seperated by commas. Example: 'swimming, poetry, cooking'", text: $hobbies)
                         TextField("Name of the hospital patient is staying in", text: $hospitalName)
@@ -472,7 +472,7 @@ struct newLovedOneView: View {
                             }
                         }
                         TextField("Loved One's children seperated by commas. Example: 'John Smith, Jack Smith'", text: $children)
-                        TextField("Loved One's spouse/partner and their name. Example: 'husband: Harry Smith'", text: $spouse)
+                        TextField("Loved One's spouse/partner", text: $spouse)
                         TextField("Loved One's place of residence", text: $placeOfResidence)
                         TextField("Loved One's hobbies seperated by commas. Example: 'swimming, poetry, cooking'", text: $hobbies)
                     }
@@ -710,13 +710,7 @@ struct CallView: View {
     @ObservedObject var mic = MicMonitor(numberOfSamples: 30)
     var speechManager = SpeechManager()
     
-    @State var videoURL = "https://bit.ly/swswift"
-    var videoURL2 = "https://storage.googleapis.com/virtual-presence-app.appspot.com/1/1/howareyoudoing.mp4"
-    var videoURL3 = "https://storage.googleapis.com/virtual-presence-app.appspot.com/1/1/okay.mp4"
-    var videoURL4 = "https://storage.googleapis.com/virtual-presence-app.appspot.com/1/1/hellotherefriend.mp4"
-    var videoURL5 = "https://storage.googleapis.com/virtual-presence-app.appspot.com/1/1/doyouknowwhereyouare.mp4"
-    var videoURL6 = "https://storage.googleapis.com/virtual-presence-app.appspot.com/1/1/mhm.mp4"
-    
+    @State var videoURL = "https://storage.googleapis.com/virtual-presence-app.appspot.com/1/1/hello.mp4"
     var body: some View {
         ZStack (alignment: .bottomTrailing){
             ForEach(lovedOneList.items, id: \.id) { item in
@@ -727,6 +721,7 @@ struct CallView: View {
                         VideoPlayer(player: player)
                             .onAppear{
                                 if player.currentItem == nil {
+                                    videoURL = "https://storage.googleapis.com/virtual-presence-app.appspot.com/\(p_id)/\(id)/hello.mp4"
                                     let item = AVPlayerItem(url: URL(string: videoURL)!)
                                     player.replaceCurrentItem(with: item)
                                 }
