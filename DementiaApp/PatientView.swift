@@ -458,6 +458,8 @@ struct newLovedOneView: View {
                                             "spouse": "",
                                             "residence": "",
                                             "hobbies": ""]
+    @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
+    @State private var isImagePickerButtonClicked = false
     @Environment(\.dismiss) var dismiss
     var body: some View {
         NavigationView {
@@ -488,13 +490,26 @@ struct newLovedOneView: View {
                             .onTapGesture {
                                 isShowingPhotoPicker = true
                             }
+                            Button("Camera") {
+                                self.sourceType = .camera
+                                self.isImagePickerButtonClicked.toggle()
+                            }.padding()
+                            
+                            Button("Photo Library") {
+                                self.sourceType = .photoLibrary
+                                self.isImagePickerButtonClicked.toggle()
+                            }.padding()
                         Text("Select Image of Loved One")
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
                     .navigationTitle("New Loved One")
-                    .sheet(isPresented: $isShowingPhotoPicker) {
-                        PhotoPicker(lovedOneImage: $lovedOneImage)
+                    //.sheet(isPresented: $isShowingPhotoPicker) {
+                    //    PhotoPicker(lovedOneImage: $lovedOneImage, sourceType: self.sourceType)
+                    //}
+                    .sheet(isPresented: self.$isImagePickerButtonClicked) {
+                        PhotoPicker(lovedOneImage: $lovedOneImage, sourceType: self.sourceType)
                     }
+                    
                     //Code to record audio adapted from a SwiftUI Voice Recorder tutorial
                     //https://blckbirds.com/post/voice-recorder-app-in-swiftui-1/
                     //https://blckbirds.com/post/voice-recorder-app-in-swiftui-2/

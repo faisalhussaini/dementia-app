@@ -10,9 +10,11 @@ import SwiftUI
 struct PhotoPicker: UIViewControllerRepresentable {
     
     @Binding var lovedOneImage: UIImage//whenever this variable changes, its bounded to lovedOneImage in ContentView, triggering an update
+    var sourceType: UIImagePickerController.SourceType
     
     func makeUIViewController(context: Context) -> UIImagePickerController { //called automatically
         let picker = UIImagePickerController()
+        picker.sourceType = self.sourceType
         picker.delegate = context.coordinator //cordinator is delegate to uiimmagepickercontroler
         picker.allowsEditing = true//crop photo
         return picker
