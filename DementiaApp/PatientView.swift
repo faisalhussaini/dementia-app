@@ -769,14 +769,12 @@ struct CallView: View {
         .ignoresSafeArea()
     }
     func recordButton(text: String?) -> some View {
-        Button(action: {
-            addItem()
-        }) {
-            Image(systemName: recording ? "stop.fill" : "mic.fill")
+        Button(action: addItem) {
+            Image(systemName: "phone.fill")
                 .font(.system(size: 40))
                 .padding()
                 .cornerRadius(10)
-        }.foregroundColor(.red)
+        }.foregroundColor(recording ? .red : .green)
     }
     
     func addItem() {

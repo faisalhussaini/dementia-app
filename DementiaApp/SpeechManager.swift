@@ -16,7 +16,6 @@ class SpeechManager {
     private var audioSession: AVAudioSession!
     var timer : Timer?
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
-    var text = String()
     
     func checkPermissions() {
         SFSpeechRecognizer.requestAuthorization{ (authStatus) in
@@ -48,31 +47,24 @@ class SpeechManager {
         recognitionRequest!.shouldReportPartialResults = true
         
         recognizer.recognitionTask(with: recognitionRequest!) { (result, error) in
-            //let defaultText = self.text
             guard error == nil else {
                 print("got error \(error!.localizedDescription)")
                 return
             }
             guard let result = result else { return }
-            /*
+            ////////////////
             self.timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: { (timer) in
                 self.timer?.invalidate()
                 print("invalidated timer")
-                self.text = result.bestTranscription.formattedString
-                self.text = self.text.replacingOccurrences(of : defaultText, with: "")
-                
-                completion(self.text)
-                print("in speech manager")
-                print(result.bestTranscription.formattedString)
-                //self.audioEngine.stop()
-                //self.recognitionRequest?.endAudio()
+                self.stopRecording()
                 return
+            ////////////////
             })
-            */
+            
             if result.isFinal {
                 completion(result.bestTranscription.formattedString)
-               // print("final")
-                //print(result.bestTranscription.formattedString)
+                print("FINAL")
+                print(result.bestTranscription.formattedString)
             }
         }
         
@@ -97,12 +89,10 @@ class SpeechManager {
     
     
     func stopRecording() {
+        audioEngine.stop()
         recognitionRequest?.endAudio()
         recognitionRequest = nil
-        audioEngine.stop()
         inputNode.removeTap(onBus: 0)
-        
-        try? audioSession.setActive(false)
         audioSession = nil
     }
 }
