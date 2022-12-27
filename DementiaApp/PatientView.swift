@@ -724,7 +724,7 @@ struct CallView: View {
     @State var recording = false
     @ObservedObject var mic = MicMonitor(numberOfSamples: 30)
     var speechManager = SpeechManager()
-    
+    @State var final_url = ""
     @State var videoURL = "https://storage.googleapis.com/virtual-presence-app.appspot.com/1/1/hello.mp4"
     var body: some View {
         ZStack (alignment: .bottomTrailing){
@@ -754,13 +754,14 @@ struct CallView: View {
                         //https://www.youtube.com/playlist?list=PLbrKvTeCrFAffsnrKSa9mp9hM22E6kSjx
                         HStack{
                             Text(todos.last?.text ?? "----")
-                            recordButton(text: todos.last?.text)
-                            deleteButton()//to delete all elements in list of texts, figure out how to do this automatically when you leave call view
-                            backendButton(text: todos.last?.text)
+                            recordButton()
                         }
                     }
                     .onAppear {
                         speechManager.checkPermissions()
+                    }
+                    .onDisappear() {
+                        deleteAllItems()
                     }
                     .padding(.top)
                 }
@@ -768,7 +769,7 @@ struct CallView: View {
         }
         .ignoresSafeArea()
     }
-    func recordButton(text: String?) -> some View {
+    func recordButton() -> some View {
         Button(action: addItem) {
             Image(systemName: "phone.fill")
                 .font(.system(size: 40))
@@ -803,8 +804,17 @@ struct CallView: View {
                         } catch {
                             print(error)
                         }
+                        var old_url = final_url
+                        callBackend(text: todos.last?.text)
+                        while(final_url == old_url) {
+                            //do nothing and wait for the url to update, there must be a more elegant way to do this
+                        }
+                        let item = AVPlayerItem(url: URL(string: final_url)!)
+                        player.replaceCurrentItem(with: item)
+                        player.play()
                     }
                 }
+                mic.stopMonitoring()
             }
         }
         speechManager.isRecording.toggle()
@@ -880,9 +890,7 @@ struct CallView: View {
                 let base_url : String = "https://storage.googleapis.com/virtual-presence-app.appspot.com"
                 new_url = "\(base_url)/\(p_id)/\(id)/\(response_name!)"
                 print(new_url)
-                let item = AVPlayerItem(url: URL(string: new_url)!)
-                player.replaceCurrentItem(with: item)
-                player.play()
+                final_url = new_url
             }).resume()
         }
     }
