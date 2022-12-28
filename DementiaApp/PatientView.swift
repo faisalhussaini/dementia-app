@@ -342,7 +342,7 @@ struct newPatientView: View {
                         TextField("Patient's children seperated by commas. Example: 'John Smith, Jack Smith'", text: $children)
                         TextField("Patient's spouse/partner", text: $spouse)
                         TextField("Patient's place of residence", text: $placeOfResidence)
-                        TextField("Patient's hobbies seperated by commas. Example: 'swimming, poetry, cooking'", text: $hobbies)
+                        TextField("Patient's top 3 hobbies seperated by commas. Example: 'swimming, poetry, cooking'", text: $hobbies)
                         TextField("Name of the hospital patient is staying in", text: $hospitalName)
                     }
                 }
@@ -476,7 +476,7 @@ struct newLovedOneView: View {
                         TextField("Loved One's children seperated by commas. Example: 'John Smith, Jack Smith'", text: $children)
                         TextField("Loved One's spouse/partner", text: $spouse)
                         TextField("Loved One's place of residence", text: $placeOfResidence)
-                        TextField("Loved One's hobbies seperated by commas. Example: 'swimming, poetry, cooking'", text: $hobbies)
+                        TextField("Loved One's top 3 hobbies seperated by commas. Example: 'swimming, poetry, cooking'", text: $hobbies)
                     }
                     //https://www.youtube.com/watch?v=V-kSSjh1T74
                     //once we connect with backend then upload lovedOneImage in add_loved_one, for now do nothing
@@ -726,6 +726,49 @@ struct CallView: View {
     var speechManager = SpeechManager()
     @State var final_url = ""
     @State var videoURL = "https://storage.googleapis.com/virtual-presence-app.appspot.com/1/1/hello.mp4"
+    @State var patientURL = ""
+    @State var timer: Timer?
+    @State var duplicateURL : Bool = false
+    @State var prompts:[String] = [
+        "doyouknowwhereyouare.mp4",
+        "youareinthehospitalbecauseyouaresick.mp4",
+        "doyouknowwhatyearitis.mp4",
+        "doyouknowwhatmonthitis.mp4",
+        "doyouknowwhatseasonitis.mp4",
+        "todayis.mp4",
+        "itistheyear.mp4",
+        "itisnow.mp4",
+        "howareyoudoingtoday.mp4",
+        "tellmeaboutthedayyourfirstchildwasborn.mp4",
+        "tellmeaboutthetimeyoufirstmetyourspouse.mp4",
+        "tellmeaboutyourweddingday.mp4",
+        "tellmeaboutthehappiestmomentinyourlife.mp4",
+        "howmanychildrendoyouhave.mp4",
+        "doyouhaveaspouse.mp4",
+        "wheredoyoulive.mp4",
+        "whatareyourhobbies.mp4",
+        "areyoufeelingscared.mp4",
+        "tellmemoreabouthowyouarefeeling.mp4",
+        "doyouliketo1.mp4",
+        "doyouliketo2.mp4",
+        "doyouliketo3.mp4",
+        "youmustbefeelingveryscaredrightnow.mp4",
+        "didyouknowthatacathas32musclesineachear.mp4",
+        "didyouknowthatmostpeoplefallasleepinsevenminutes.mp4",
+        "didyouknowthatthefirstorangeswereactuallygreen.mp4",
+        "didyouknowthatthereare206bonesinthehumanbody.mp4",
+        "tellmeaboutyourfriendsinschool.mp4",
+        "tellmeaboutyourchildren.mp4"
+    ]
+    @State var tempPrompts:[String] = [
+        "hello.mp4",
+        "byeseeyoulater.mp4",
+        "imdonaldtrump.mp4",
+        "iliveinpalmbeach.mp4",
+        "youare.mp4",
+        "iam.mp4"
+    ]
+    
     var body: some View {
         ZStack (alignment: .bottomTrailing){
             ForEach(lovedOneList.items, id: \.id) { item in
@@ -806,12 +849,16 @@ struct CallView: View {
                         }
                         var old_url = final_url
                         callBackend(text: todos.last?.text)
-                        while(final_url == old_url) {
+                        while(final_url == old_url && duplicateURL == false) {
                             //do nothing and wait for the url to update, there must be a more elegant way to do this
                         }
+                        print("final_url: ", final_url)
+                        print("old_url: ", old_url)
+                        print("duplicateURL: ", duplicateURL)
                         let item = AVPlayerItem(url: URL(string: final_url)!)
                         player.replaceCurrentItem(with: item)
                         player.play()
+                        resetTimer()
                     }
                 }
                 mic.stopMonitoring()
@@ -829,6 +876,20 @@ struct CallView: View {
                 print(error)
             }
         }
+    }
+    
+    func startTimer() {
+        self.timer = Timer.scheduledTimer(withTimeInterval: 14, repeats: true, block: { _ in
+            print("timer done, prompting patient!!!!!!!!!!")
+            var promptURL = patientURL + tempPrompts.randomElement()!
+            let item = AVPlayerItem(url: URL(string: promptURL)!)
+            player.replaceCurrentItem(with: item)
+            player.play()
+        })
+    }
+    func resetTimer() {
+        self.timer?.invalidate()
+        startTimer()
     }
     
     func deleteButton() -> some View {
@@ -850,7 +911,7 @@ struct CallView: View {
     func callBackend(text: String?) {
         print("Called backend!")
         print("text to send to backend: ", text)
-        
+        duplicateURL = false
         //TODO: GET VIDEO URL, FOR NOW GETTING A RANDOM VID
         var new_url = ""
         if(useBackend){
@@ -882,6 +943,7 @@ struct CallView: View {
                     print("invalid data")
                     return
                 }
+                var old_final_url = final_url
                 let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
                 print(responseStr)
                 let res : [String : String]? = convertToDictionary(text: (responseStr))
@@ -891,6 +953,13 @@ struct CallView: View {
                 new_url = "\(base_url)/\(p_id)/\(id)/\(response_name!)"
                 print(new_url)
                 final_url = new_url
+                patientURL = "\(base_url)/\(p_id)/\(id)/"
+                if (old_final_url == new_url) {
+                    duplicateURL = true
+                }
+                else {
+                    duplicateURL = false
+                }
             }).resume()
         }
     }
