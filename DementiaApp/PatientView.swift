@@ -883,8 +883,8 @@ struct CallView: View {
             let item = AVPlayerItem(url: URL(string: promptURL)!)
             player.replaceCurrentItem(with: item)
             player.play()
-            promptURL = patientURL + prompts.randomElement()!
-            //getPrompt()
+            //promptURL = patientURL + prompts.randomElement()!
+            getPrompt()
         })
     }
     func resetTimer() {
@@ -892,6 +892,33 @@ struct CallView: View {
         startTimer()
     }
     func getPrompt() {
+        if(useBackend){
+            //Upload patient to the server
+            guard let url: URL = URL(string: "http://127.0.0.1:5000/prompts") else {
+                print("Invalid url")
+                return
+            }
+            var urlRequest: URLRequest = URLRequest(url: url)
+            urlRequest.httpMethod = "GET"
+            
+            //urlRequest.httpBody = jsonData
+            urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            URLSession.shared.dataTask(with: urlRequest, completionHandler: {
+                (data, response, error) in
+                guard let data = data else{
+                    print("invalid data")
+                    return
+                }
+                var old_final_url = final_url
+                let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
+                print(responseStr)
+                let res : [String : String]? = convertToDictionary(text: (responseStr))
+                print(res)
+                let prompt_name : String? = res?["response"]
+                print(prompt_name)
+                promptURL = patientURL + prompt_name! + ".mp4"
+            }).resume()
+        }
         //var promptURL = patientURL + MP4 FILE FROM BACKEND
     }
     
