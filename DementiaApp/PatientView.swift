@@ -899,8 +899,18 @@ struct CallView: View {
                 return
             }
             var urlRequest: URLRequest = URLRequest(url: url)
-            urlRequest.httpMethod = "GET"
-            
+            urlRequest.httpMethod = "POST"
+            let parameters: [String: String] = [
+                "lo_idx": id,
+                "p_idx": p_id,
+            ]
+            let encoder = JSONEncoder()
+            if let jsonData = try? encoder.encode(parameters) {
+                if let jsonString = String(data: jsonData, encoding: .utf8) {
+                    print(jsonString)
+                    urlRequest.httpBody = jsonData
+                }
+            }
             //urlRequest.httpBody = jsonData
             urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
             URLSession.shared.dataTask(with: urlRequest, completionHandler: {
