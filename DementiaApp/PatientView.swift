@@ -627,14 +627,14 @@ struct newLovedOneView: View {
                     // Create a reference to the file you want to upload
                     //TODO: this whole thing would be cleaner with async and await
                     let storRef = Storage.storage().reference()
-                    let imgRef = storRef.child("training_data/face.jpeg")
+                    let imgRef = storRef.child("training_data/\(patiendID)/\(loved_one_id!)/face.jpeg")
                     
                     let uploadTask = imgRef.putData(picture, metadata: nil) { (metadata, error) in
                         guard let metadata = metadata else {
                             // Uh-oh, an error occurred!
                             return
                         }
-                        let audioRef = storRef.child("training_data/voice.m4a")
+                        let audioRef = storRef.child("training_data/\(patiendID)/\(loved_one_id!)/voice.m4a")
                         let documentPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]//where do you want to save
                         let audioFilename = documentPath.appendingPathComponent("Recording.m4a")
                         
