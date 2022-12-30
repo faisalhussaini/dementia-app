@@ -729,6 +729,7 @@ struct CallView: View {
     @State var patientURL = ""
     @State var timer: Timer?
     @State var duplicateURL : Bool = false
+    @State var promptURL : String = ""
     @State var prompts:[String] = [
         "doyouknowwhereyouare.mp4",
         "youareinthehospitalbecauseyouaresick.mp4",
@@ -760,14 +761,6 @@ struct CallView: View {
         "tellmeaboutyourfriendsinschool.mp4",
         "tellmeaboutyourchildren.mp4"
     ]
-    @State var tempPrompts:[String] = [
-        "hello.mp4",
-        "byeseeyoulater.mp4",
-        "imdonaldtrump.mp4",
-        "iliveinpalmbeach.mp4",
-        "youare.mp4",
-        "iam.mp4"
-    ]
     
     var body: some View {
         ZStack (alignment: .bottomTrailing){
@@ -778,7 +771,12 @@ struct CallView: View {
                         //https://stackoverflow.com/questions/65796552/ios-swiftui-video-autoplay
                         VideoPlayer(player: player)
                             .onAppear{
+                                if (promptURL == "") {
+                                    //the first prompt is fixed, everything after is chosen by the backend
+                                    promptURL = "https://storage.googleapis.com/virtual-presence-app.appspot.com/\(p_id)/\(id)/" + "howareyoudoingtoday.mp4"
+                                }
                                 if player.currentItem == nil {
+                                    //the chat should open up with hello
                                     videoURL = "https://storage.googleapis.com/virtual-presence-app.appspot.com/\(p_id)/\(id)/hello.mp4"
                                     let item = AVPlayerItem(url: URL(string: videoURL)!)
                                     player.replaceCurrentItem(with: item)
@@ -881,15 +879,20 @@ struct CallView: View {
     func startTimer() {
         self.timer = Timer.scheduledTimer(withTimeInterval: 14, repeats: true, block: { _ in
             print("timer done, prompting patient!!!!!!!!!!")
-            var promptURL = patientURL + tempPrompts.randomElement()!
+            print(promptURL)
             let item = AVPlayerItem(url: URL(string: promptURL)!)
             player.replaceCurrentItem(with: item)
             player.play()
+            promptURL = patientURL + prompts.randomElement()!
+            //getPrompt()
         })
     }
     func resetTimer() {
         self.timer?.invalidate()
         startTimer()
+    }
+    func getPrompt() {
+        //var promptURL = patientURL + MP4 FILE FROM BACKEND
     }
     
     func deleteButton() -> some View {
