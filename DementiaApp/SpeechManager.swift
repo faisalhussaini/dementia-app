@@ -79,7 +79,8 @@ class SpeechManager {
         
         do {
             audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.record, mode: .spokenAudio, options: .duckOthers)
+//            try audioSession.setCategory(.record, mode: .spokenAudio, options: .duckOthers)
+            try audioSession.setCategory(.playAndRecord, mode: .measurement, options: .defaultToSpeaker)
             try audioSession.setActive(true, options:.notifyOthersOnDeactivation)
             try audioEngine.start()
         } catch {

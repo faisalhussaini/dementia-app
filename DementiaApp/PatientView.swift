@@ -4,16 +4,17 @@
 //
 //  Created by Faisal Hussaini on 2022-09-18.
 //
-
-
+ 
+ 
 import SwiftUI
 import AVKit
 import Alamofire
 import FirebaseStorage
-
-let useBackend : Bool = true
+ 
+let useBackend : Bool = false
 var didLoad : Bool = false
-
+var waiting_to_get_reply : Bool = true
+ 
 func convertDictionaryToString(dic: [String : String]) -> String{
     var res:String = ""
     for (key,val) in dic{
@@ -22,7 +23,7 @@ func convertDictionaryToString(dic: [String : String]) -> String{
     }
     return res
 }
-
+ 
 func convertToDictionary(text: String) -> [String: String]? {
     if let data = text.data(using: .utf8) {
         do {
@@ -33,7 +34,7 @@ func convertToDictionary(text: String) -> [String: String]? {
     }
     return nil
 }
-
+ 
 func convertToDictionaryList(text: String) -> [String: [[String : String]]]? {
     if let data = text.data(using: .utf8) {
         do {
@@ -44,7 +45,7 @@ func convertToDictionaryList(text: String) -> [String: [[String : String]]]? {
     }
     return nil
 }
-
+ 
 struct PatientView: View {
     
     @StateObject var patientList = patients()
@@ -226,9 +227,9 @@ struct PatientView: View {
         }
     }
 }
-
-
-
+ 
+ 
+ 
 struct LovedOneView: View {
     
     var patientID: String
@@ -308,7 +309,7 @@ struct LovedOneView: View {
         lovedOneList.items.remove(atOffsets: offsets)
     }
 }
-
+ 
 struct newPatientView: View {
     @StateObject var patientList : patients
     @Environment(\.presentationMode) var presentationMode
@@ -435,7 +436,7 @@ struct newPatientView: View {
         }
     }
 }
-
+ 
 struct newLovedOneView: View {
     
     @ObservedObject var audioRecorder: AudioRecorder
@@ -710,8 +711,8 @@ struct newLovedOneView: View {
         
     }
 }
-
-
+ 
+ 
 struct CallView: View {
     var color: Color
     @StateObject var lovedOneList : lovedOnes
@@ -728,6 +729,7 @@ struct CallView: View {
     @State var videoURL = "https://storage.googleapis.com/virtual-presence-app.appspot.com/1/1/hello.mp4"
     @State var patientURL = ""
     @State var timer: Timer?
+    @State var timer_me: Timer?
     @State var duplicateURL : Bool = false
     @State var promptURL : String = ""
     @State var prompts:[String] = [
@@ -773,11 +775,13 @@ struct CallView: View {
                             .onAppear{
                                 if (promptURL == "") {
                                     //the first prompt is fixed, everything after is chosen by the backend
-                                    promptURL = "https://storage.googleapis.com/virtual-presence-app.appspot.com/\(p_id)/\(id)/" + "howareyoudoingtoday.mp4"
+                                    //promptURL = "https://storage.googleapis.com/virtual-presence-app.appspot.com/\(p_id)/\(id)/" + "howareyoudoingtoday.mp4"
+                                    promptURL = "https://storage.googleapis.com/virtual-presence-app.appspot.com/1/1/howareyoudoingtoday.mp4"
                                 }
                                 if player.currentItem == nil {
                                     //the chat should open up with hello
-                                    videoURL = "https://storage.googleapis.com/virtual-presence-app.appspot.com/\(p_id)/\(id)/hello.mp4"
+                                    //videoURL = "https://storage.googleapis.com/virtual-presence-app.appspot.com/\(p_id)/\(id)/hello.mp4"
+                                    videoURL = "https://storage.googleapis.com/virtual-presence-app.appspot.com/1/1/hello.mp4"
                                     let item = AVPlayerItem(url: URL(string: videoURL)!)
                                     player.replaceCurrentItem(with: item)
                                 }
@@ -817,52 +821,74 @@ struct CallView: View {
                 .padding()
                 .cornerRadius(10)
         }.foregroundColor(recording ? .red : .green)
+//        print("button pressed")
     }
     
     func addItem() {
+        print("J: adding item!!!!!!")
         if speechManager.isRecording {
+            print("done recording")
             self.recording = false
             mic.stopMonitoring()
             speechManager.stopRecording()
+            print("Speech manager toggled")
+            speechManager.isRecording.toggle()
         } else {
+            print("waiting to record")
             self.recording = true
             mic.startMonitoring()
-            speechManager.start { (speechText) in
-                guard let text = speechText, !text.isEmpty else {
-                    self.recording = false
-                    return
-                }
-                print("text: ", text)
-                DispatchQueue.main.async {
-                    withAnimation {
-                        let newItem = Todo(context: viewContext)
-                        newItem.id = UUID()
-                        newItem.text = text
-                        newItem.created = Date()
-                        
-                        do {
-                            try viewContext.save()
-                        } catch {
-                            print(error)
-                        }
-                        var old_url = final_url
-                        callBackend(text: todos.last?.text)
-                        while(final_url == old_url && duplicateURL == false) {
-                            //do nothing and wait for the url to update, there must be a more elegant way to do this
-                        }
-                        print("final_url: ", final_url)
-                        print("old_url: ", old_url)
-                        print("duplicateURL: ", duplicateURL)
-                        let item = AVPlayerItem(url: URL(string: final_url)!)
-                        player.replaceCurrentItem(with: item)
-                        player.play()
-                        resetTimer()
+            var x : Int = 2;
+            var i : Int = 0;
+            print("speech manager start")
+                speechManager.start { (speechText) in
+                    guard let text = speechText, !text.isEmpty else {
+                        self.recording = false
+                        return
                     }
+                    print("text: ", text)
+                    DispatchQueue.main.async {
+                        withAnimation {
+                            let newItem = Todo(context: viewContext)
+                            newItem.id = UUID()
+                            newItem.text = text
+                            newItem.created = Date()
+                            
+                            do {
+                                try viewContext.save()
+                            } catch {
+                                print(error)
+                            }
+                            var old_url = final_url
+                            callBackend(text: todos.last?.text)
+                            //while(final_url == old_url && duplicateURL == false) {
+                            //do nothing and wait for the url to update, there must be a more elegant way to do this
+                            //}
+                            print("final_url: ", final_url)
+                            print("old_url: ", old_url)
+                            print("duplicateURL: ", duplicateURL)
+                            final_url = "https://storage.googleapis.com/virtual-presence-app.appspot.com/1/1/hello.mp4"
+                            let item = AVPlayerItem(url: URL(string: final_url)!)
+                            player.replaceCurrentItem(with: item)
+                            player.play()
+                            let time_to_wait = self.player.currentItem!.asset.duration
+                            resetTimer(wait_n: time_to_wait)
+                            
+                            self.recording = false
+                            mic.stopMonitoring()
+                            speechManager.stopRecording()
+                            print("Speech manager toggled")
+                            waiting_to_get_reply = false
+                        }
+                    }
+                    mic.stopMonitoring()
+                    print("mic stopped monitoring")
                 }
-                mic.stopMonitoring()
-            }
+                
         }
-        speechManager.isRecording.toggle()
+//        print("Speech manager toggled")
+//        speechManager.isRecording.toggle()
+//        print("Wait to get reply")
+
     }
     func deleteItems(offsets: IndexSet) {
         withAnimation {
@@ -885,11 +911,28 @@ struct CallView: View {
             player.play()
             //promptURL = patientURL + prompts.randomElement()!
             getPrompt()
+//            addItem()
         })
     }
-    func resetTimer() {
+    func startMe(wait_n : Double) {
+        self.timer_me = Timer.scheduledTimer(withTimeInterval: wait_n, repeats: false, block: { _ in
+            print("spinning and waiting to restart prompt")
+            if (waiting_to_get_reply) {
+                return
+            }
+            print("done spinning, restarting")
+            waiting_to_get_reply = true;
+            addItem()
+        })
+    }
+    func resetTimer(wait_n: CMTime) {
+        print("wait = ", wait_n)
+        print("seconds = ", wait_n.seconds)
+        let compute = ceil(wait_n.seconds) + 1
+        print("new wait = ", compute)
         self.timer?.invalidate()
         startTimer()
+        startMe(wait_n: compute)
     }
     func getPrompt() {
         if(useBackend){
@@ -1015,10 +1058,10 @@ struct CallView: View {
         }.foregroundColor(.red)
     }
 }
-
+ 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         PatientView()
     }
 }
-
+ 
