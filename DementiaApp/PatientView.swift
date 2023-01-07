@@ -914,7 +914,7 @@ struct CallView: View {
 //            addItem()
         })
     }
-    func startMe(wait_n : Double) {
+    func startMe(wait_n : Double) { 
         self.timer_me = Timer.scheduledTimer(withTimeInterval: wait_n, repeats: false, block: { _ in
             print("spinning and waiting to restart prompt")
             if (waiting_to_get_reply) {
