@@ -13,6 +13,7 @@ import FirebaseStorage
 
 let useBackend : Bool = true
 var didLoad : Bool = false
+var waiting_to_get_reply : Bool = true
 
 func convertDictionaryToString(dic: [String : String]) -> String{
     var res:String = ""
@@ -728,39 +729,9 @@ struct CallView: View {
     @State var videoURL = "https://storage.googleapis.com/virtual-presence-app.appspot.com/1/1/hello.mp4"
     @State var patientURL = ""
     @State var timer: Timer?
+    @State var timer_me: Timer?
     @State var duplicateURL : Bool = false
     @State var promptURL : String = ""
-    @State var prompts:[String] = [
-        "doyouknowwhereyouare.mp4",
-        "youareinthehospitalbecauseyouaresick.mp4",
-        "doyouknowwhatyearitis.mp4",
-        "doyouknowwhatmonthitis.mp4",
-        "doyouknowwhatseasonitis.mp4",
-        "todayis.mp4",
-        "itistheyear.mp4",
-        "itisnow.mp4",
-        "howareyoudoingtoday.mp4",
-        "tellmeaboutthedayyourfirstchildwasborn.mp4",
-        "tellmeaboutthetimeyoufirstmetyourspouse.mp4",
-        "tellmeaboutyourweddingday.mp4",
-        "tellmeaboutthehappiestmomentinyourlife.mp4",
-        "howmanychildrendoyouhave.mp4",
-        "doyouhaveaspouse.mp4",
-        "wheredoyoulive.mp4",
-        "whatareyourhobbies.mp4",
-        "areyoufeelingscared.mp4",
-        "tellmemoreabouthowyouarefeeling.mp4",
-        "doyouliketo1.mp4",
-        "doyouliketo2.mp4",
-        "doyouliketo3.mp4",
-        "youmustbefeelingveryscaredrightnow.mp4",
-        "didyouknowthatacathas32musclesineachear.mp4",
-        "didyouknowthatmostpeoplefallasleepinsevenminutes.mp4",
-        "didyouknowthatthefirstorangeswereactuallygreen.mp4",
-        "didyouknowthatthereare206bonesinthehumanbody.mp4",
-        "tellmeaboutyourfriendsinschool.mp4",
-        "tellmeaboutyourchildren.mp4"
-    ]
     
     var body: some View {
         ZStack (alignment: .bottomTrailing){
@@ -820,49 +791,68 @@ struct CallView: View {
     }
     
     func addItem() {
+        print("J: adding item!!!!!!")
         if speechManager.isRecording {
+            print("done recording")
             self.recording = false
             mic.stopMonitoring()
             speechManager.stopRecording()
+            print("Speech manager toggled")
+            speechManager.isRecording.toggle()
         } else {
+            print("waiting to record")
             self.recording = true
             mic.startMonitoring()
-            speechManager.start { (speechText) in
-                guard let text = speechText, !text.isEmpty else {
-                    self.recording = false
-                    return
-                }
-                print("text: ", text)
-                DispatchQueue.main.async {
-                    withAnimation {
-                        let newItem = Todo(context: viewContext)
-                        newItem.id = UUID()
-                        newItem.text = text
-                        newItem.created = Date()
-                        
-                        do {
-                            try viewContext.save()
-                        } catch {
-                            print(error)
-                        }
-                        var old_url = final_url
-                        callBackend(text: todos.last?.text)
-                        while(final_url == old_url && duplicateURL == false) {
-                            //do nothing and wait for the url to update, there must be a more elegant way to do this
-                        }
-                        print("final_url: ", final_url)
-                        print("old_url: ", old_url)
-                        print("duplicateURL: ", duplicateURL)
-                        let item = AVPlayerItem(url: URL(string: final_url)!)
-                        player.replaceCurrentItem(with: item)
-                        player.play()
-                        resetTimer()
+            var x : Int = 2;
+            var i : Int = 0;
+            print("speech manager start")
+                speechManager.start { (speechText) in
+                    guard let text = speechText, !text.isEmpty else {
+                        self.recording = false
+                        return
                     }
+                    print("text: ", text)
+                    DispatchQueue.main.async {
+                        withAnimation {
+                            let newItem = Todo(context: viewContext)
+                            newItem.id = UUID()
+                            newItem.text = text
+                            newItem.created = Date()
+                            
+                            do {
+                                try viewContext.save()
+                            } catch {
+                                print(error)
+                            }
+                            var old_url = final_url
+                            callBackend(text: todos.last?.text)
+                            while(final_url == old_url && duplicateURL == false) {
+                            //do nothing and wait for the url to update, there must be a more elegant way to do this
+                            }
+                            print("final_url: ", final_url)
+                            print("old_url: ", old_url)
+                            print("duplicateURL: ", duplicateURL)
+                            let item = AVPlayerItem(url: URL(string: final_url)!)
+                            player.replaceCurrentItem(with: item)
+                            player.play()
+                            let time_to_wait = self.player.currentItem!.asset.duration
+                            resetTimer(wait_n: time_to_wait)
+                            
+                            self.recording = false
+                            mic.stopMonitoring()
+                            speechManager.stopRecording()
+                            print("Speech manager toggled")
+                            waiting_to_get_reply = false
+                        }
+                    }
+                    mic.stopMonitoring()
+                    print("mic stopped monitoring")
                 }
-                mic.stopMonitoring()
-            }
+                
         }
-        speechManager.isRecording.toggle()
+//        print("Speech manager toggled")
+//        speechManager.isRecording.toggle()
+//        print("Wait to get reply")
     }
     func deleteItems(offsets: IndexSet) {
         withAnimation {
@@ -887,9 +877,25 @@ struct CallView: View {
             getPrompt()
         })
     }
-    func resetTimer() {
+    func startMe(wait_n : Double) {
+        self.timer_me = Timer.scheduledTimer(withTimeInterval: wait_n, repeats: false, block: { _ in
+            print("spinning and waiting to restart prompt")
+            if (waiting_to_get_reply) {
+                return
+            }
+            print("done spinning, restarting")
+            waiting_to_get_reply = true;
+            addItem()
+        })
+    }
+    func resetTimer(wait_n: CMTime) {
+        print("wait = ", wait_n)
+        print("seconds = ", wait_n.seconds)
+        let compute = ceil(wait_n.seconds) + 1
+        print("new wait = ", compute)
         self.timer?.invalidate()
         startTimer()
+        startMe(wait_n: compute)
     }
     func getPrompt() {
         if(useBackend){

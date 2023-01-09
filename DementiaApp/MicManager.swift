@@ -42,7 +42,7 @@ class MicMonitor: ObservableObject {
         
         do {
             audioRecorder = try AVAudioRecorder(url: url, settings: recorderSettings)
-            try audioSession.setCategory(.playAndRecord, mode: .default, options: [])
+            try audioSession.setCategory(.playAndRecord, mode: .measurement, options: .defaultToSpeaker)
         } catch {
             fatalError(error.localizedDescription)
         }

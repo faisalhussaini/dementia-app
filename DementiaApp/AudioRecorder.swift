@@ -30,7 +30,7 @@ class AudioRecorder: NSObject,ObservableObject { //NSObject to allow fetchRecord
     func startRecording() {
         let recordingSession = AVAudioSession.sharedInstance() //create recording
         do {//define type of recording and activate it
-            try recordingSession.setCategory(.playAndRecord, mode: .default)
+            try recordingSession.setCategory(.playAndRecord, mode: .measurement, options: .defaultToSpeaker)
             try recordingSession.setActive(true)
         } catch {
             print("Failed to set up recording session")
