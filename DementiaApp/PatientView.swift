@@ -14,6 +14,7 @@ import FirebaseStorage
 let useBackend : Bool = false
 var didLoad : Bool = false
 var waiting_to_get_reply : Bool = true
+let lock_audio : NSLock = NSLock()
  
 func convertDictionaryToString(dic: [String : String]) -> String{
     var res:String = ""
@@ -904,6 +905,13 @@ struct CallView: View {
     
     func startTimer() {
         self.timer = Timer.scheduledTimer(withTimeInterval: 14, repeats: true, block: { _ in
+            lock_audio.lock()
+            //turn off mic
+            self.recording = false
+            mic.stopMonitoring()
+            speechManager.stopRecording()
+            waiting_to_get_reply = false
+            
             print("timer done, prompting patient!!!!!!!!!!")
             print(promptURL)
             let item = AVPlayerItem(url: URL(string: promptURL)!)
@@ -912,10 +920,18 @@ struct CallView: View {
             //promptURL = patientURL + prompts.randomElement()!
             getPrompt()
 //            addItem()
+            
+            //restart mic monitoring post prompt
+            let wait_n = self.player.currentItem!.asset.duration
+            let time_to_wait = ceil(wait_n.seconds) + 1
+            print("time of prompt = ", time_to_wait)
+            startMe(wait_n: time_to_wait)
+            lock_audio.unlock()
         })
     }
-    func startMe(wait_n : Double) { 
+    func startMe(wait_n : Double) {
         self.timer_me = Timer.scheduledTimer(withTimeInterval: wait_n, repeats: false, block: { _ in
+            lock_audio.lock()
             print("spinning and waiting to restart prompt")
             if (waiting_to_get_reply) {
                 return
@@ -923,6 +939,7 @@ struct CallView: View {
             print("done spinning, restarting")
             waiting_to_get_reply = true;
             addItem()
+            lock_audio.unlock()
         })
     }
     func resetTimer(wait_n: CMTime) {
@@ -935,6 +952,7 @@ struct CallView: View {
         startMe(wait_n: compute)
     }
     func getPrompt() {
+        
         if(useBackend){
             //Upload patient to the server
             guard let url: URL = URL(string: "http://127.0.0.1:5000/prompts") else {
