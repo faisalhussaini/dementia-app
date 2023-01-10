@@ -14,6 +14,7 @@ import FirebaseStorage
 let useBackend : Bool = true
 var didLoad : Bool = false
 var waiting_to_get_reply : Bool = true
+let lock_audio : NSLock = NSLock()
 
 func convertDictionaryToString(dic: [String : String]) -> String{
     var res:String = ""
@@ -803,8 +804,6 @@ struct CallView: View {
             print("waiting to record")
             self.recording = true
             mic.startMonitoring()
-            var x : Int = 2;
-            var i : Int = 0;
             print("speech manager start")
                 speechManager.start { (speechText) in
                     guard let text = speechText, !text.isEmpty else {
@@ -868,17 +867,30 @@ struct CallView: View {
     
     func startTimer() {
         self.timer = Timer.scheduledTimer(withTimeInterval: 14, repeats: true, block: { _ in
+            lock_audio.lock()
+            //turn off mic
+            self.recording = false
+            mic.stopMonitoring()
+            speechManager.stopRecording()
+            waiting_to_get_reply = false
+            
             print("timer done, prompting patient!!!!!!!!!!")
             print(promptURL)
             let item = AVPlayerItem(url: URL(string: promptURL)!)
             player.replaceCurrentItem(with: item)
             player.play()
-            //promptURL = patientURL + prompts.randomElement()!
             getPrompt()
+            //restart mic monitoring post prompt
+            let wait_n = self.player.currentItem!.asset.duration
+            let time_to_wait = ceil(wait_n.seconds) + 0.1
+            print("time of prompt = ", time_to_wait)
+            startMe(wait_n: time_to_wait)
+            lock_audio.unlock()
         })
     }
     func startMe(wait_n : Double) {
         self.timer_me = Timer.scheduledTimer(withTimeInterval: wait_n, repeats: false, block: { _ in
+            lock_audio.lock()
             print("spinning and waiting to restart prompt")
             if (waiting_to_get_reply) {
                 return
@@ -886,12 +898,13 @@ struct CallView: View {
             print("done spinning, restarting")
             waiting_to_get_reply = true;
             addItem()
+            lock_audio.unlock()
         })
     }
     func resetTimer(wait_n: CMTime) {
         print("wait = ", wait_n)
         print("seconds = ", wait_n.seconds)
-        let compute = ceil(wait_n.seconds) + 1
+        let compute = ceil(wait_n.seconds) + 0.1
         print("new wait = ", compute)
         self.timer?.invalidate()
         startTimer()
