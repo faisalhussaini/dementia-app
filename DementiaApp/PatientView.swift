@@ -733,6 +733,7 @@ struct CallView: View {
     @State var timer_me: Timer?
     @State var duplicateURL : Bool = false
     @State var promptURL : String = ""
+    @State var inCall = true
     
     var body: some View {
         ZStack (alignment: .bottomTrailing){
@@ -775,6 +776,8 @@ struct CallView: View {
                     }
                     .onDisappear() {
                         deleteAllItems()
+                        inCall = false
+                        print("Left call!")
                     }
                     .padding(.top)
                 }
@@ -907,6 +910,9 @@ struct CallView: View {
         let compute = ceil(wait_n.seconds) + 0.1
         print("new wait = ", compute)
         self.timer?.invalidate()
+        if (!inCall) {
+            return
+        }
         startTimer()
         startMe(wait_n: compute)
     }
