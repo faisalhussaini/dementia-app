@@ -10,6 +10,7 @@
 		4752BC5D29141B4200FDCB98 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4752BC5C29141B4200FDCB98 /* GoogleService-Info.plist */; };
 		4752BC6029141C1600FDCB98 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 4752BC5F29141C1600FDCB98 /* FirebaseFirestore */; };
 		4752BC6229141C1600FDCB98 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 4752BC6129141C1600FDCB98 /* FirebaseStorage */; };
+		CF0BCD46297DD46E0020ECA9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF0BCD45297DD46E0020ECA9 /* LaunchScreen.storyboard */; };
 		CF3CB1C9291B4A4D002D53E0 /* SpeechManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3CB1C8291B4A4D002D53E0 /* SpeechManager.swift */; };
 		CF3CB1CB291B4A5B002D53E0 /* MicManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3CB1CA291B4A5B002D53E0 /* MicManager.swift */; };
 		CF3CB1CD291B4A64002D53E0 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3CB1CC291B4A64002D53E0 /* Persistence.swift */; };
@@ -46,6 +47,8 @@
 		33F89C145C2E01CFCDBAD044 /* Pods_DementiaApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DementiaApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4752BC5C29141B4200FDCB98 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		48367EE8DDE9E7A98B5AA9CB /* Pods-DementiaApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DementiaApp.release.xcconfig"; path = "Target Support Files/Pods-DementiaApp/Pods-DementiaApp.release.xcconfig"; sourceTree = "<group>"; };
+		CF0BCD44297DD3A30020ECA9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		CF0BCD45297DD46E0020ECA9 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CF3CB1C8291B4A4D002D53E0 /* SpeechManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeechManager.swift; sourceTree = "<group>"; };
 		CF3CB1CA291B4A5B002D53E0 /* MicManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MicManager.swift; sourceTree = "<group>"; };
 		CF3CB1CC291B4A64002D53E0 /* Persistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -116,6 +119,7 @@
 		CFE5054828D7892100825BC9 /* DementiaApp */ = {
 			isa = PBXGroup;
 			children = (
+				CF0BCD44297DD3A30020ECA9 /* Info.plist */,
 				CFE5054928D7892100825BC9 /* DementiaAppApp.swift */,
 				CFE5054B28D7892100825BC9 /* PatientView.swift */,
 				CFB77B1128D8DED200D3F39D /* contacts.swift */,
@@ -129,6 +133,7 @@
 				CF3CB1CA291B4A5B002D53E0 /* MicManager.swift */,
 				CF3CB1CC291B4A64002D53E0 /* Persistence.swift */,
 				CF3CB1D0291B4AAA002D53E0 /* speechtodo.xcdatamodeld */,
+				CF0BCD45297DD46E0020ECA9 /* LaunchScreen.storyboard */,
 				CFE5054D28D7892200825BC9 /* Assets.xcassets */,
 				CFE5054F28D7892200825BC9 /* Preview Content */,
 			);
@@ -212,6 +217,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4752BC5D29141B4200FDCB98 /* GoogleService-Info.plist in Resources */,
+				CF0BCD46297DD46E0020ECA9 /* LaunchScreen.storyboard in Resources */,
 				CFE5055128D7892200825BC9 /* Preview Assets.xcassets in Resources */,
 				CFE5054E28D7892200825BC9 /* Assets.xcassets in Resources */,
 			);
@@ -410,13 +416,15 @@
 				DEVELOPMENT_TEAM = JCBWZNYKTF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_FILE = DementiaApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Familar Faces";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Camera is needed to photograph loved ones";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Microphone usage is required to communicate with loved ones";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Speech recognition is required to communicate with loved ones";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
@@ -445,13 +453,15 @@
 				DEVELOPMENT_TEAM = JCBWZNYKTF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_FILE = DementiaApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Familar Faces";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.medical";
 				INFOPLIST_KEY_NSCameraUsageDescription = "Camera is needed to photograph loved ones";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Microphone usage is required to communicate with loved ones";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Speech recognition is required to communicate with loved ones";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.5;

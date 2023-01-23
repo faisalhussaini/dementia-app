@@ -47,6 +47,19 @@ func convertToDictionaryList(text: String) -> [String: [[String : String]]]? {
     return nil
 }
 
+extension View {
+    func placeholder<Content: View>(
+        when shouldShow: Bool,
+        alignment: Alignment = .leading,
+        @ViewBuilder placeholder: () -> Content) -> some View {
+
+        ZStack(alignment: alignment) {
+            placeholder().opacity(shouldShow ? 1 : 0)
+            self
+        }
+    }
+}
+
 struct PatientView: View {
     
     @StateObject var patientList = patients()
@@ -334,7 +347,10 @@ struct newPatientView: View {
             VStack {
                 Form {
                     Section {
-                        TextField("Patient's Name", text: $name)
+                        TextField("", text: $name)
+                            .placeholder(when: name.isEmpty) {
+                                Text("Patient's Name").foregroundColor(.red)
+                            }
                         DatePicker("Patient's Date of Birth", selection : $date, displayedComponents: .date)
                         Picker("Patient's Gender", selection: $gender) {
                             ForEach(genders, id: \.self) {
@@ -343,9 +359,18 @@ struct newPatientView: View {
                         }
                         TextField("Patient's children seperated by commas. Example: 'John Smith, Jack Smith'", text: $children)
                         TextField("Patient's spouse/partner", text: $spouse)
-                        TextField("Patient's place of residence", text: $placeOfResidence)
-                        TextField("Patient's top 3 hobbies seperated by commas. Example: 'swimming, poetry, cooking'", text: $hobbies)
-                        TextField("Name of the hospital patient is staying in", text: $hospitalName)
+                        TextField("", text: $placeOfResidence)
+                            .placeholder(when: placeOfResidence.isEmpty) {
+                                Text("Patient's place of residence").foregroundColor(.red)
+                            }
+                        TextField("", text: $hobbies)
+                            .placeholder(when: hobbies.isEmpty) {
+                                Text("Patient's top 3 hobbies seperated by commas. Example: 'swimming, poetry, cooking'").foregroundColor(.red)
+                            }
+                        TextField("", text: $hospitalName)
+                            .placeholder(when: hospitalName.isEmpty) {
+                                Text("Name of the hospital patient is staying in").foregroundColor(.red)
+                            }
                     }
                 }
                 
@@ -366,12 +391,15 @@ struct newPatientView: View {
                 })
                 
                 .navigationBarTitle("New Patient")
-                Button {
-                    add_patient(id: "21", name: name, gender: gender, date: date, questionResponses: questionResponses)
-                    presentationMode.wrappedValue.dismiss()
-                } label : {
-                    Text("Save")
+                Section {
+                    Button {
+                        add_patient(id: "21", name: name, gender: gender, date: date, questionResponses: questionResponses)
+                        presentationMode.wrappedValue.dismiss()
+                    } label : {
+                        Text("Save")
+                    }
                 }
+                .disabled(name.isEmpty || placeOfResidence.isEmpty || hobbies.isEmpty || hospitalName.isEmpty || hobbies.filter { $0 == "," }.count != 2)
             }
             .toolbar {
                 Button("Cancel") {
@@ -449,7 +477,6 @@ struct newLovedOneView: View {
     @State private var date = Date()
     @State private var name: String = ""
     @State private var gender: String = ""
-    @State private var audioFile: Recording?
     @State private var isShowingPhotoPicker = false
     @State private var lovedOneImage = UIImage(named: "default-avatar")!
     @State private var children: String = ""
@@ -468,7 +495,10 @@ struct newLovedOneView: View {
             VStack {
                 Form {
                     Section {
-                        TextField("Loved One's Name", text: $name)
+                        TextField("", text: $name)
+                            .placeholder(when: name.isEmpty) {
+                                Text("Loved One's Name").foregroundColor(.red)
+                            }
                         DatePicker("Loved One's Date of birth", selection : $date, displayedComponents: .date)
                         Picker("Loved Ones's Gender", selection: $gender) {
                             ForEach(genders, id: \.self) {
@@ -477,8 +507,14 @@ struct newLovedOneView: View {
                         }
                         TextField("Loved One's children seperated by commas. Example: 'John Smith, Jack Smith'", text: $children)
                         TextField("Loved One's spouse/partner", text: $spouse)
-                        TextField("Loved One's place of residence", text: $placeOfResidence)
-                        TextField("Loved One's top 3 hobbies seperated by commas. Example: 'swimming, poetry, cooking'", text: $hobbies)
+                        TextField("", text: $placeOfResidence)
+                            .placeholder(when: placeOfResidence.isEmpty) {
+                                Text("Loved One's place of residence").foregroundColor(.red)
+                            }
+                        TextField("", text: $hobbies)
+                            .placeholder(when: hobbies.isEmpty) {
+                                Text("Loved One's top 3 hobbies seperated by commas. Example: 'swimming, poetry, cooking'").foregroundColor(.red)
+                            }
                     }
                     //https://www.youtube.com/watch?v=V-kSSjh1T74
                     //once we connect with backend then upload lovedOneImage in add_loved_one, for now do nothing
@@ -539,6 +575,8 @@ struct newLovedOneView: View {
                                 .foregroundColor(.red)
                         }
                     }
+                    Text("Please record yourself saying the following three sentences:\n1. The quick brown fox jumps over the lazy dog.\n2. I am feeling happy today.\n3. The temperature outside is 75 degrees.")
+                        .frame(maxWidth: .infinity, alignment: .center)
                 }
                 .navigationBarTitle("New Loved One")
                 
@@ -554,16 +592,18 @@ struct newLovedOneView: View {
                 .onChange(of: hobbies, perform: { string in
                     questionResponses["hobbies"] = hobbies
                 })
-                
-                Button {
-                    //Once we connect with Backend then pass mp4 file and image in add_loved_one
-                    let imageData: Data = lovedOneImage.jpegData(compressionQuality: 0.5) ?? Data()
-                    
-                    add_loved_one(id: "21", patiendID: patientID, name: name, gender: gender, date: date, picture: imageData, questionResponses: questionResponses)
-                    presentationMode.wrappedValue.dismiss()
-                } label : {
-                    Text("Save")
+                Section {
+                    Button {
+                        //Once we connect with Backend then pass mp4 file and image in add_loved_one
+                        let imageData: Data = lovedOneImage.jpegData(compressionQuality: 0.5) ?? Data()
+                        
+                        add_loved_one(id: "21", patiendID: patientID, name: name, gender: gender, date: date, picture: imageData, questionResponses: questionResponses)
+                        presentationMode.wrappedValue.dismiss()
+                    } label : {
+                        Text("Save")
+                    }
                 }
+                .disabled(name.isEmpty || placeOfResidence.isEmpty || hobbies.isEmpty || audioRecorder.recordings.isEmpty || hobbies.filter { $0 == "," }.count != 2)
             }
             .toolbar {
                 Button("Cancel") {

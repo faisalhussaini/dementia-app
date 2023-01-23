@@ -27,6 +27,9 @@ struct RecordingsList: View {
         }
         audioRecorder.deleteRecording(urlsToDelete: urlsToDelete)
     }
+    func isEmpty() {
+        return
+    }
 }
 
 struct RecordingRow: View { //to display one row for each stored recording
