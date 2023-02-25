@@ -8,6 +8,12 @@
 import Foundation
 import AVFoundation
 
+//This file contains functions which are used to record the users speech for transcription
+//It uses the AV foundation to access the mic and record the users speech
+//Below are two functions to start and stop the microphone sessions
+//code for speech recognition adopted from a todo app tutorial youtube series
+//https://www.youtube.com/playlist?list=PLbrKvTeCrFAffsnrKSa9mp9hM22E6kSjx
+
 class MicMonitor: ObservableObject {
     private var audioRecorder: AVAudioRecorder
     private var timer: Timer?
@@ -27,7 +33,7 @@ class MicMonitor: ObservableObject {
         if audioSession.recordPermission != .granted {
             audioSession.requestRecordPermission { (success)  in
                 if !success {
-                    fatalError("We need audio recording for visualization")
+                    fatalError("We need audio recording permission to allow you to talk to your loved one")
                 }
             }
         }

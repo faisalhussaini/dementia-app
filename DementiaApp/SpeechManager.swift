@@ -8,6 +8,13 @@
 import Foundation
 import Speech
 
+//This file contains functions which are used to transcribe the users speech to text
+//It uses the speech framework along with a 2 second timer to partition and transcribe the users speech
+//Below are two functions to start and stop the transcription sessions
+//code for speech recognition adopted from a todo app tutorial youtube series
+//https://www.youtube.com/playlist?list=PLbrKvTeCrFAffsnrKSa9mp9hM22E6kSjx
+
+
 class SpeechManager {
     public var isRecording = false
     
@@ -52,18 +59,15 @@ class SpeechManager {
                 return
             }
             guard let result = result else { return }
-            ////////////////
+
             self.timer = Timer.scheduledTimer(withTimeInterval: 2, repeats: false, block: { (timer) in
                 self.timer?.invalidate()
-                print("invalidated timer")
                 self.stopRecording()
                 return
-            ////////////////
             })
             
             if result.isFinal {
                 completion(result.bestTranscription.formattedString)
-                print("FINAL")
                 print(result.bestTranscription.formattedString)
             }
         }

@@ -62,13 +62,16 @@ extension View {
 
 struct PatientView: View {
     
+    //This is the view that the user sees when they start the app.
+    //From here they can view all patients as well as add and delete patients
+    
     @StateObject var patientList = patients()
     @StateObject var lovedOneList = lovedOnes()
     @State var showPopup = false
     var body: some View {
         ZStack {
             NavigationView{
-                List {
+                List {//list showing each patient
                     ForEach(patientList.items, id: \.id) { item in
                         HStack {
                             Text(item.name)
@@ -95,7 +98,7 @@ struct PatientView: View {
                 }
             }
             .navigationViewStyle(StackNavigationViewStyle())
-            .onAppear {
+            .onAppear { //load all the patients and loved ones once on startup
                 if (!didLoad) {
                     load_patients()
                     load_loved_ones()
@@ -106,6 +109,7 @@ struct PatientView: View {
         .ignoresSafeArea()
     }
     func removeItems(at offsets: IndexSet) {
+        //This function is called when deleting patients, it removes them from the DB
         if(useBackend){
             for index in offsets{
                 let patient : patient = patientList.items[index]
@@ -141,8 +145,9 @@ struct PatientView: View {
         }
         patientList.items.remove(atOffsets: offsets)
     }
-    //For now just hard code this, access API endpoint later
     func load_patients(){
+        //This function gets the list of patients from the backend DB and appends them to the local list of patients to display
+        //One patient struct is created for each patient in the backend
         if(useBackend){
             //fetch all the patients
             guard let url: URL = URL(string: "http://127.0.0.1:5000/all_patients") else {
@@ -182,6 +187,7 @@ struct PatientView: View {
             }).resume()
         }
         else{
+            //for local testing when not using the backend, hardcode patients
             let patient1: patient = patient(id: "1", name: "Faisal Hussaini", gender: "male", DOB: Date())
             let patient2: patient = patient(id: "2", name: "Julian Humecki", gender: "male", DOB: Date())
             let patient3: patient = patient(id: "3", name: "Hassan Khan", gender: "male", DOB: Date())
@@ -193,6 +199,8 @@ struct PatientView: View {
         }
     }
     func load_loved_ones(){
+        //This function gets the list of loved ones from the backend DB and appends them to the local list of loved ones to display
+        //One loved one struct is created for each loved one in the backend
         if(useBackend){
             //fetch all the loved ones
             guard let url: URL = URL(string: "http://127.0.0.1:5000/all_loved_ones") else {
@@ -233,6 +241,7 @@ struct PatientView: View {
             }).resume()
         }
         else{
+            //for local testing when not using the backend, hardcode loved ones
             for i in 1...15{
                 let name = "Loved One" + String(i)
                 let newLovedOne: lovedOne = lovedOne(id: String(i), patientID: String((i % 4) + 1), name: name, gender: "male", DOB: Date())
@@ -245,6 +254,8 @@ struct PatientView: View {
 
 
 struct LovedOneView: View {
+    //This is the view that the user sees when they click a patient.
+    //From here they can view all loved ones curresponding to that patient, as well as add and delete loved ones
     
     var patientID: String
     @State private var showPopup = false
@@ -286,6 +297,7 @@ struct LovedOneView: View {
         .ignoresSafeArea()
     }
     func removeItems(at offsets: IndexSet) {
+        //This function is called when deleting loved ones, it removes them from the DB and the local list of loves ones
         if(useBackend){
             for index in offsets{
                 let lovedOne : lovedOne = lovedOneList.items[index]
@@ -325,6 +337,10 @@ struct LovedOneView: View {
 }
 
 struct newPatientView: View {
+    
+    //This is the view that is displayed when adding a new patient
+    //the view takes information about the patient in the form of text form
+    
     @StateObject var patientList : patients
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.dismiss) var dismiss
@@ -399,7 +415,7 @@ struct newPatientView: View {
                         Text("Save")
                     }
                 }
-                .disabled(name.isEmpty || placeOfResidence.isEmpty || hobbies.isEmpty || hospitalName.isEmpty || hobbies.filter { $0 == "," }.count != 2)
+                .disabled(name.isEmpty || placeOfResidence.isEmpty || hobbies.isEmpty || hospitalName.isEmpty || hobbies.filter { $0 == "," }.count != 2)//The save button is disabled if info is missing
             }
             .toolbar {
                 Button("Cancel") {
@@ -411,8 +427,10 @@ struct newPatientView: View {
         .navigationViewStyle(.stack)
     }
     
-    //hard code for now, add API access
+    
     func add_patient(id: String, name: String, gender:String, date:Date, questionResponses: [String: String]){
+        
+        //This function is used to add the patient to the backend DB
         if(useBackend){
             //Upload patient to the server
             guard let url: URL = URL(string: "http://127.0.0.1:5000/patients") else {
@@ -468,6 +486,12 @@ struct newPatientView: View {
 
 struct newLovedOneView: View {
     
+    //This is the view that is displayed when adding a new loved one
+    //the view takes information about the patient in the form of text form
+    //It also requires the loved one to upload an image of themselves, either via the camera roll or front camera
+    //It requires the loved one to record themselves speaking. Users can listen to their recording and rerecord as neccesary
+    //This data will be sent to the backend for ML training purposes
+    
     @ObservedObject var audioRecorder: AudioRecorder
     var patientID: String
     @StateObject var lovedOneList : lovedOnes
@@ -517,7 +541,7 @@ struct newLovedOneView: View {
                             }
                     }
                     //https://www.youtube.com/watch?v=V-kSSjh1T74
-                    //once we connect with backend then upload lovedOneImage in add_loved_one, for now do nothing
+                    //This demo on youtube was followed to create the photopicker
                     Section {
                         Image(uiImage: lovedOneImage) //swiftui does not have a native way in ios 15 to interact with photopicker. Have to use with uiimagepickercontroller in uikit which returns uiimage
                             .resizable()
@@ -541,9 +565,6 @@ struct newLovedOneView: View {
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
                     .navigationTitle("New Loved One")
-                    //.sheet(isPresented: $isShowingPhotoPicker) {
-                    //    PhotoPicker(lovedOneImage: $lovedOneImage, sourceType: self.sourceType)
-                    //}
                     .sheet(isPresented: self.$isImagePickerButtonClicked) {
                         PhotoPicker(lovedOneImage: $lovedOneImage, sourceType: self.sourceType)
                     }
@@ -575,7 +596,7 @@ struct newLovedOneView: View {
                                 .foregroundColor(.red)
                         }
                     }
-                    Text("Please record yourself saying the following three sentences:\n1. The quick brown fox jumps over the lazy dog.\n2. I am feeling happy today.\n3. The temperature outside is 75 degrees.")
+                    Text("Please record yourself saying the following three sentences:\n1. The quick brown fox jumps over the lazy dog.\n2. I am feeling happy today.\n3. The temperature outside is 25 degrees.")
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
                 .navigationBarTitle("New Loved One")
@@ -594,9 +615,9 @@ struct newLovedOneView: View {
                 })
                 Section {
                     Button {
-                        //Once we connect with Backend then pass mp4 file and image in add_loved_one
+
                         let imageData: Data = lovedOneImage.jpegData(compressionQuality: 0.5) ?? Data()
-                        
+                        //Send this loved one data to the backend
                         add_loved_one(id: "21", patiendID: patientID, name: name, gender: gender, date: date, picture: imageData, questionResponses: questionResponses)
                         presentationMode.wrappedValue.dismiss()
                     } label : {
@@ -615,9 +636,10 @@ struct newLovedOneView: View {
         .navigationViewStyle(.stack)
     }
     
-    //hard code for now, add API access later
-    //Once we connect with Backend then pass mp4 file in add_loved_one
     func add_loved_one(id:String, patiendID: String, name:String, gender:String, date:Date, picture:Data, questionResponses: [String: String]){
+        
+        //This function is called when adding a loved one and sending their data like audio and image to the backend
+        
         let upload_img : Bool = true
         print("Adding a loved one\n");
         if(useBackend){
@@ -755,6 +777,12 @@ struct newLovedOneView: View {
 
 
 struct CallView: View {
+    
+    //This is the view that is displayed when calling a loved one
+    //It uses speech to text provided by apple to convert the users speech to text
+    //It sends this text to the backend and then plays whatever mp4 is sent back using AVPlayer
+    //It also has a prompter that prompts the patient if they are not participiating in the conversation
+    
     var color: Color
     @StateObject var lovedOneList : lovedOnes
     var id: String
@@ -800,12 +828,10 @@ struct CallView: View {
                             }
                         Text("Chatting with \(item.name)")
                             .padding()
-                        
-                        //TODO: MAKE CALL HANDS FREE RATHER THAN WITH BUTTON
-                        //We would then pass this into chatbot and get an output text
-                        
+
                         //code for speech recognition adopted from a todo app tutorial youtube series
                         //https://www.youtube.com/playlist?list=PLbrKvTeCrFAffsnrKSa9mp9hM22E6kSjx
+                        //The call button must be clicked one to initiate the speech recognition
                         HStack{
                             Text(todos.last?.text ?? "----")
                             recordButton()
@@ -815,7 +841,7 @@ struct CallView: View {
                         speechManager.checkPermissions()
                     }
                     .onDisappear() {
-                        deleteAllItems()
+                        deleteAllItems()//Delete the conversation data once you leave the call
                         inCall = false
                         print("Left call!")
                     }
@@ -826,6 +852,7 @@ struct CallView: View {
         .ignoresSafeArea()
     }
     func recordButton() -> some View {
+        //This button starts the speech recognition when clicked. It only needs to be manually clicked once
         Button(action: addItem) {
             Image(systemName: "phone.fill")
                 .font(.system(size: 40))
@@ -835,6 +862,10 @@ struct CallView: View {
     }
     
     func addItem() {
+        //This is called each time speech recognition has started
+        //It starts recording the user and transcribing their text to speech, then provides this text to the backend
+        //It then updates the AVPlayer to play whatever the backend sent back
+        
         print("J: adding item!!!!!!")
         if speechManager.isRecording {
             print("done recording")
@@ -892,11 +923,9 @@ struct CallView: View {
                 }
                 
         }
-//        print("Speech manager toggled")
-//        speechManager.isRecording.toggle()
-//        print("Wait to get reply")
     }
     func deleteItems(offsets: IndexSet) {
+        //delete all speech to text transcriptions
         withAnimation {
             offsets.map {todos[$0]}.forEach(viewContext.delete)
             
@@ -909,6 +938,8 @@ struct CallView: View {
     }
     
     func startTimer() {
+        //This function is used to start the timer which is used to prompt the patient if they are not speaking
+        //If you reach the end of the timer, the patient is prompted
         self.timer = Timer.scheduledTimer(withTimeInterval: 14, repeats: true, block: { _ in
             lock_audio.lock()
             //turn off mic
@@ -932,6 +963,7 @@ struct CallView: View {
         })
     }
     func startMe(wait_n : Double) {
+        //spinner to wait and restart prompt
         self.timer_me = Timer.scheduledTimer(withTimeInterval: wait_n, repeats: false, block: { _ in
             lock_audio.lock()
             print("spinning and waiting to restart prompt")
@@ -945,6 +977,7 @@ struct CallView: View {
         })
     }
     func resetTimer(wait_n: CMTime) {
+        //restarting the timer after the prompt is done playing
         print("wait = ", wait_n)
         print("seconds = ", wait_n.seconds)
         let compute = ceil(wait_n.seconds) + 0.1
@@ -957,6 +990,8 @@ struct CallView: View {
         startMe(wait_n: compute)
     }
     func getPrompt() {
+        //function used to communicate with the backend to figure out what prompt to play to them
+        
         if(useBackend){
             //Upload patient to the server
             guard let url: URL = URL(string: "http://127.0.0.1:5000/prompts") else {
@@ -994,7 +1029,6 @@ struct CallView: View {
                 promptURL = patientURL + prompt_name! + ".mp4"
             }).resume()
         }
-        //var promptURL = patientURL + MP4 FILE FROM BACKEND
     }
     
     func deleteButton() -> some View {
@@ -1014,6 +1048,9 @@ struct CallView: View {
         }
     }
     func callBackend(text: String?) {
+        
+        //Function used to send the speech text to the backend and update the url response to play to the user
+        
         print("Called backend!")
         print("text to send to backend: ", text)
         duplicateURL = false
@@ -1086,4 +1123,3 @@ struct ContentView_Previews: PreviewProvider {
         PatientView()
     }
 }
-

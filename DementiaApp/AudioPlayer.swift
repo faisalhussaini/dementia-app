@@ -5,11 +5,16 @@
 //  Created by Faisal Hussaini on 2022-10-01.
 //
 
-
 import Foundation
 import SwiftUI
 import Combine
 import AVFoundation
+
+//This file contains the functions that are used to play the loved ones audio when creating a new loved one
+//Code to play audio adapted from a SwiftUI Voice Recorder tutorial
+//https://blckbirds.com/post/voice-recorder-app-in-swiftui-1/
+//https://blckbirds.com/post/voice-recorder-app-in-swiftui-2/
+
 class AudioPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
  
     let objectWillChange = PassthroughSubject<AudioPlayer, Never>()  //notify observing views about changes such as if an audio is being played or not
@@ -41,11 +46,10 @@ class AudioPlayer: NSObject, ObservableObject, AVAudioPlayerDelegate {
         isPlaying = false
     }
     
-    //audiplayer will call this func as its own delgate after the audio has been finished playing. Playing atirbute will be false again, eventually causing the particular recording row to yupdate itself and display theplay button again
+    //audiplayer will call this func as its own delgate after the audio has been finished playing. Playing atirbute will be false again, eventually causing the particular recording row to yupdate itself and display the play button again
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) { //if the audio was succefully played, we set the playing properties back to false
         if flag {
             isPlaying = false
         }
     }
-    
 }

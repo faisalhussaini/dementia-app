@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+//Classes with lists of structs of patients and loved ones that are used to display names on the screen
+
 class patients: ObservableObject {
     @Published var items = [patient]()
     init(items: [patient] = [patient]()) {

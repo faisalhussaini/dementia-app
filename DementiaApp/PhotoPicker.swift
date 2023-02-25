@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+//This file contains functions which are used to allow the loved one to pick and upload a photo of themselves to train the deepfake
+//https://www.youtube.com/watch?v=V-kSSjh1T74
+//This demo on youtube was followed to create the photopicker
+
 struct PhotoPicker: UIViewControllerRepresentable {
     
     @Binding var lovedOneImage: UIImage//whenever this variable changes, its bounded to lovedOneImage in ContentView, triggering an update
@@ -38,7 +42,6 @@ struct PhotoPicker: UIViewControllerRepresentable {
             if let image = info[.editedImage] as? UIImage {
                 
                 guard let data = image.jpegData(compressionQuality: 0.5), let compressedImage = UIImage(data:data) else { //compress image on scale from 0 to 1, aka 50%
-                    //error
                     return
                 }
                 

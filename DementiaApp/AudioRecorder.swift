@@ -10,6 +10,11 @@ import SwiftUI
 import Combine
 import AVFoundation //recorder functionality
 
+//This file contains the functions that are used to record the loved ones audio when creating a new loved one
+//Code to record audio adapted from a SwiftUI Voice Recorder tutorial
+//https://blckbirds.com/post/voice-recorder-app-in-swiftui-1/
+//https://blckbirds.com/post/voice-recorder-app-in-swiftui-2/
+
 
 class AudioRecorder: NSObject,ObservableObject { //NSObject to allow fetchRecordings to work w
 
