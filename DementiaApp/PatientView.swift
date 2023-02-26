@@ -69,44 +69,41 @@ struct PatientView: View {
     @StateObject var lovedOneList = lovedOnes()
     @State var showPopup = false
     var body: some View {
-        ZStack {
-            NavigationView{
-                List {//list showing each patient
-                    ForEach(patientList.items, id: \.id) { item in
-                        HStack {
+        NavigationView{
+            List {//list showing each patient
+                ForEach(patientList.items, id: \.id) { item in
+                    HStack {
+                        NavigationLink(destination: LovedOneView(patientID: item.id, lovedOneList: lovedOneList)) {
                             Text(item.name)
-                            NavigationLink(destination: LovedOneView(patientID: item.id, lovedOneList: lovedOneList), label: {
-                            })
-                            .isDetailLink(false)
                         }
-                        .padding(.top)
+                        .isDetailLink(false)
                     }
-                    .onDelete(perform: removeItems)
+                    .padding(.top)
                 }
-                .navigationTitle("Patients")
-                .offset(y:80)
-                .padding()
-                .toolbar {
-                    Button {
-                        showPopup.toggle()
-                    } label : {
-                        Image(systemName: "plus")
-                    }
-                    .sheet(isPresented: $showPopup) {
-                        newPatientView(patientList: patientList)
-                    }
-                }
+                .onDelete(perform: removeItems)
             }
-            .navigationViewStyle(StackNavigationViewStyle())
-            .onAppear { //load all the patients and loved ones once on startup
-                if (!didLoad) {
-                    load_patients()
-                    load_loved_ones()
-                    didLoad = true
+            .navigationTitle("Patients")
+            .offset(y:80)
+            .padding()
+            .toolbar {
+                Button {
+                    showPopup.toggle()
+                } label : {
+                    Image(systemName: "plus")
+                }
+                .sheet(isPresented: $showPopup) {
+                    newPatientView(patientList: patientList)
                 }
             }
         }
-        .ignoresSafeArea()
+        .navigationViewStyle(StackNavigationViewStyle())
+        .onAppear { //load all the patients and loved ones once on startup
+            if (!didLoad) {
+                load_patients()
+                load_loved_ones()
+                didLoad = true
+            }
+        }
     }
     func removeItems(at offsets: IndexSet) {
         //This function is called when deleting patients, it removes them from the DB
@@ -262,39 +259,32 @@ struct LovedOneView: View {
     
     @StateObject var lovedOneList : lovedOnes
     var body: some View {
-        ZStack {
-            NavigationView() {
-                List {
-                    ForEach(lovedOneList.items, id: \.id) { item in
-                        if (item.patientID == patientID) {
-                            HStack {
-                                Text(item.name)
-                                NavigationLink(destination: CallView(color: .blue, lovedOneList: lovedOneList, id: item.id, p_id: patientID), label: {
-                                })
-                                .isDetailLink(false)
-                            }
-                            .padding(.top)
+        List {
+            ForEach(lovedOneList.items, id: \.id) { item in
+                if (item.patientID == patientID) {
+                    HStack {
+                        NavigationLink(destination: CallView(color: .blue, lovedOneList: lovedOneList, id: item.id, p_id: patientID)) {
+                            Text(item.name)
                         }
                     }
-                    .onDelete(perform: removeItems)
-                }
-                .navigationTitle("Call A Loved One")
-                .offset(y:80)
-                .padding()
-                .toolbar {
-                    Button {
-                        showPopup.toggle()
-                    } label : {
-                        Image(systemName: "plus")
-                    }
-                    .sheet(isPresented: $showPopup) {
-                        newLovedOneView(audioRecorder: AudioRecorder(), patientID: patientID, lovedOneList: lovedOneList)
-                    }
+                    .padding(.top)
                 }
             }
-            .navigationViewStyle(StackNavigationViewStyle())
+            .onDelete(perform: removeItems)
         }
-        .ignoresSafeArea()
+        .navigationTitle("Call A Loved One")
+        .offset(y:80)
+        .padding()
+        .toolbar {
+            Button {
+                showPopup.toggle()
+            } label : {
+                Image(systemName: "plus")
+            }
+            .sheet(isPresented: $showPopup) {
+                newLovedOneView(audioRecorder: AudioRecorder(), patientID: patientID, lovedOneList: lovedOneList)
+            }
+        }
     }
     func removeItems(at offsets: IndexSet) {
         //This function is called when deleting loved ones, it removes them from the DB and the local list of loves ones
@@ -839,6 +829,10 @@ struct CallView: View {
                     }
                     .onAppear {
                         speechManager.checkPermissions()
+                        //let InitialDelay = 2.0
+                        //DispatchQueue.main.asyncAfter(deadline: .now() + InitialDelay) {
+                        //    addItem()
+                        //}
                     }
                     .onDisappear() {
                         deleteAllItems()//Delete the conversation data once you leave the call
@@ -1030,15 +1024,6 @@ struct CallView: View {
             }).resume()
         }
     }
-    
-    func deleteButton() -> some View {
-        Button(action: deleteAllItems) {
-            Image(systemName: "trash" )
-                .font(.system(size: 40))
-                .padding()
-                .cornerRadius(10)
-        }.foregroundColor(.red)
-    }
     func deleteAllItems() {
         todos.forEach(viewContext.delete)
         do {
@@ -1104,17 +1089,6 @@ struct CallView: View {
                 }
             }).resume()
         }
-    }
-    
-    func backendButton(text: String?) -> some View {
-        Button(action: {
-            callBackend(text: text)
-        }) {
-            Image(systemName: "square.and.arrow.up")
-                .font(.system(size: 40))
-                .padding()
-                .cornerRadius(10)
-        }.foregroundColor(.red)
     }
 }
 
