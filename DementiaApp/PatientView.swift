@@ -266,6 +266,7 @@ struct LovedOneView: View {
                         NavigationLink(destination: CallView(color: .blue, lovedOneList: lovedOneList, id: item.id, p_id: patientID)) {
                             Text(item.name)
                         }
+                        .isDetailLink(false)
                     }
                     .padding(.top)
                 }
@@ -829,10 +830,10 @@ struct CallView: View {
                     }
                     .onAppear {
                         speechManager.checkPermissions()
-                        //let InitialDelay = 2.0
-                        //DispatchQueue.main.asyncAfter(deadline: .now() + InitialDelay) {
-                        //    addItem()
-                        //}
+                        let InitialDelay = 2.0
+                        DispatchQueue.main.asyncAfter(deadline: .now() + InitialDelay) {
+                            addItem()
+                        }
                     }
                     .onDisappear() {
                         deleteAllItems()//Delete the conversation data once you leave the call
@@ -934,7 +935,10 @@ struct CallView: View {
     func startTimer() {
         //This function is used to start the timer which is used to prompt the patient if they are not speaking
         //If you reach the end of the timer, the patient is prompted
-        self.timer = Timer.scheduledTimer(withTimeInterval: 14, repeats: true, block: { _ in
+        self.timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true, block: { _ in
+            if (!inCall) {
+                return
+            }
             lock_audio.lock()
             //turn off mic
             self.recording = false
@@ -977,9 +981,6 @@ struct CallView: View {
         let compute = ceil(wait_n.seconds) + 0.1
         print("new wait = ", compute)
         self.timer?.invalidate()
-        if (!inCall) {
-            return
-        }
         startTimer()
         startMe(wait_n: compute)
     }
