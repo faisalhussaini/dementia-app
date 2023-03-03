@@ -774,6 +774,7 @@ struct CallView: View {
     //It sends this text to the backend and then plays whatever mp4 is sent back using AVPlayer
     //It also has a prompter that prompts the patient if they are not participiating in the conversation
     
+    @Environment(\.dismiss) private var dismiss
     var color: Color
     @StateObject var lovedOneList : lovedOnes
     var id: String
@@ -793,6 +794,7 @@ struct CallView: View {
     @State var duplicateURL : Bool = false
     @State var promptURL : String = ""
     @State var inCall = true
+    @State private var showingAlert = false
     
     var body: some View {
         ZStack (alignment: .bottomTrailing){
@@ -810,8 +812,16 @@ struct CallView: View {
                                 if player.currentItem == nil {
                                     //the chat should open up with hello
                                     videoURL = "https://storage.googleapis.com/virtual-presence-app.appspot.com/\(p_id)/\(id)/hello.mp4"
-                                    let item = AVPlayerItem(url: URL(string: videoURL)!)
-                                    player.replaceCurrentItem(with: item)
+                                    let videoAsset = AVAsset(url: URL(string: videoURL)!)
+                                    let assetLength = Float(videoAsset.duration.value) / Float(videoAsset.duration.timescale)
+                                    if (assetLength > 0) {//deepfake is ready
+                                        let item = AVPlayerItem(url: URL(string: videoURL)!)
+                                        player.replaceCurrentItem(with: item)
+                                    }
+                                    else {//deepfake is not ready, alert user and dismiss view
+                                        showingAlert = true
+                                        inCall = false
+                                    }                                    
                                 }
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
                                     player.play()
@@ -841,6 +851,9 @@ struct CallView: View {
                         print("Left call!")
                     }
                     .padding(.top)
+                    .alert("Loved one is still being generated, please check back in a few minutes", isPresented: $showingAlert) {
+                        Button("OK", role: .cancel) { dismiss()}
+                    }
                 }
             }
         }
@@ -897,12 +910,11 @@ struct CallView: View {
                             while(final_url == old_url && duplicateURL == false) {
                             //do nothing and wait for the url to update, there must be a more elegant way to do this
                             }
-                            print("final_url: ", final_url)
-                            print("old_url: ", old_url)
-                            print("duplicateURL: ", duplicateURL)
-                            let item = AVPlayerItem(url: URL(string: final_url)!)
-                            player.replaceCurrentItem(with: item)
-                            player.play()
+                            if (inCall) {
+                                let item = AVPlayerItem(url: URL(string: final_url)!)
+                                player.replaceCurrentItem(with: item)
+                                player.play()
+                            }
                             let time_to_wait = self.player.currentItem!.asset.duration
                             resetTimer(wait_n: time_to_wait)
                             
