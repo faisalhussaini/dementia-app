@@ -19,7 +19,6 @@
 		CF70C8CC28EE804100C0BD42 /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF70C8CB28EE804100C0BD42 /* AudioPlayer.swift */; };
 		CF70C8CE28EE807000C0BD42 /* RecordingsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF70C8CD28EE807000C0BD42 /* RecordingsList.swift */; };
 		CF876B1828FB7FCF005D44AC /* Pods_DementiaApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33F89C145C2E01CFCDBAD044 /* Pods_DementiaApp.framework */; };
-		CF876B1928FB7FCF005D44AC /* Pods_DementiaApp.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 33F89C145C2E01CFCDBAD044 /* Pods_DementiaApp.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CFB77B1028D8DE3C00D3F39D /* StructsDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB77B0F28D8DE3C00D3F39D /* StructsDB.swift */; };
 		CFB77B1228D8DED200D3F39D /* contacts.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB77B1128D8DED200D3F39D /* contacts.swift */; };
 		CFD8EF3028F1FE4300DB94F7 /* PhotoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD8EF2F28F1FE4300DB94F7 /* PhotoPicker.swift */; };
@@ -28,20 +27,6 @@
 		CFE5054E28D7892200825BC9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFE5054D28D7892200825BC9 /* Assets.xcassets */; };
 		CFE5055128D7892200825BC9 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFE5055028D7892200825BC9 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		CF876B1A28FB7FCF005D44AC /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				CF876B1928FB7FCF005D44AC /* Pods_DementiaApp.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		33F89C145C2E01CFCDBAD044 /* Pods_DementiaApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DementiaApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -160,7 +145,6 @@
 				CFE5054328D7892100825BC9 /* Frameworks */,
 				CFE5054428D7892100825BC9 /* Resources */,
 				AD51A1FB2B8C4EF01F68BED7 /* [CP] Embed Pods Frameworks */,
-				CF876B1A28FB7FCF005D44AC /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
