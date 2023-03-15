@@ -493,7 +493,7 @@ struct newLovedOneView: View {
     @State private var name: String = ""
     @State private var gender: String = ""
     @State private var isShowingPhotoPicker = false
-    @State private var lovedOneImage = UIImage(named: "default-avatar")!
+    //@State private var lovedOneImage = UIImage(named: "default-avatar")!
     @State private var children: String = ""
     @State private var spouse: String = ""
     @State private var placeOfResidence: String = ""
@@ -502,8 +502,10 @@ struct newLovedOneView: View {
                                             "spouse": "",
                                             "residence": "",
                                             "hobbies": ""]
-    @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
-    @State private var isImagePickerButtonClicked = false
+    //@State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
+    //@State private var isImagePickerButtonClicked = false
+    @State private var showVideoPicker = false
+    @State private var videoURL : URL?
     @Environment(\.dismiss) var dismiss
     var body: some View {
         NavigationView {
@@ -531,6 +533,8 @@ struct newLovedOneView: View {
                                 Text("Loved One's top 3 hobbies seperated by commas. Example: 'swimming, poetry, cooking'").foregroundColor(.red)
                             }
                     }
+                    /*
+                    REMOVED NEED FOR PHOTO FOR NOW. INSTEAD USE VIDEO
                     //https://www.youtube.com/watch?v=V-kSSjh1T74
                     //This demo on youtube was followed to create the photopicker
                     Section {
@@ -555,9 +559,24 @@ struct newLovedOneView: View {
                         Text("Select Image of Loved One")
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
+                     */
+                    Section {
+                        if let videoURL = videoURL {
+                                        VideoPlayer(player: AVPlayer(url: videoURL))
+                                            .frame(height: 900)
+                        } else {
+                            Text("No video recorded")
+                                .foregroundColor(.gray)
+                        }
+                        Button(action: {
+                            self.showVideoPicker.toggle()
+                        }) {
+                            Text("Please record a short clip of yourself nodding while as still as possible. This will be used to generate the deepfake")
+                        }
+                    }
                     .navigationTitle("New Loved One")
-                    .sheet(isPresented: self.$isImagePickerButtonClicked) {
-                        PhotoPicker(lovedOneImage: $lovedOneImage, sourceType: self.sourceType)
+                    .sheet(isPresented: $showVideoPicker) {
+                        VideoPicker(showVideoPicker: $showVideoPicker, videoURL: $videoURL)
                     }
                     
                     //Code to record audio adapted from a SwiftUI Voice Recorder tutorial
@@ -607,15 +626,17 @@ struct newLovedOneView: View {
                 Section {
                     Button {
 
-                        let imageData: Data = lovedOneImage.jpegData(compressionQuality: 0.5) ?? Data()
+                        //let imageData: Data = lovedOneImage.jpegData(compressionQuality: 0.5) ?? Data()
                         //Send this loved one data to the backend
-                        add_loved_one(id: "21", patiendID: patientID, name: name, gender: gender, date: date, picture: imageData, questionResponses: questionResponses)
+                        if let url = videoURL {
+                            add_loved_one(id: "21", patiendID: patientID, name: name, gender: gender, date: date, video: url, questionResponses: questionResponses)
+                        }
                         presentationMode.wrappedValue.dismiss()
                     } label : {
                         Text("Save")
                     }
                 }
-                .disabled(name.isEmpty || placeOfResidence.isEmpty || hobbies.isEmpty || audioRecorder.recordings.isEmpty || hobbies.filter { $0 == "," }.count != 2)
+                .disabled(name.isEmpty || placeOfResidence.isEmpty || hobbies.isEmpty || audioRecorder.recordings.isEmpty || hobbies.filter { $0 == "," }.count != 2 || videoURL == nil)
             }
             .toolbar {
                 Button("Cancel") {
@@ -627,7 +648,7 @@ struct newLovedOneView: View {
         .navigationViewStyle(.stack)
     }
     
-    func add_loved_one(id:String, patiendID: String, name:String, gender:String, date:Date, picture:Data, questionResponses: [String: String]){
+    func add_loved_one(id:String, patiendID: String, name:String, gender:String, date:Date, video:URL, questionResponses: [String: String]){
         
         //This function is called when adding a loved one and sending their data like audio and image to the backend
         
@@ -676,6 +697,7 @@ struct newLovedOneView: View {
                 print("Loved one id is \(loved_one_id ?? "0")")
                 let newLovedOne = lovedOne(id: loved_one_id ?? "0", patientID: patientID,  name: name, gender: gender, DOB: date)
                 lovedOneList.items.append(newLovedOne)
+                /*
                 if(upload_img){
                     //TODO: add p_id and lo_id in the upload path, (need to work around optional part...)
                     //Upload training data to firebase
@@ -754,6 +776,7 @@ struct newLovedOneView: View {
                     
                     
                 }
+                */
             }).resume()
             
             
