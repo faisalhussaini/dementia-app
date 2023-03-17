@@ -652,7 +652,7 @@ struct newLovedOneView: View {
         
         //This function is called when adding a loved one and sending their data like audio and image to the backend
         
-        let upload_img : Bool = true
+        let upload_vid : Bool = true
         print("Adding a loved one\n");
         if(useBackend){
             //Upload patient to the server
@@ -697,16 +697,16 @@ struct newLovedOneView: View {
                 print("Loved one id is \(loved_one_id ?? "0")")
                 let newLovedOne = lovedOne(id: loved_one_id ?? "0", patientID: patientID,  name: name, gender: gender, DOB: date)
                 lovedOneList.items.append(newLovedOne)
-                /*
-                if(upload_img){
+                
+                if(upload_vid){
                     //TODO: add p_id and lo_id in the upload path, (need to work around optional part...)
                     //Upload training data to firebase
                     // Create a reference to the file you want to upload
                     //TODO: this whole thing would be cleaner with async and await
                     let storRef = Storage.storage().reference()
-                    let imgRef = storRef.child("training_data/\(patiendID)/\(loved_one_id!)/face.jpeg")
+                    let vidRef = storRef.child("training_data/\(patiendID)/\(loved_one_id!)/face.mov")
                     
-                    let uploadTask = imgRef.putData(picture, metadata: nil) { (metadata, error) in
+                    let uploadTask = vidRef.putFile(from: video, metadata: nil) { (metadata, error) in
                         guard let metadata = metadata else {
                             // Uh-oh, an error occurred!
                             return
@@ -776,7 +776,7 @@ struct newLovedOneView: View {
                     
                     
                 }
-                */
+                
             }).resume()
             
             
