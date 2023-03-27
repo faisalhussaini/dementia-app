@@ -1,6 +1,6 @@
 //
 //  MicManager.swift
-//  speechtodo
+//  speech
 //
 //  Created by Faisal Hussaini on 2022-10-30.
 //

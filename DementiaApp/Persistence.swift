@@ -1,6 +1,6 @@
 //
 //  Persistence.swift
-//  speechtodo
+//  speech
 //
 //  Created by Faisal Hussaini on 2022-10-30.
 //
@@ -13,7 +13,7 @@ struct PersistenceController {
     let container: NSPersistentContainer
 
     init() {
-        container = NSPersistentContainer(name: "speechtodo")
+        container = NSPersistentContainer(name: "speechItems")
 
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {

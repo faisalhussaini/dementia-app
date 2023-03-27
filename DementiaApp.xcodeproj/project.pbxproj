@@ -14,7 +14,7 @@
 		CF3CB1C9291B4A4D002D53E0 /* SpeechManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3CB1C8291B4A4D002D53E0 /* SpeechManager.swift */; };
 		CF3CB1CB291B4A5B002D53E0 /* MicManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3CB1CA291B4A5B002D53E0 /* MicManager.swift */; };
 		CF3CB1CD291B4A64002D53E0 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3CB1CC291B4A64002D53E0 /* Persistence.swift */; };
-		CF3CB1D2291B4AAA002D53E0 /* speechtodo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CF3CB1D0291B4AAA002D53E0 /* speechtodo.xcdatamodeld */; };
+		CF3CB1D2291B4AAA002D53E0 /* speechItems.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CF3CB1D0291B4AAA002D53E0 /* speechItems.xcdatamodeld */; };
 		CF70C8C628EE7D5600C0BD42 /* AudioRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF70C8C528EE7D5600C0BD42 /* AudioRecorder.swift */; };
 		CF70C8CC28EE804100C0BD42 /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF70C8CB28EE804100C0BD42 /* AudioPlayer.swift */; };
 		CF70C8CE28EE807000C0BD42 /* RecordingsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF70C8CD28EE807000C0BD42 /* RecordingsList.swift */; };
@@ -120,7 +120,7 @@
 				CF3CB1C8291B4A4D002D53E0 /* SpeechManager.swift */,
 				CF3CB1CA291B4A5B002D53E0 /* MicManager.swift */,
 				CF3CB1CC291B4A64002D53E0 /* Persistence.swift */,
-				CF3CB1D0291B4AAA002D53E0 /* speechtodo.xcdatamodeld */,
+				CF3CB1D0291B4AAA002D53E0 /* speechItems.xcdatamodeld */,
 				CF0BCD45297DD46E0020ECA9 /* LaunchScreen.storyboard */,
 				CFE5054D28D7892200825BC9 /* Assets.xcassets */,
 				CFE5054F28D7892200825BC9 /* Preview Content */,
@@ -265,7 +265,7 @@
 				CFB77B1228D8DED200D3F39D /* contacts.swift in Sources */,
 				CFE5054C28D7892100825BC9 /* PatientView.swift in Sources */,
 				CF84EB3529C0E4DC00B3887B /* VideoRecorder.swift in Sources */,
-				CF3CB1D2291B4AAA002D53E0 /* speechtodo.xcdatamodeld in Sources */,
+				CF3CB1D2291B4AAA002D53E0 /* speechItems.xcdatamodeld in Sources */,
 				CF3CB1C9291B4A4D002D53E0 /* SpeechManager.swift in Sources */,
 				CF3CB1CB291B4A5B002D53E0 /* MicManager.swift in Sources */,
 				CFB77B1028D8DE3C00D3F39D /* StructsDB.swift in Sources */,
@@ -514,13 +514,13 @@
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
-		CF3CB1D0291B4AAA002D53E0 /* speechtodo.xcdatamodeld */ = {
+		CF3CB1D0291B4AAA002D53E0 /* speechItems.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
 				CF3CB1D1291B4AAA002D53E0 /* speechtodo.xcdatamodel */,
 			);
 			currentVersion = CF3CB1D1291B4AAA002D53E0 /* speechtodo.xcdatamodel */;
-			path = speechtodo.xcdatamodeld;
+			path = speechItems.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

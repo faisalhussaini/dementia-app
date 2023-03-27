@@ -461,7 +461,6 @@ struct newPatientView: View {
                 let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
                 print(responseStr)
                 let res : [String : String]? = convertToDictionary(text: (responseStr))
-                print(res)
                 let patient_id : String? = res?["id"]
                 print("Patient id is \(patient_id ?? "0")")
                 let newPatient = patient(id: patient_id ?? "0", name: name, gender: gender, DOB: date)
@@ -692,7 +691,6 @@ struct newLovedOneView: View {
                 let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
                 print(responseStr)
                 let res : [String : String]? = convertToDictionary(text: (responseStr))
-                print(res)
                 let loved_one_id : String? = res?["id"]
                 print("Loved one id is \(loved_one_id ?? "0")")
                 let newLovedOne = lovedOne(id: loved_one_id ?? "0", patientID: patientID,  name: name, gender: gender, DOB: date)
@@ -706,7 +704,7 @@ struct newLovedOneView: View {
                     let storRef = Storage.storage().reference()
                     let vidRef = storRef.child("training_data/\(patiendID)/\(loved_one_id!)/face.mov")
                     
-                    let uploadTask = vidRef.putFile(from: video, metadata: nil) { (metadata, error) in
+                    let _ = vidRef.putFile(from: video, metadata: nil) { (metadata, error) in
                         guard let metadata = metadata else {
                             // Uh-oh, an error occurred!
                             return
@@ -715,7 +713,7 @@ struct newLovedOneView: View {
                         let documentPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]//where do you want to save
                         let audioFilename = documentPath.appendingPathComponent("Recording.m4a")
                         
-                        let audioUploadTask = audioRef.putFile(from: audioFilename, metadata: nil) { (metadata, error) in
+                        let _ = audioRef.putFile(from: audioFilename, metadata: nil) { (metadata, error) in
                             guard let metadata = metadata else {
                                 // Uh-oh, an error occurred!
                                 return
@@ -753,7 +751,7 @@ struct newLovedOneView: View {
                             }).resume()
                             
                             // Metadata contains file metadata such as size, content-type.
-                            let size = metadata.size
+                            let _ = metadata.size
                             // You can also access to download URL after upload.
                             storRef.downloadURL { (url, error) in
                                 guard let downloadURL = url else {
@@ -764,7 +762,7 @@ struct newLovedOneView: View {
                         }
                         
                         // Metadata contains file metadata such as size, content-type.
-                        let size = metadata.size
+                        let _ = metadata.size
                         // You can also access to download URL after upload.
                         storRef.downloadURL { (url, error) in
                             guard let downloadURL = url else {
@@ -816,6 +814,7 @@ struct CallView: View {
     @State var timer_me: Timer?
     @State var duplicateURL : Bool = false
     @State var promptURL : String = ""
+    @State var noddingURL : String = ""
     @State var inCall = true
     @State private var showingAlert = false
     
@@ -831,6 +830,8 @@ struct CallView: View {
                                 if (promptURL == "") {
                                     //the first prompt is fixed, everything after is chosen by the backend
                                     promptURL = "https://storage.googleapis.com/virtual-presence-app.appspot.com/\(p_id)/\(id)/" + "howareyoudoingtoday.mp4"
+                                    let storRef = Storage.storage().reference()
+                                    noddingURL = storRef.child("training_data/\(p_id)/\(id)/face.mov").fullPath
                                 }
                                 if player.currentItem == nil {
                                     //the chat should open up with hello
@@ -928,15 +929,26 @@ struct CallView: View {
                             } catch {
                                 print(error)
                             }
-                            var old_url = final_url
+                            let old_url = final_url
                             callBackend(text: todos.last?.text)
                             while(final_url == old_url && duplicateURL == false) {
                             //do nothing and wait for the url to update, there must be a more elegant way to do this
                             }
                             if (inCall) {
-                                let item = AVPlayerItem(url: URL(string: final_url)!)
+                                var item = AVPlayerItem(url: URL(string: final_url)!)
                                 player.replaceCurrentItem(with: item)
                                 player.play()
+                                
+                                NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: item, queue: nil) { _ in
+                                    print("Playback finished")
+                                    item = AVPlayerItem(url: URL(string: noddingURL)!)
+                                    player.replaceCurrentItem(with: item)
+                                    let delay = 1.0 // delay in seconds
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                                        player.play()
+                                    }
+                                }
+                                 
                             }
                             let time_to_wait = self.player.currentItem!.asset.duration
                             resetTimer(wait_n: time_to_wait)
@@ -1049,13 +1061,10 @@ struct CallView: View {
                     print("invalid data")
                     return
                 }
-                var old_final_url = final_url
                 let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
                 print(responseStr)
                 let res : [String : String]? = convertToDictionary(text: (responseStr))
-                print(res)
                 let prompt_name : String? = res?["response"]
-                print(prompt_name)
                 promptURL = patientURL + prompt_name! + ".mp4"
             }).resume()
         }
@@ -1073,7 +1082,6 @@ struct CallView: View {
         //Function used to send the speech text to the backend and update the url response to play to the user
         
         print("Called backend!")
-        print("text to send to backend: ", text)
         duplicateURL = false
         //TODO: GET VIDEO URL, FOR NOW GETTING A RANDOM VID
         var new_url = ""
@@ -1106,11 +1114,10 @@ struct CallView: View {
                     print("invalid data")
                     return
                 }
-                var old_final_url = final_url
+                let old_final_url = final_url
                 let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
                 print(responseStr)
                 let res : [String : String]? = convertToDictionary(text: (responseStr))
-                print(res)
                 let response_name : String? = res?["response"]
                 let base_url : String = "https://storage.googleapis.com/virtual-presence-app.appspot.com"
                 new_url = "\(base_url)/\(p_id)/\(id)/\(response_name!)"
