@@ -11,6 +11,10 @@
 		4752BC6029141C1600FDCB98 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 4752BC5F29141C1600FDCB98 /* FirebaseFirestore */; };
 		4752BC6229141C1600FDCB98 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 4752BC6129141C1600FDCB98 /* FirebaseStorage */; };
 		CF0BCD46297DD46E0020ECA9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF0BCD45297DD46E0020ECA9 /* LaunchScreen.storyboard */; };
+		CF2C122A29D1494D000B5007 /* LovedOneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF2C122929D1494D000B5007 /* LovedOneView.swift */; };
+		CF2C122C29D149BA000B5007 /* newPatientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF2C122B29D149BA000B5007 /* newPatientView.swift */; };
+		CF2C122E29D14FE3000B5007 /* newLovedOneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF2C122D29D14FE3000B5007 /* newLovedOneView.swift */; };
+		CF2C123029D1501F000B5007 /* CallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF2C122F29D1501F000B5007 /* CallView.swift */; };
 		CF3CB1C9291B4A4D002D53E0 /* SpeechManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3CB1C8291B4A4D002D53E0 /* SpeechManager.swift */; };
 		CF3CB1CB291B4A5B002D53E0 /* MicManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3CB1CA291B4A5B002D53E0 /* MicManager.swift */; };
 		CF3CB1CD291B4A64002D53E0 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3CB1CC291B4A64002D53E0 /* Persistence.swift */; };
@@ -35,6 +39,10 @@
 		48367EE8DDE9E7A98B5AA9CB /* Pods-DementiaApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DementiaApp.release.xcconfig"; path = "Target Support Files/Pods-DementiaApp/Pods-DementiaApp.release.xcconfig"; sourceTree = "<group>"; };
 		CF0BCD44297DD3A30020ECA9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		CF0BCD45297DD46E0020ECA9 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		CF2C122929D1494D000B5007 /* LovedOneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LovedOneView.swift; sourceTree = "<group>"; };
+		CF2C122B29D149BA000B5007 /* newPatientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newPatientView.swift; sourceTree = "<group>"; };
+		CF2C122D29D14FE3000B5007 /* newLovedOneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newLovedOneView.swift; sourceTree = "<group>"; };
+		CF2C122F29D1501F000B5007 /* CallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallView.swift; sourceTree = "<group>"; };
 		CF3CB1C8291B4A4D002D53E0 /* SpeechManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpeechManager.swift; sourceTree = "<group>"; };
 		CF3CB1CA291B4A5B002D53E0 /* MicManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MicManager.swift; sourceTree = "<group>"; };
 		CF3CB1CC291B4A64002D53E0 /* Persistence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -109,20 +117,24 @@
 				CF0BCD44297DD3A30020ECA9 /* Info.plist */,
 				CFE5054928D7892100825BC9 /* DementiaAppApp.swift */,
 				CFE5054B28D7892100825BC9 /* PatientView.swift */,
+				CF2C122B29D149BA000B5007 /* newPatientView.swift */,
+				CF2C122929D1494D000B5007 /* LovedOneView.swift */,
+				CF2C122D29D14FE3000B5007 /* newLovedOneView.swift */,
+				CF2C122F29D1501F000B5007 /* CallView.swift */,
 				CFB77B1128D8DED200D3F39D /* contacts.swift */,
 				CFB77B0F28D8DE3C00D3F39D /* StructsDB.swift */,
 				CF70C8C528EE7D5600C0BD42 /* AudioRecorder.swift */,
-				CF84EB3429C0E4DC00B3887B /* VideoRecorder.swift */,
-				4752BC5C29141B4200FDCB98 /* GoogleService-Info.plist */,
 				CF70C8CB28EE804100C0BD42 /* AudioPlayer.swift */,
 				CF70C8CD28EE807000C0BD42 /* RecordingsList.swift */,
 				CFD8EF2F28F1FE4300DB94F7 /* PhotoPicker.swift */,
 				CF3CB1C8291B4A4D002D53E0 /* SpeechManager.swift */,
 				CF3CB1CA291B4A5B002D53E0 /* MicManager.swift */,
 				CF3CB1CC291B4A64002D53E0 /* Persistence.swift */,
+				CF84EB3429C0E4DC00B3887B /* VideoRecorder.swift */,
 				CF3CB1D0291B4AAA002D53E0 /* speechItems.xcdatamodeld */,
 				CF0BCD45297DD46E0020ECA9 /* LaunchScreen.storyboard */,
 				CFE5054D28D7892200825BC9 /* Assets.xcassets */,
+				4752BC5C29141B4200FDCB98 /* GoogleService-Info.plist */,
 				CFE5054F28D7892200825BC9 /* Preview Content */,
 			);
 			path = DementiaApp;
@@ -260,6 +272,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF3CB1CD291B4A64002D53E0 /* Persistence.swift in Sources */,
+				CF2C122E29D14FE3000B5007 /* newLovedOneView.swift in Sources */,
+				CF2C122C29D149BA000B5007 /* newPatientView.swift in Sources */,
 				CF70C8C628EE7D5600C0BD42 /* AudioRecorder.swift in Sources */,
 				CFD8EF3028F1FE4300DB94F7 /* PhotoPicker.swift in Sources */,
 				CFB77B1228D8DED200D3F39D /* contacts.swift in Sources */,
@@ -269,7 +283,9 @@
 				CF3CB1C9291B4A4D002D53E0 /* SpeechManager.swift in Sources */,
 				CF3CB1CB291B4A5B002D53E0 /* MicManager.swift in Sources */,
 				CFB77B1028D8DE3C00D3F39D /* StructsDB.swift in Sources */,
+				CF2C122A29D1494D000B5007 /* LovedOneView.swift in Sources */,
 				CFE5054A28D7892100825BC9 /* DementiaAppApp.swift in Sources */,
+				CF2C123029D1501F000B5007 /* CallView.swift in Sources */,
 				CF70C8CE28EE807000C0BD42 /* RecordingsList.swift in Sources */,
 				CF70C8CC28EE804100C0BD42 /* AudioPlayer.swift in Sources */,
 			);
