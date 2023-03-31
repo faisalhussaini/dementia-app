@@ -62,7 +62,6 @@ struct LovedOneView: View {
                 let encoder = JSONEncoder()
                 if let jsonData = try? encoder.encode(parameters) {
                     if let jsonString = String(data: jsonData, encoding: .utf8) {
-                        print(jsonString)
                         urlRequest.httpBody = jsonData
                     }
                 }
@@ -75,7 +74,6 @@ struct LovedOneView: View {
                         return
                     }
                     let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
-                    print(responseStr)
                 }).resume()
             }
             

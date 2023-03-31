@@ -106,7 +106,7 @@ struct newLovedOneView: View {
                         Button(action: {
                             self.showVideoPicker.toggle()
                         }) {
-                            Text("Please record a short clip of yourself nodding while as still as possible. This will be used to generate the deepfake")
+                            Text("Please record a short clip of yourself nodding. Pretend like you are listening to the patient speak. This will be used to generate the deepfake")
                         }
                     }
                     .navigationTitle("New Loved One")
@@ -188,7 +188,6 @@ struct newLovedOneView: View {
         //This function is called when adding a loved one and sending their data like audio and image to the backend
         
         let upload_vid : Bool = true
-        print("Adding a loved one\n");
         if(useBackend){
             //Upload patient to the server
             guard let url: URL = URL(string: "http://127.0.0.1:5000/loved_ones") else {
@@ -199,7 +198,6 @@ struct newLovedOneView: View {
             // Convert Date to String
             dF.dateFormat = "YYYY/MM/dd"
             let dob = dF.string(from: date)
-            print(dob)
             var urlRequest: URLRequest = URLRequest(url: url)
             urlRequest.httpMethod = "POST"
             let parameters: [String: String] = [
@@ -212,7 +210,6 @@ struct newLovedOneView: View {
             let encoder = JSONEncoder()
             if let jsonData = try? encoder.encode(parameters) {
                 if let jsonString = String(data: jsonData, encoding: .utf8) {
-                    print(jsonString)
                     urlRequest.httpBody = jsonData
                 }
             }
@@ -225,10 +222,8 @@ struct newLovedOneView: View {
                     return
                 }
                 let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
-                print(responseStr)
                 let res : [String : String]? = convertToDictionary(text: (responseStr))
                 let loved_one_id : String? = res?["id"]
-                print("Loved one id is \(loved_one_id ?? "0")")
                 let newLovedOne = lovedOne(id: loved_one_id ?? "0", patientID: patientID,  name: name, gender: gender, DOB: date)
                 lovedOneList.items.append(newLovedOne)
                 
@@ -270,7 +265,6 @@ struct newLovedOneView: View {
                             let encoder = JSONEncoder()
                             if let jsonData = try? encoder.encode(parameters) {
                                 if let jsonString = String(data: jsonData, encoding: .utf8) {
-                                    print(jsonString)
                                     urlRequest.httpBody = jsonData
                                 }
                             }
@@ -283,7 +277,6 @@ struct newLovedOneView: View {
                                     return
                                 }
                                 let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
-                                print(responseStr)
                             }).resume()
                             
                             // Metadata contains file metadata such as size, content-type.

@@ -112,7 +112,6 @@ struct newPatientView: View {
             // Convert Date to String
             dF.dateFormat = "YYYY/MM/dd"
             let dob = dF.string(from: date)
-            print(dob)
             var urlRequest: URLRequest = URLRequest(url: url)
             urlRequest.httpMethod = "POST"
             
@@ -125,7 +124,6 @@ struct newPatientView: View {
             let encoder = JSONEncoder()
             if let jsonData = try? encoder.encode(parameters) {
                 if let jsonString = String(data: jsonData, encoding: .utf8) {
-                    print(jsonString)
                     urlRequest.httpBody = jsonData
                 }
             }
@@ -139,10 +137,8 @@ struct newPatientView: View {
                     return
                 }
                 let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
-                print(responseStr)
                 let res : [String : String]? = convertToDictionary(text: (responseStr))
                 let patient_id : String? = res?["id"]
-                print("Patient id is \(patient_id ?? "0")")
                 let newPatient = patient(id: patient_id ?? "0", name: name, gender: gender, DOB: date)
                 patientList.items.append(newPatient)
             }).resume()

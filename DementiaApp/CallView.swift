@@ -94,7 +94,9 @@ struct CallView: View {
                     .onDisappear() {
                         deleteAllItems()//Delete the conversation data once you leave the call
                         inCall = false
-                        print("Left call!")
+                        self.recording = false
+                        mic.stopMonitoring()
+                        speechManager.stopRecording()
                     }
                     .padding(.top)
                     .alert("Loved one is still being generated, please check back in a few minutes", isPresented: $showingAlert) {
@@ -120,25 +122,19 @@ struct CallView: View {
         //It starts recording the user and transcribing their text to speech, then provides this text to the backend
         //It then updates the AVPlayer to play whatever the backend sent back
         
-        print("J: adding item!!!!!!")
         if speechManager.isRecording {
-            print("done recording")
             self.recording = false
             mic.stopMonitoring()
             speechManager.stopRecording()
-            print("Speech manager toggled")
             speechManager.isRecording.toggle()
         } else {
-            print("waiting to record")
             self.recording = true
             mic.startMonitoring()
-            print("speech manager start")
                 speechManager.start { (speechText) in
                     guard let text = speechText, !text.isEmpty else {
                         self.recording = false
                         return
                     }
-                    print("text: ", text)
                     DispatchQueue.main.async {
                         withAnimation {
                             let newItem = Todo(context: viewContext)
@@ -149,7 +145,6 @@ struct CallView: View {
                             do {
                                 try viewContext.save()
                             } catch {
-                                print(error)
                             }
                             let old_url = final_url
                             callBackend(text: todos.last?.text)
@@ -162,7 +157,6 @@ struct CallView: View {
                                 player.play()
                                 
                                 NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: item, queue: nil) { _ in
-                                    print("Playback finished")
                                     item = AVPlayerItem(url: URL(string: noddingURL)!)
                                     player.replaceCurrentItem(with: item)
                                     let delay = 1.0 // delay in seconds
@@ -178,12 +172,10 @@ struct CallView: View {
                             self.recording = false
                             mic.stopMonitoring()
                             speechManager.stopRecording()
-                            print("Speech manager toggled")
                             waiting_to_get_reply = false
                         }
                     }
                     mic.stopMonitoring()
-                    print("mic stopped monitoring")
                 }
                 
         }
@@ -204,7 +196,7 @@ struct CallView: View {
     func startTimer() {
         //This function is used to start the timer which is used to prompt the patient if they are not speaking
         //If you reach the end of the timer, the patient is prompted
-        self.timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true, block: { _ in
+        self.timer = Timer.scheduledTimer(withTimeInterval: 14, repeats: true, block: { _ in
             if (!inCall) {
                 return
             }
@@ -215,8 +207,6 @@ struct CallView: View {
             speechManager.stopRecording()
             waiting_to_get_reply = false
             
-            print("timer done, prompting patient!!!!!!!!!!")
-            print(promptURL)
             let item = AVPlayerItem(url: URL(string: promptURL)!)
             player.replaceCurrentItem(with: item)
             player.play()
@@ -224,7 +214,6 @@ struct CallView: View {
             //restart mic monitoring post prompt
             let wait_n = self.player.currentItem!.asset.duration
             let time_to_wait = ceil(wait_n.seconds) + 0.1
-            print("time of prompt = ", time_to_wait)
             startMe(wait_n: time_to_wait)
             lock_audio.unlock()
         })
@@ -233,11 +222,9 @@ struct CallView: View {
         //spinner to wait and restart prompt
         self.timer_me = Timer.scheduledTimer(withTimeInterval: wait_n, repeats: false, block: { _ in
             lock_audio.lock()
-            print("spinning and waiting to restart prompt")
             if (waiting_to_get_reply) {
                 return
             }
-            print("done spinning, restarting")
             waiting_to_get_reply = true;
             addItem()
             lock_audio.unlock()
@@ -245,10 +232,7 @@ struct CallView: View {
     }
     func resetTimer(wait_n: CMTime) {
         //restarting the timer after the prompt is done playing
-        print("wait = ", wait_n)
-        print("seconds = ", wait_n.seconds)
         let compute = ceil(wait_n.seconds) + 0.1
-        print("new wait = ", compute)
         self.timer?.invalidate()
         startTimer()
         startMe(wait_n: compute)
@@ -271,7 +255,6 @@ struct CallView: View {
             let encoder = JSONEncoder()
             if let jsonData = try? encoder.encode(parameters) {
                 if let jsonString = String(data: jsonData, encoding: .utf8) {
-                    print(jsonString)
                     urlRequest.httpBody = jsonData
                 }
             }
@@ -284,7 +267,6 @@ struct CallView: View {
                     return
                 }
                 let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
-                print(responseStr)
                 let res : [String : String]? = convertToDictionary(text: (responseStr))
                 let prompt_name : String? = res?["response"]
                 promptURL = patientURL + prompt_name! + ".mp4"
@@ -303,9 +285,7 @@ struct CallView: View {
         
         //Function used to send the speech text to the backend and update the url response to play to the user
         
-        print("Called backend!")
         duplicateURL = false
-        //TODO: GET VIDEO URL, FOR NOW GETTING A RANDOM VID
         var new_url = ""
         if(useBackend){
             //Upload patient to the server
@@ -323,7 +303,6 @@ struct CallView: View {
             let encoder = JSONEncoder()
             if let jsonData = try? encoder.encode(parameters) {
                 if let jsonString = String(data: jsonData, encoding: .utf8) {
-                    print(jsonString)
                     urlRequest.httpBody = jsonData
                 }
             }
@@ -338,12 +317,10 @@ struct CallView: View {
                 }
                 let old_final_url = final_url
                 let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
-                print(responseStr)
                 let res : [String : String]? = convertToDictionary(text: (responseStr))
                 let response_name : String? = res?["response"]
                 let base_url : String = "https://storage.googleapis.com/virtual-presence-app.appspot.com"
                 new_url = "\(base_url)/\(p_id)/\(id)/\(response_name!)"
-                print(new_url)
                 final_url = new_url
                 patientURL = "\(base_url)/\(p_id)/\(id)/"
                 if (old_final_url == new_url) {

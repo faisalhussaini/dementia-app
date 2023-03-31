@@ -122,7 +122,6 @@ struct PatientView: View {
                 let encoder = JSONEncoder()
                 if let jsonData = try? encoder.encode(parameters) {
                     if let jsonString = String(data: jsonData, encoding: .utf8) {
-                        print(jsonString)
                         urlRequest.httpBody = jsonData
                     }
                 }
@@ -131,11 +130,9 @@ struct PatientView: View {
                 URLSession.shared.dataTask(with: urlRequest, completionHandler: {
                     (data, response, error) in
                     guard let data = data else{
-                        print("invalid data")
                         return
                     }
                     let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
-                    print(responseStr)
                 }).resume()
             }
             
@@ -164,9 +161,7 @@ struct PatientView: View {
                     return
                 }
                 let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
-                print(responseStr)
                 let res : [String:[[String : String]]] = convertToDictionaryList(text:responseStr) ?? ["" : [["":""]]]
-                print(res)
                 let all_patients : [[String : String]] = res["patients"] ?? [["":""]]
                 for p in all_patients{
                     let gender : String = p["gender"] ?? ""
@@ -177,7 +172,6 @@ struct PatientView: View {
                     // Convert string to date
                     dF.dateFormat = "YYYY/MM/dd"
                     let date = dF.date(from: dob) ?? Date()
-                    print(date)
                     let curr_patient: patient = patient(id: id, name: name, gender: gender, DOB: date)
                     patientList.items.append(curr_patient)
                 }
@@ -217,9 +211,7 @@ struct PatientView: View {
                     return
                 }
                 let responseStr : String = String(data: data, encoding: .utf8) ?? "No Response"
-                print(responseStr)
                 let res : [String:[[String : String]]] = convertToDictionaryList(text:responseStr) ?? ["" : [["":""]]]
-                print(res)
                 let all_loved_ones : [[String : String]] = res["loved_ones"] ?? [["":""]]
                 for lo in all_loved_ones{
                     let gender : String = lo["gender"] ?? ""
@@ -231,7 +223,6 @@ struct PatientView: View {
                     // Convert string to date
                     dF.dateFormat = "YYYY/MM/dd"
                     let date = dF.date(from: dob) ?? Date()
-                    //print(date)
                     let curr_loved_one: lovedOne = lovedOne(id: id, patientID: patientId, name: name, gender: gender, DOB: date)
                     lovedOneList.items.append(curr_loved_one)
                 }

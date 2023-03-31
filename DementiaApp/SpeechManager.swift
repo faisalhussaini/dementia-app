@@ -68,7 +68,6 @@ class SpeechManager {
             
             if result.isFinal {
                 completion(result.bestTranscription.formattedString)
-                print(result.bestTranscription.formattedString)
             }
         }
         
