@@ -49,7 +49,7 @@ struct LovedOneView: View {
         if(useBackend){
             for index in offsets{
                 let lovedOne : lovedOne = lovedOneList.items[index]
-                guard let url: URL = URL(string: "http://127.0.0.1:5000/loved_ones") else {
+                guard let url: URL = URL(string: "http://" + backendIpPort + "/loved_ones") else {
                     print("Invalid url")
                     return
                 }

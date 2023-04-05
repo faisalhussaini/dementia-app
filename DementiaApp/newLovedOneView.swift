@@ -190,7 +190,7 @@ struct newLovedOneView: View {
         let upload_vid : Bool = true
         if(useBackend){
             //Upload patient to the server
-            guard let url: URL = URL(string: "http://127.0.0.1:5000/loved_ones") else {
+            guard let url: URL = URL(string: "http://" + backendIpPort + "/loved_ones") else {
                 print("Invalid url")
                 return
             }
@@ -251,7 +251,7 @@ struct newLovedOneView: View {
                             }
                             //Notify backend of upload
                             //TODO: possibly use some event hook here instead so we dont have to do this
-                            guard let url: URL = URL(string: "http://127.0.0.1:5000/training_data") else {
+                            guard let url: URL = URL(string: "http://" + backendIpPort + "/training_data") else {
                                 print("Invalid url")
                                 return
                             }

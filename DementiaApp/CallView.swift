@@ -52,8 +52,7 @@ struct CallView: View {
                                 if (promptURL == "") {
                                     //the first prompt is fixed, everything after is chosen by the backend
                                     promptURL = "https://storage.googleapis.com/virtual-presence-app.appspot.com/\(p_id)/\(id)/" + "howareyoudoingtoday.mp4"
-                                    let storRef = Storage.storage().reference()
-                                    noddingURL = storRef.child("training_data/\(p_id)/\(id)/face.mov").fullPath
+                                    noddingURL = "https://storage.googleapis.com/virtual-presence-app.appspot.com/\(p_id)/\(id)/" + "nod.mp4"
                                 }
                                 if player.currentItem == nil {
                                     //the chat should open up with hello
@@ -78,10 +77,8 @@ struct CallView: View {
 
                         //code for speech recognition adopted from a todo app tutorial youtube series
                         //https://www.youtube.com/playlist?list=PLbrKvTeCrFAffsnrKSa9mp9hM22E6kSjx
-                        //The call button must be clicked one to initiate the speech recognition
                         HStack{
                             Text(todos.last?.text ?? "----")
-                            recordButton()
                         }
                     }
                     .onAppear {
@@ -99,22 +96,13 @@ struct CallView: View {
                         speechManager.stopRecording()
                     }
                     .padding(.top)
-                    .alert("Loved one is still being generated, please check back in a few minutes", isPresented: $showingAlert) {
+                    .alert("Loved one is still being generated, please check back later", isPresented: $showingAlert) {
                         Button("OK", role: .cancel) { dismiss()}
                     }
                 }
             }
         }
         .ignoresSafeArea()
-    }
-    func recordButton() -> some View {
-        //This button starts the speech recognition when clicked. It only needs to be manually clicked once
-        Button(action: addItem) {
-            Image(systemName: "phone.fill")
-                .font(.system(size: 40))
-                .padding()
-                .cornerRadius(10)
-        }.foregroundColor(recording ? .red : .green)
     }
     
     func addItem() {
@@ -242,7 +230,7 @@ struct CallView: View {
         
         if(useBackend){
             //Upload patient to the server
-            guard let url: URL = URL(string: "http://127.0.0.1:5000/prompts") else {
+            guard let url: URL = URL(string: "http://" + backendIpPort + "/prompts") else {
                 print("Invalid url")
                 return
             }
@@ -289,7 +277,7 @@ struct CallView: View {
         var new_url = ""
         if(useBackend){
             //Upload patient to the server
-            guard let url: URL = URL(string: "http://127.0.0.1:5000/responses") else {
+            guard let url: URL = URL(string: "http://" + backendIpPort + "/responses") else {
                 print("Invalid url")
                 return
             }

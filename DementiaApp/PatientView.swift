@@ -15,6 +15,7 @@ let useBackend : Bool = true
 var didLoad : Bool = false
 var waiting_to_get_reply : Bool = true
 let lock_audio : NSLock = NSLock()
+let backendIpPort : String = "127.0.0.1:5000"
 
 func convertDictionaryToString(dic: [String : String]) -> String{
     var res:String = ""
@@ -110,7 +111,7 @@ struct PatientView: View {
         if(useBackend){
             for index in offsets{
                 let patient : patient = patientList.items[index]
-                guard let url: URL = URL(string: "http://127.0.0.1:5000/patients") else {
+                guard let url: URL = URL(string: "http://" + backendIpPort + "/patients") else {
                     print("Invalid url")
                     return
                 }
@@ -144,7 +145,7 @@ struct PatientView: View {
         //One patient struct is created for each patient in the backend
         if(useBackend){
             //fetch all the patients
-            guard let url: URL = URL(string: "http://127.0.0.1:5000/all_patients") else {
+            guard let url: URL = URL(string: "http://" + backendIpPort + "/all_patients") else {
                 print("Invalid url")
                 return
             }
@@ -194,7 +195,7 @@ struct PatientView: View {
         //One loved one struct is created for each loved one in the backend
         if(useBackend){
             //fetch all the loved ones
-            guard let url: URL = URL(string: "http://127.0.0.1:5000/all_loved_ones") else {
+            guard let url: URL = URL(string: "http://" + backendIpPort + "/all_loved_ones") else {
                 print("Invalid url")
                 return
             }

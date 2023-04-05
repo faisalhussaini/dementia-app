@@ -104,7 +104,7 @@ struct newPatientView: View {
         //This function is used to add the patient to the backend DB
         if(useBackend){
             //Upload patient to the server
-            guard let url: URL = URL(string: "http://127.0.0.1:5000/patients") else {
+            guard let url: URL = URL(string: "http://" + backendIpPort + "/patients") else {
                 print("Invalid url")
                 return
             }
