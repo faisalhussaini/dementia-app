@@ -77,9 +77,12 @@ struct CallView: View {
 
                         //code for speech recognition adopted from a todo app tutorial youtube series
                         //https://www.youtube.com/playlist?list=PLbrKvTeCrFAffsnrKSa9mp9hM22E6kSjx
+                        /*
                         HStack{
+                            //to display what the speech recognition captured
                             Text(todos.last?.text ?? "----")
                         }
+                         */
                     }
                     .onAppear {
                         speechManager.checkPermissions()

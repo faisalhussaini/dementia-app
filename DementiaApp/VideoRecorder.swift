@@ -5,7 +5,8 @@
 //  Created by Faisal Hussaini on 2023-03-14.
 //
 
-//code to record a video adapted from a ChatGPT answer to "swiftui record and view video" on Feb 13
+//This file contains functions which are used to allow the loved one to record and upload a video of themselves to train the deepfake
+//adapted from ChatGPT's instructions for "swiftui record and view video" on Mar 13
 
 import SwiftUI
 import UIKit
@@ -23,7 +24,6 @@ struct VideoPicker: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {
-        //
     }
 
     func makeCoordinator() -> Coordinator {

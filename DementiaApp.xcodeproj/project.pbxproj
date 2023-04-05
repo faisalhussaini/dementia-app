@@ -26,7 +26,6 @@
 		CF876B1828FB7FCF005D44AC /* Pods_DementiaApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33F89C145C2E01CFCDBAD044 /* Pods_DementiaApp.framework */; };
 		CFB77B1028D8DE3C00D3F39D /* StructsDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB77B0F28D8DE3C00D3F39D /* StructsDB.swift */; };
 		CFB77B1228D8DED200D3F39D /* contacts.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB77B1128D8DED200D3F39D /* contacts.swift */; };
-		CFD8EF3028F1FE4300DB94F7 /* PhotoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFD8EF2F28F1FE4300DB94F7 /* PhotoPicker.swift */; };
 		CFE5054A28D7892100825BC9 /* DementiaAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE5054928D7892100825BC9 /* DementiaAppApp.swift */; };
 		CFE5054C28D7892100825BC9 /* PatientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFE5054B28D7892100825BC9 /* PatientView.swift */; };
 		CFE5054E28D7892200825BC9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CFE5054D28D7892200825BC9 /* Assets.xcassets */; };
@@ -53,7 +52,6 @@
 		CF84EB3429C0E4DC00B3887B /* VideoRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoRecorder.swift; sourceTree = "<group>"; };
 		CFB77B0F28D8DE3C00D3F39D /* StructsDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StructsDB.swift; sourceTree = "<group>"; };
 		CFB77B1128D8DED200D3F39D /* contacts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = contacts.swift; sourceTree = "<group>"; };
-		CFD8EF2F28F1FE4300DB94F7 /* PhotoPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoPicker.swift; sourceTree = "<group>"; };
 		CFE5054628D7892100825BC9 /* DementiaApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DementiaApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CFE5054928D7892100825BC9 /* DementiaAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DementiaAppApp.swift; sourceTree = "<group>"; };
 		CFE5054B28D7892100825BC9 /* PatientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientView.swift; sourceTree = "<group>"; };
@@ -126,7 +124,6 @@
 				CF70C8C528EE7D5600C0BD42 /* AudioRecorder.swift */,
 				CF70C8CB28EE804100C0BD42 /* AudioPlayer.swift */,
 				CF70C8CD28EE807000C0BD42 /* RecordingsList.swift */,
-				CFD8EF2F28F1FE4300DB94F7 /* PhotoPicker.swift */,
 				CF3CB1C8291B4A4D002D53E0 /* SpeechManager.swift */,
 				CF3CB1CA291B4A5B002D53E0 /* MicManager.swift */,
 				CF3CB1CC291B4A64002D53E0 /* Persistence.swift */,
@@ -275,7 +272,6 @@
 				CF2C122E29D14FE3000B5007 /* newLovedOneView.swift in Sources */,
 				CF2C122C29D149BA000B5007 /* newPatientView.swift in Sources */,
 				CF70C8C628EE7D5600C0BD42 /* AudioRecorder.swift in Sources */,
-				CFD8EF3028F1FE4300DB94F7 /* PhotoPicker.swift in Sources */,
 				CFB77B1228D8DED200D3F39D /* contacts.swift in Sources */,
 				CFE5054C28D7892100825BC9 /* PatientView.swift in Sources */,
 				CF84EB3529C0E4DC00B3887B /* VideoRecorder.swift in Sources */,

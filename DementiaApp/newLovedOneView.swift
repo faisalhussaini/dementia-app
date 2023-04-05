@@ -68,33 +68,6 @@ struct newLovedOneView: View {
                                 Text("Loved One's top 3 hobbies seperated by commas. Example: 'swimming, poetry, cooking'").foregroundColor(.red)
                             }
                     }
-                    /*
-                    REMOVED NEED FOR PHOTO FOR NOW. INSTEAD USE VIDEO
-                    //https://www.youtube.com/watch?v=V-kSSjh1T74
-                    //This demo on youtube was followed to create the photopicker
-                    Section {
-                        Image(uiImage: lovedOneImage) //swiftui does not have a native way in ios 15 to interact with photopicker. Have to use with uiimagepickercontroller in uikit which returns uiimage
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 150, height:150)
-                            .clipShape(Circle())
-                            .padding()
-                            .onTapGesture {
-                                isShowingPhotoPicker = true
-                            }
-                            Button("Camera") {
-                                self.sourceType = .camera
-                                self.isImagePickerButtonClicked.toggle()
-                            }.padding()
-                            
-                            Button("Photo Library") {
-                                self.sourceType = .photoLibrary
-                                self.isImagePickerButtonClicked.toggle()
-                            }.padding()
-                        Text("Select Image of Loved One")
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    }
-                     */
                     Section {
                         if let videoURL = videoURL {
                                         VideoPlayer(player: AVPlayer(url: videoURL))

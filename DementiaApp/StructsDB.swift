@@ -9,7 +9,6 @@
 import SwiftUI
 
 struct patient: Identifiable {
-    //let id = UUID()
     let id: String
     let name: String
     let gender: String
@@ -22,8 +21,6 @@ struct Recording {
 }
 
 struct lovedOne: Identifiable {
-    //let id = UUID()
-    //let patientID: UUID
     let id: String
     let patientID: String
     let name: String
