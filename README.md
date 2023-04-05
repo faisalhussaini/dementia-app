@@ -1,7 +1,6 @@
 # dementia-app
 
-This project requires Alamofire to work
-To make sure this runs without any issues, please do the following:
+This project requires Alamofire to work. To make sure this runs without any issues, please do the following:
 
 1) brew install cocoapods
 2) go the directory containing the Podfile, and run: "pod install"
