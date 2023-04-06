@@ -8,11 +8,12 @@
 import SwiftUI
 import Firebase
 
-let useBackend : Bool = true
-var didLoad : Bool = false
+let useBackend : Bool = true //for debugging without the backend
+var didLoad : Bool = false //to check if you loaded patients and loved ones
 var waiting_to_get_reply : Bool = true
 let lock_audio : NSLock = NSLock()
 let backendIpPort : String = "127.0.0.1:5000"
+let promptTime : TimeInterval = 10
 
 func convertDictionaryToString(dic: [String : String]) -> String{
     var res:String = ""

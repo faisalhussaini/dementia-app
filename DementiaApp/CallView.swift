@@ -186,7 +186,7 @@ struct CallView: View {
     func startTimer() {
         //This function is used to start the timer which is used to prompt the patient if they are not speaking
         //If you reach the end of the timer, the patient is prompted
-        self.timer = Timer.scheduledTimer(withTimeInterval: 14, repeats: true, block: { _ in
+        self.timer = Timer.scheduledTimer(withTimeInterval: promptTime, repeats: true, block: { _ in
             if (!inCall) {
                 return
             }

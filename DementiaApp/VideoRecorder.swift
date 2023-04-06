@@ -5,21 +5,21 @@
 //  Created by Faisal Hussaini on 2023-03-14.
 //
 
-//This file contains the video picker that allows loved one to record and upload a video of themselves to train the deepfake
-//adapted from ChatGPT's instructions for "swiftui record and view video" on Mar 13
+//This file contains the video recorder that uses UIViewControllerRepresentable to allow loved ones to use uikit to record and upload a video of themselves to train the deepfake
+//developed by following tutorial on UIViewControllerRepresentable
+//https://www.youtube.com/watch?v=V-kSSjh1T74
 
 import SwiftUI
-import UIKit
 
-struct VideoPicker: UIViewControllerRepresentable {
-    @Binding var showVideoPicker: Bool
+struct VideoRecorder: UIViewControllerRepresentable {
+    @Binding var showVideoRecorder: Bool
     @Binding var videoURL: URL?
     
     func makeUIViewController(context: Context) -> UIImagePickerController {
         let picker = UIImagePickerController()
         picker.sourceType = .camera
-        picker.mediaTypes = ["public.movie"]
         picker.delegate = context.coordinator
+        picker.mediaTypes = ["public.movie"]
         return picker
     }
 
@@ -27,23 +27,19 @@ struct VideoPicker: UIViewControllerRepresentable {
     }
 
     func makeCoordinator() -> Coordinator {
-        return Coordinator(parent: self)
+        return Coordinator(videoRecorder: self)
     }
     
-    class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-        let parent: VideoPicker
-
-        init(parent: VideoPicker) {
-            self.parent = parent
+    final class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+        let videoRecorder: VideoRecorder
+        init(videoRecorder: VideoRecorder) {
+            self.videoRecorder = videoRecorder
         }
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             if let videoURL = info[.mediaURL] as? URL {
-                parent.videoURL = videoURL
-                parent.showVideoPicker = false
+                videoRecorder.videoURL = videoURL
+                videoRecorder.showVideoRecorder = false
             }
-        }
-        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-            parent.showVideoPicker = false
         }
     }
 }

@@ -11,13 +11,12 @@ import AVFoundation
 //This file contains functions which are used to record the users speech for transcription
 //It uses the AV foundation to access the mic and record the users speech
 //Below are two functions to start and stop the microphone sessions
-//code for speech recognition adapted from a todo app tutorial youtube series
+//developed by following a todo app tutorial youtube series
 //https://www.youtube.com/playlist?list=PLbrKvTeCrFAffsnrKSa9mp9hM22E6kSjx
 
 class MicMonitor: ObservableObject {
     private var audioRecorder: AVAudioRecorder
-    private var timer: Timer?
-    
+    private var timer: Timer?    
     private var currentSample: Int
     private let numberOfSamples: Int
     

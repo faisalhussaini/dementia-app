@@ -11,7 +11,7 @@ import Combine
 import AVFoundation
 
 //This file contains the functions that are used to play the loved ones audio when creating a new loved one
-//Code to play audio adapted from a SwiftUI Voice Recorder tutorial
+//developed by following a SwiftUI Voice Recorder tutorial
 //https://blckbirds.com/post/voice-recorder-app-in-swiftui-1/
 //https://blckbirds.com/post/voice-recorder-app-in-swiftui-2/
 

@@ -36,7 +36,7 @@ struct newLovedOneView: View {
                                             "spouse": "",
                                             "residence": "",
                                             "hobbies": ""]
-    @State private var showVideoPicker = false
+    @State private var showVideoRecorder = false
     @State private var videoURL : URL?
     @Environment(\.dismiss) var dismiss
     var body: some View {
@@ -68,22 +68,15 @@ struct newLovedOneView: View {
                     Section {
                         if let videoURL = videoURL {
                                         VideoPlayer(player: AVPlayer(url: videoURL))
-                                            .frame(height: 900)
-                        } else {
-                            Text("No video recorded")
-                                .foregroundColor(.gray)
+                                            .frame(height: 400)
                         }
-                        Button(action: {
-                            self.showVideoPicker.toggle()
-                        }) {
-                            Text("Please record a short clip of yourself nodding. Pretend like you are listening to the patient speak. This will be used to generate the deepfake")
+                        Button("Please record a short clip of yourself nodding. Pretend like you are listening to the patient speak. This will be used to generate the deepfake."){
+                            self.showVideoRecorder = true
                         }
                     }
-                    .navigationTitle("New Loved One")
-                    .sheet(isPresented: $showVideoPicker) {
-                        VideoPicker(showVideoPicker: $showVideoPicker, videoURL: $videoURL)
+                    .sheet(isPresented: self.$showVideoRecorder) {
+                        VideoRecorder(showVideoRecorder: $showVideoRecorder, videoURL: $videoURL)
                     }
-                    
                     //Code to record audio adapted from a SwiftUI Voice Recorder tutorial
                     //https://blckbirds.com/post/voice-recorder-app-in-swiftui-1/
                     //https://blckbirds.com/post/voice-recorder-app-in-swiftui-2/
