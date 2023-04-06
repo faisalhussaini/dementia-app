@@ -11,7 +11,7 @@ import Speech
 //This file contains functions which are used to transcribe the users speech to text
 //It uses the speech framework along with a 2 second timer to partition and transcribe the users speech
 //Below are two functions to start and stop the transcription sessions
-//code for speech recognition adopted from a todo app tutorial youtube series
+//code for speech recognition adapted from a todo app tutorial youtube series
 //https://www.youtube.com/playlist?list=PLbrKvTeCrFAffsnrKSa9mp9hM22E6kSjx
 
 

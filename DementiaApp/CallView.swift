@@ -45,8 +45,6 @@ struct CallView: View {
             ForEach(lovedOneList.items, id: \.id) { item in
                 if (item.id == id) {
                     VStack {
-                        //Make video play automatically
-                        //https://stackoverflow.com/questions/65796552/ios-swiftui-video-autoplay
                         VideoPlayer(player: player)
                             .onAppear{
                                 if (promptURL == "") {
@@ -75,7 +73,8 @@ struct CallView: View {
                         Text("Chatting with \(item.name)")
                             .padding()
 
-                        //code for speech recognition adopted from a todo app tutorial youtube series
+                        //code for speech recognition adapted from a todo app tutorial youtube series
+                        //each segment of recognized speech is called a "Todo"
                         //https://www.youtube.com/playlist?list=PLbrKvTeCrFAffsnrKSa9mp9hM22E6kSjx
                         /*
                         HStack{

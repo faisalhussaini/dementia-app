@@ -5,7 +5,7 @@
 //  Created by Faisal Hussaini on 2023-03-14.
 //
 
-//This file contains functions which are used to allow the loved one to record and upload a video of themselves to train the deepfake
+//This file contains the video picker that allows loved one to record and upload a video of themselves to train the deepfake
 //adapted from ChatGPT's instructions for "swiftui record and view video" on Mar 13
 
 import SwiftUI
