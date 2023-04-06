@@ -74,7 +74,7 @@ struct CallView: View {
                             .padding()
 
                         //code for speech recognition adapted from a todo app tutorial youtube series
-                        //each segment of recognized speech is called a "Todo"
+                        //each segment of recognized speech is a "Todo"
                         //https://www.youtube.com/playlist?list=PLbrKvTeCrFAffsnrKSa9mp9hM22E6kSjx
                         /*
                         HStack{

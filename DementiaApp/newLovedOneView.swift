@@ -28,7 +28,6 @@ struct newLovedOneView: View {
     @State private var name: String = ""
     @State private var gender: String = ""
     @State private var isShowingPhotoPicker = false
-    //@State private var lovedOneImage = UIImage(named: "default-avatar")!
     @State private var children: String = ""
     @State private var spouse: String = ""
     @State private var placeOfResidence: String = ""
@@ -37,8 +36,6 @@ struct newLovedOneView: View {
                                             "spouse": "",
                                             "residence": "",
                                             "hobbies": ""]
-    //@State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
-    //@State private var isImagePickerButtonClicked = false
     @State private var showVideoPicker = false
     @State private var videoURL : URL?
     @Environment(\.dismiss) var dismiss
@@ -134,7 +131,6 @@ struct newLovedOneView: View {
                 Section {
                     Button {
 
-                        //let imageData: Data = lovedOneImage.jpegData(compressionQuality: 0.5) ?? Data()
                         //Send this loved one data to the backend
                         if let url = videoURL {
                             add_loved_one(id: "21", patiendID: patientID, name: name, gender: gender, date: date, video: url, questionResponses: questionResponses)
@@ -201,7 +197,6 @@ struct newLovedOneView: View {
                 lovedOneList.items.append(newLovedOne)
                 
                 if(upload_vid){
-                    //TODO: add p_id and lo_id in the upload path, (need to work around optional part...)
                     //Upload training data to firebase
                     // Create a reference to the file you want to upload
                     //TODO: this whole thing would be cleaner with async and await
