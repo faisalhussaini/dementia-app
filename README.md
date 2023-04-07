@@ -1,4 +1,5 @@
 # Familiar Faces
+![image](https://user-images.githubusercontent.com/64606546/230535601-96059f5e-029a-4d33-bec6-f3e7f3c24ba2.png)
 
 ## This is the swift frontend for our virtual presence software for agitated inpatients with dementia, our final year ECE496 capstone project at the University of Toronto. 
 
@@ -18,13 +19,17 @@
 * CallView.swift: 
 * This view allows the user to make a call with a loved one. This view will listen to the user’s speech and detect when they stop speaking, use speech recognition to convert it to text using the Speech framework, and then play the appropriate video response that the backend sent back with AVKit. It will then begin the cycle again to let the user have a continuous conversation. It also has a prompting functionality where the patient is prompted with a stimulating and personalized question in the case that they are not actively participating in the conversation.
 
+#### DementiaAppApp.swift is the entry point of the app 
+* It also contains global variables that dictate the prompt time, whether or not a video of the loved one nodding should play between clips, the backend IP and port, etc.
+
 #### The rest of the files contain helper functions for: 
-1. Speech recognition (SpeechManager.swift, MicManager.swift, Persistence.swift)
-2. Recording and playing an audio sample (AudioPlayer.swift, AudioRecorder.swift, RecordingsList.swift)
+1. Speech recognition (SpeechManager.swift, MicManager.swift)
+2. Recording and playing an audio sample (AudioRecorder.swift, AudioPlayer.swift, RecordingsList.swift)
 3. Recording a video (VideoRecorder.swift)
 
 # Instructions to run on Xcode
 ## This project is compatible with iOS devices with iOS 15+.
+## You can clone this project from within Xcode, or download it from git. Make sure to open the xcworkspace and not the xcodeproj.
 ## This project requires Alamofire to work. To make sure this runs without any issues, please do the following:
 
 1) brew install cocoapods
