@@ -14,6 +14,7 @@ var waiting_to_get_reply : Bool = true
 let lock_audio : NSLock = NSLock()
 let backendIpPort : String = "127.0.0.1:5000"
 let promptTime : TimeInterval = 10
+let shouldNod : Bool = false
 
 func convertDictionaryToString(dic: [String : String]) -> String{
     var res:String = ""

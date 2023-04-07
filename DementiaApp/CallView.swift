@@ -30,7 +30,7 @@ struct CallView: View {
     @ObservedObject var mic = MicMonitor(numberOfSamples: 30)
     var speechManager = SpeechManager()
     @State var final_url = ""
-    @State var videoURL = "https://storage.googleapis.com/virtual-presence-app.appspot.com/1/1/hello.mp4"
+    @State var videoURL = ""
     @State var patientURL = ""
     @State var timer: Timer?
     @State var timer_me: Timer?
@@ -72,26 +72,17 @@ struct CallView: View {
                             }
                         Text("Chatting with \(item.name)")
                             .padding()
-
-                        //code for speech recognition adapted from a todo app tutorial youtube series
-                        //each segment of recognized speech is a "Todo"
-                        //https://www.youtube.com/playlist?list=PLbrKvTeCrFAffsnrKSa9mp9hM22E6kSjx
-                        /*
-                        HStack{
-                            //to display what the speech recognition captured
-                            Text(todos.last?.text ?? "----")
-                        }
-                         */
+                        //Text(todos.last?.text ?? "----") //the recognized speech
                     }
                     .onAppear {
                         speechManager.checkPermissions()
                         let InitialDelay = 2.0
                         DispatchQueue.main.asyncAfter(deadline: .now() + InitialDelay) {
-                            addItem()
+                            recognizeSpeech()
                         }
                     }
                     .onDisappear() {
-                        deleteAllItems()//Delete the conversation data once you leave the call
+                        deleteRecognizedSpeech()//Delete the conversation data once you leave the call
                         inCall = false
                         self.recording = false
                         mic.stopMonitoring()
@@ -107,7 +98,7 @@ struct CallView: View {
         .ignoresSafeArea()
     }
     
-    func addItem() {
+    func recognizeSpeech() {
         //This is called each time speech recognition has started
         //It starts recording the user and transcribing their text to speech, then provides this text to the backend
         //It then updates the AVPlayer to play whatever the backend sent back
@@ -146,15 +137,16 @@ struct CallView: View {
                                 player.replaceCurrentItem(with: item)
                                 player.play()
                                 
-                                NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: item, queue: nil) { _ in
-                                    item = AVPlayerItem(url: URL(string: noddingURL)!)
-                                    player.replaceCurrentItem(with: item)
-                                    let delay = 1.0 // delay in seconds
-                                    DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-                                        player.play()
+                                if (shouldNod) {
+                                    NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: item, queue: nil) { _ in
+                                        item = AVPlayerItem(url: URL(string: noddingURL)!)
+                                        player.replaceCurrentItem(with: item)
+                                        let delay = 1.0 // delay in seconds
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                                            player.play()
+                                        }
                                     }
                                 }
-                                 
                             }
                             let time_to_wait = self.player.currentItem!.asset.duration
                             resetTimer(wait_n: time_to_wait)
@@ -170,19 +162,6 @@ struct CallView: View {
                 
         }
     }
-    func deleteItems(offsets: IndexSet) {
-        //delete all speech to text transcriptions
-        withAnimation {
-            offsets.map {todos[$0]}.forEach(viewContext.delete)
-            
-            do {
-                try viewContext.save()
-            } catch {
-                print(error)
-            }
-        }
-    }
-    
     func startTimer() {
         //This function is used to start the timer which is used to prompt the patient if they are not speaking
         //If you reach the end of the timer, the patient is prompted
@@ -216,7 +195,7 @@ struct CallView: View {
                 return
             }
             waiting_to_get_reply = true;
-            addItem()
+            recognizeSpeech()
             lock_audio.unlock()
         })
     }
@@ -263,7 +242,7 @@ struct CallView: View {
             }).resume()
         }
     }
-    func deleteAllItems() {
+    func deleteRecognizedSpeech() {
         todos.forEach(viewContext.delete)
         do {
             try viewContext.save()
