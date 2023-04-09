@@ -1,7 +1,7 @@
 # Familiar Faces
 ![image](https://user-images.githubusercontent.com/64606546/230535601-96059f5e-029a-4d33-bec6-f3e7f3c24ba2.png)
 
-## This is the swift frontend for our virtual presence software for agitated inpatients with dementia, our final year ECE496 capstone project at the University of Toronto. 
+## This is the swift frontend for our virtual presence software for agitated inpatients with dementia, our final year ECE496 capstone project at the University of Toronto. It goes hand in hand with the backend located here https://github.com/hassank1187/Capstone_server
 
 ### This app can be broken down into 5 parts. 
 
@@ -44,3 +44,12 @@ If you get into the project and it says something about a missing xc environment
 2) scroll down to Frameworks, Libraries, and Embedded Content
 3) Finally make sure the one package that is there has Embed label: Embed & Sign
 -> If not, change it to Embed and Sign, then rebuild and all will be well
+
+# Demonstration without clip between responses
+https://user-images.githubusercontent.com/64606546/230792729-f934d7e3-3805-4981-a86f-5dacd381a47b.mp4
+
+# Demonstration with clip between responses
+https://user-images.githubusercontent.com/64606546/230792765-830b91a2-6bcb-4443-aa9a-e6d01bfec938.mp4
+
+
+
