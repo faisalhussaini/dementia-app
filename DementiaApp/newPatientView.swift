@@ -84,6 +84,12 @@ struct newPatientView: View {
                         presentationMode.wrappedValue.dismiss()
                     } label : {
                         Text("Save")
+                            .frame(maxWidth: .infinity)
+                            .foregroundColor(.white)
+                            .background(name.isEmpty || placeOfResidence.isEmpty || hobbies.isEmpty || hospitalName.isEmpty || hobbies.filter { $0 == "," }.count != 2 ? Color.gray : Color.blue)
+                            .cornerRadius(5)
+                            .padding(.horizontal, 10)
+                            .frame(height: 40)
                     }
                 }
                 .disabled(name.isEmpty || placeOfResidence.isEmpty || hobbies.isEmpty || hospitalName.isEmpty || hobbies.filter { $0 == "," }.count != 2)//The save button is disabled if info is missing

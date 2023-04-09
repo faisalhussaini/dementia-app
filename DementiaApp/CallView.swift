@@ -188,12 +188,9 @@ struct CallView: View {
         })
     }
     func startMe(wait_n : Double) {
-        //spinner to wait and restart prompt
+        //spinner to wait and restart prompt for recognizing user speech
         self.timer_me = Timer.scheduledTimer(withTimeInterval: wait_n, repeats: false, block: { _ in
             lock_audio.lock()
-            if (waiting_to_get_reply) {
-                return
-            }
             waiting_to_get_reply = true;
             recognizeSpeech()
             lock_audio.unlock()
